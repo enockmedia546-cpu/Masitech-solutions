@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Boarding Houses | Masitech Accommodation</title>
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --amber: #d97706;
+            --red: #dc2626;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 60px 0 46px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.88), rgba(31, 41, 55, 0.88)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header h1 {
+            margin-bottom: 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .page-header p {
+            max-width: 680px;
+            color: #e5e7eb;
+        }
+
+        .listing-area {
+            padding: 38px 0 80px;
+        }
+
+        .filter-card {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr auto;
+            align-items: end;
+            gap: 14px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field-group label {
+            color: var(--charcoal);
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .field-group input,
+        .field-group select {
+            width: 100%;
+            min-height: 43px;
+            padding: 0 11px;
+            color: var(--dark-charcoal);
+            background: var(--white);
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .field-group input:focus,
+        .field-group select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .listing-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .listing-summary h2 {
+            color: var(--dark-charcoal);
+            font-size: 1.35rem;
+        }
+
+        .listing-summary p {
+            color: var(--medium-grey);
+            font-size: 0.9rem;
+        }
+
+        .loading,
+        .empty-state,
+        .error-state {
+            padding: 45px 20px;
+            color: var(--medium-grey);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .error-state {
+            color: var(--red);
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .property-card {
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(31, 41, 55, 0.05);
+            transition: 0.2s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .property-image-wrapper {
+            position: relative;
+            height: 205px;
+            background: #d1d5db;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            padding: 5px 9px;
+            color: var(--white);
+            background: var(--green);
+            border-radius: 5px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .property-content {
+            padding: 18px;
+        }
+
+        .property-content h3 {
+            margin-bottom: 7px;
+            color: var(--dark-charcoal);
+            font-size: 1.12rem;
+        }
+
+        .location {
+            margin-bottom: 12px;
+            color: var(--medium-grey);
+            font-size: 0.86rem;
+        }
+
+        .location::before {
+            content: "⌖ ";
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .property-description {
+            display: -webkit-box;
+            min-height: 43px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            color: var(--medium-grey);
+            font-size: 0.88rem;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .property-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 16px;
+        }
+
+        .meta-item {
+            padding: 5px 8px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border-radius: 5px;
+            font-size: 0.76rem;
+        }
+
+        .property-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .price {
+            color: var(--teal);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .rating {
+            margin-top: 3px;
+            color: var(--amber);
+            font-size: 0.82rem;
+        }
+
+        .view-button {
+            min-height: 38px;
+            padding: 0 12px;
+            color: var(--white);
+            background: var(--charcoal);
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .view-button:hover {
+            background: var(--teal);
+        }
+
+        .site-footer {
+            padding: 24px 20px;
+            color: #9ca3af;
+            background: var(--dark-charcoal);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 980px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .filter-card {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-card .button {
+                grid-column: span 2;
+            }
+
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .filter-card,
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-card .button {
+                grid-column: auto;
+            }
+
+            .listing-summary {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="assets/logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a class="active" href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Student boarding houses</h1>
+                <p>
+                    Browse available student accommodation near your campus and
+                    compare rooms, prices, conditions, and facilities.
+                </p>
+            </div>
+        </section>
+
+        <section class="listing-area">
+            <div class="container">
+                <form class="filter-card" id="filterForm">
+                    <div class="field-group">
+                        <label for="searchInput">Search</label>
+                        <input
+                            id="searchInput"
+                            type="search"
+                            placeholder="Search by property name..."
+                        >
+                    </div>
+
+                    <div class="field-group">
+                        <label for="locationFilter">Location</label>
+                        <select id="locationFilter">
+                            <option value="all">All locations</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="sortFilter">Sort by</label>
+                        <select id="sortFilter">
+                            <option value="newest">Newest first</option>
+                            <option value="price-low">Price: low to high</option>
+                            <option value="price-high">Price: high to low</option>
+                            <option value="rating">Highest rated</option>
+                        </select>
+                    </div>
+
+                    <button class="button button-primary" type="submit">
+                        Apply filters
+                    </button>
+                </form>
+
+                <div class="listing-summary">
+                    <div>
+                        <h2>Available student accommodation</h2>
+                        <p id="resultCount">Loading listings...</p>
+                    </div>
+                </div>
+
+                <div class="loading" id="loadingState">
+                    Loading student boarding houses...
+                </div>
+
+                <div class="property-grid" id="propertyGrid"></div>
+
+                <div class="empty-state" id="emptyState" hidden>
+                    No student boarding houses match your search.
+                </div>
+
+                <div class="error-state" id="errorState" hidden>
+                    We could not load the listings. Please try again later.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            query,
+            where,
+            onSnapshot,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const mainNav = document.getElementById("mainNav");
+        const menuButton = document.getElementById("menuButton");
+        const filterForm = document.getElementById("filterForm");
+        const searchInput = document.getElementById("searchInput");
+        const locationFilter = document.getElementById("locationFilter");
+        const sortFilter = document.getElementById("sortFilter");
+        const propertyGrid = document.getElementById("propertyGrid");
+        const loadingState = document.getElementById("loadingState");
+        const emptyState = document.getElementById("emptyState");
+        const errorState = document.getElementById("errorState");
+        const resultCount = document.getElementById("resultCount");
+        const currentYear = document.getElementById("currentYear");
+
+        let allProperties = [];
+        let locationMap = {};
+
+        currentYear.textContent = new Date().getFullYear();
+
+        const urlLocation = new URLSearchParams(window.location.search).get(
+            "location"
+        );
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!mainNav.classList.contains("open")) return;
+
+            const insideNav = mainNav.contains(event.target);
+            const onButton = menuButton.contains(event.target);
+
+            if (!insideNav && !onButton) {
+                mainNav.classList.remove("open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+            }
+        });
+
+        function escapeHtml(value) {
+            const div = document.createElement("div");
+            div.textContent = value ?? "";
+            return div.innerHTML;
+        }
+
+        function formatPrice(property) {
+            if (property.priceLabel) {
+                return escapeHtml(property.priceLabel);
+            }
+
+            if (typeof property.price === "number") {
+                return `K${property.price.toLocaleString()} per month`;
+            }
+
+            return "Price on inquiry";
+        }
+
+        function getImageUrl(property) {
+            if (property.imageUrl) return property.imageUrl;
+            if (Array.isArray(property.imageUrls) && property.imageUrls[0]) {
+                return property.imageUrls[0];
+            }
+
+            return "https://via.placeholder.com/800x500?text=Student+Accommodation";
+        }
+
+        function getRating(property) {
+            const rating = Number(property.rating);
+
+            if (!rating) {
+                return "No reviews yet";
+            }
+
+            return `★ ${rating.toFixed(1)} (${property.reviewCount || 0} reviews)`;
+        }
+
+        function getAvailabilityLabel(property) {
+            if (property.availableRooms !== undefined && property.availableRooms !== null) {
+                return `${property.availableRooms} available`;
+            }
+
+            if (property.availableUnits !== undefined && property.availableUnits !== null) {
+                return `${property.availableUnits} available`;
+            }
+
+            return "Availability on inquiry";
+        }
+
+        function getLocationLabel(property) {
+            return (
+                property.locationName ||
+                locationMap[property.locationId] ||
+                property.locationId ||
+                "Location not provided"
+            );
+        }
+
+        function displayProperties(properties) {
+            propertyGrid.innerHTML = "";
+
+            if (properties.length === 0) {
+                emptyState.hidden = false;
+                resultCount.textContent = "0 listings found";
+                return;
+            }
+
+            emptyState.hidden = true;
+            resultCount.textContent =
+                `${properties.length} listing${properties.length === 1 ? "" : "s"} found`;
+
+            properties.forEach((property) => {
+                const propertyId = property.id;
+                const title = escapeHtml(
+                    property.title || "Student boarding house"
+                );
+                const location = escapeHtml(getLocationLabel(property));
+                const description = escapeHtml(
+                    property.description || "Property details will be provided soon."
+                );
+                const roomType = escapeHtml(
+                    property.roomType ||
+                    property.spaceLabel ||
+                    "Room details unavailable"
+                );
+                const condition = escapeHtml(
+                    property.condition || "Condition not provided"
+                );
+                const availableRooms = escapeHtml(
+                    getAvailabilityLabel(property)
+                );
+
+                const card = document.createElement("article");
+                card.className = "property-card";
+
+                card.innerHTML = `
+                    <div class="property-image-wrapper">
+                        <img
+                            class="property-image"
+                            src="${getImageUrl(property)}"
+                            alt="${title}"
+                            loading="lazy"
+                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Accommodation'"
+                        >
+                        <span class="status-badge">Available</span>
+                    </div>
+
+                    <div class="property-content">
+                        <h3>${title}</h3>
+                        <p class="location">${location}</p>
+                        <p class="property-description">${description}</p>
+
+                        <div class="property-meta">
+                            <span class="meta-item">${roomType}</span>
+                            <span class="meta-item">${condition}</span>
+                            <span class="meta-item">${availableRooms}</span>
+                        </div>
+
+                        <div class="property-bottom">
+                            <div>
+                                <div class="price">${formatPrice(property)}</div>
+                                <div class="rating">${getRating(property)}</div>
+                            </div>
+
+                            <a
+                                class="view-button"
+                                href="property-details.html?id=${encodeURIComponent(propertyId)}"
+                            >
+                                View details
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                propertyGrid.appendChild(card);
+            });
+        }
+
+        function filterAndDisplayProperties() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedLocation = locationFilter.value;
+            const selectedSort = sortFilter.value;
+
+            let filteredProperties = allProperties.filter((property) => {
+                const searchableText = [
+                    property.title,
+                    property.locationName,
+                    property.locationId,
+                    locationMap[property.locationId],
+                    property.description,
+                    property.address,
+                    property.roomType,
+                    property.spaceLabel
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                const matchesSearch =
+                    !searchTerm || searchableText.includes(searchTerm);
+
+                const matchesLocation =
+                    selectedLocation === "all" ||
+                    property.locationId === selectedLocation;
+
+                return matchesSearch && matchesLocation;
+            });
+
+            filteredProperties.sort((first, second) => {
+                if (selectedSort === "price-low") {
+                    return Number(first.price || 0) - Number(second.price || 0);
+                }
+
+                if (selectedSort === "price-high") {
+                    return Number(second.price || 0) - Number(first.price || 0);
+                }
+
+                if (selectedSort === "rating") {
+                    return Number(second.rating || 0) - Number(first.rating || 0);
+                }
+
+                return getDateValue(second.createdAt) -
+                    getDateValue(first.createdAt);
+            });
+
+            displayProperties(filteredProperties);
+        }
+
+        function getDateValue(timestamp) {
+            if (!timestamp) {
+                return 0;
+            }
+
+            if (typeof timestamp.toMillis === "function") {
+                return timestamp.toMillis();
+            }
+
+            if (timestamp.seconds) {
+                return timestamp.seconds * 1000;
+            }
+
+            return new Date(timestamp).getTime() || 0;
+        }
+
+        async function loadLocations() {
+            try {
+                const snapshot = await getDocs(collection(db, "locations"));
+                const locations = snapshot.docs.map((docSnap) => ({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                }));
+
+                locationMap = {};
+                locationFilter.innerHTML =
+                    `<option value="all">All locations</option>`;
+
+                locations
+                    .sort((a, b) =>
+                        String(a.name || a.id).localeCompare(String(b.name || b.id))
+                    )
+                    .forEach((location) => {
+                        locationMap[location.id] = location.name || location.id;
+
+                        const option = document.createElement("option");
+                        option.value = location.id;
+                        option.textContent = location.name || location.id;
+                        locationFilter.appendChild(option);
+                    });
+
+                if (urlLocation) {
+                    locationFilter.value = urlLocation;
+                }
+            } catch (error) {
+                console.warn("Could not load locations:", error);
+            }
+        }
+
+        filterForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            filterAndDisplayProperties();
+        });
+
+        searchInput.addEventListener("input", filterAndDisplayProperties);
+        locationFilter.addEventListener("change", filterAndDisplayProperties);
+        sortFilter.addEventListener("change", filterAndDisplayProperties);
+
+        const propertiesQuery = query(
+            collection(db, "properties"),
+            where("propertyType", "==", "student"),
+            where("status", "==", "published")
+        );
+
+        await loadLocations();
+
+        onSnapshot(
+            propertiesQuery,
+            (snapshot) => {
+                allProperties = snapshot.docs.map((propertyDocument) => ({
+                    id: propertyDocument.id,
+                    ...propertyDocument.data()
+                }));
+
+                loadingState.style.display = "none";
+                errorState.hidden = true;
+                filterAndDisplayProperties();
+            },
+            (error) => {
+                console.error("Could not load properties:", error);
+
+                loadingState.style.display = "none";
+                errorState.hidden = false;
+                resultCount.textContent = "Listings unavailable";
+            }
+        );
+    </script>
+</body>
+</html>

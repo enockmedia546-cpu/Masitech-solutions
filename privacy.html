@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Policy | Masitech Accommodation</title>
+
+    <meta
+        name="description"
+        content="Read the Masitech Accommodation Privacy Policy."
+    >
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 58px 0 45px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.9)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header h1 {
+            margin-bottom: 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+        }
+
+        .content-area {
+            padding: 45px 0 80px;
+        }
+
+        .policy-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            align-items: start;
+            gap: 28px;
+        }
+
+        .policy-navigation {
+            position: sticky;
+            top: 100px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .policy-navigation h2 {
+            margin-bottom: 12px;
+            color: var(--dark-charcoal);
+            font-size: 1rem;
+        }
+
+        .policy-navigation a {
+            display: block;
+            padding: 6px 0;
+            color: var(--medium-grey);
+            font-size: 0.86rem;
+            line-height: 1.4;
+        }
+
+        .policy-navigation a:hover {
+            color: var(--teal);
+        }
+
+        .policy-document {
+            padding: 36px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .last-updated {
+            margin-bottom: 30px;
+            padding: 13px 15px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border-left: 4px solid var(--teal);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .policy-document section {
+            scroll-margin-top: 100px;
+            margin-bottom: 32px;
+        }
+
+        .policy-document section:last-child {
+            margin-bottom: 0;
+        }
+
+        .policy-document h2 {
+            margin-bottom: 10px;
+            color: var(--dark-charcoal);
+            font-size: 1.35rem;
+            line-height: 1.3;
+        }
+
+        .policy-document h3 {
+            margin: 18px 0 6px;
+            color: var(--charcoal);
+            font-size: 1.05rem;
+        }
+
+        .policy-document p {
+            margin-bottom: 12px;
+            color: #4b5563;
+            font-size: 0.96rem;
+        }
+
+        .policy-document ul {
+            margin: 10px 0 14px 21px;
+            color: #4b5563;
+        }
+
+        .policy-document li {
+            margin-bottom: 7px;
+            font-size: 0.95rem;
+        }
+
+        .policy-document a {
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .policy-document a:hover {
+            text-decoration: underline;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 24px 20px;
+            color: #9ca3af;
+            background: var(--dark-charcoal);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .policy-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .policy-navigation {
+                position: static;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .policy-document {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="assets/logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a class="active" href="privacy.html">Privacy</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 id="cmsHeroTitle">Privacy Policy</h1>
+                <p id="cmsHeroSubtitle">
+                    This notice explains how Masitech Accommodation collects,
+                    uses, stores, and protects personal information.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-area">
+            <div class="container policy-layout">
+                <aside class="policy-navigation" aria-label="Privacy policy sections">
+                    <h2>On this page</h2>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#information">Information we collect</a>
+                    <a href="#use">How we use information</a>
+                    <a href="#sharing">Information sharing</a>
+                    <a href="#firebase">Firebase and Cloudinary</a>
+                    <a href="#retention">Data retention</a>
+                    <a href="#rights">Your rights</a>
+                    <a href="#security">Data security</a>
+                    <a href="#cookies">Cookies and analytics</a>
+                    <a href="#children">Children’s privacy</a>
+                    <a href="#changes">Policy changes</a>
+                    <a href="#contact">Contact us</a>
+                </aside>
+
+                <article class="policy-document">
+                    <div class="last-updated">
+                        <strong>Last updated:</strong>
+                        <span id="cmsLastUpdated">14 September 2026</span>
+                    </div>
+
+                    <section id="introduction" data-cms-section="1">
+                        <h2>1. Introduction</h2>
+                        <p>
+                            Masitech Accommodation operates a platform that helps
+                            students and non-student tenants discover accommodation
+                            such as boarding houses and apartments.
+                        </p>
+                        <p>
+                            This Privacy Policy explains how we handle personal
+                            information when you visit our website, create an account,
+                            browse listings, contact a caretaker, submit an inquiry,
+                            or use another platform feature.
+                        </p>
+                        <p>
+                            In this policy, “we,” “us,” and “our” refer to Masitech
+                            Accommodation. “You” refers to a visitor, student, tenant,
+                            caretaker, administrator, or other person using the platform.
+                        </p>
+                    </section>
+
+                    <section id="information" data-cms-section="2">
+                        <h2>2. Information we collect</h2>
+
+                        <h3>Information you provide</h3>
+                        <p>
+                            Depending on how you use the platform, we may collect:
+                        </p>
+
+                        <ul>
+                            <li>Full name.</li>
+                            <li>Email address.</li>
+                            <li>Phone number.</li>
+                            <li>Password-related account information handled by Firebase Authentication.</li>
+                            <li>Account type, such as student or non-student tenant.</li>
+                            <li>Preferred location or campus area.</li>
+                            <li>Property inquiries and messages.</li>
+                            <li>Ratings, reviews, and reports.</li>
+                            <li>Information submitted when you contact us.</li>
+                        </ul>
+
+                        <h3>Information collected automatically</h3>
+                        <p>
+                            We may collect technical information such as browser type,
+                            device information, approximate location derived from
+                            technical data, IP address, pages visited, and interaction
+                            information. Some of this information may be collected by
+                            authentication, security, or analytics services.
+                        </p>
+
+                        <h3>Property information</h3>
+                        <p>
+                            Caretakers and administrators may submit property details,
+                            room information, availability, prices, conditions, photos,
+                            amenities, and location information. Some of this information
+                            is intended to be publicly displayed on the platform.
+                        </p>
+                    </section>
+
+                    <section id="use" data-cms-section="3">
+                        <h2>3. How we use information</h2>
+                        <p>
+                            We may use personal information to:
+                        </p>
+
+                        <ul>
+                            <li>Create and manage user accounts.</li>
+                            <li>Authenticate users and protect accounts.</li>
+                            <li>Display accommodation listings according to selected locations.</li>
+                            <li>Connect prospective tenants with relevant caretakers.</li>
+                            <li>Process inquiries, applications, and support requests.</li>
+                            <li>Display and manage ratings and reviews.</li>
+                            <li>Send important account, service, or platform announcements.</li>
+                            <li>Improve the website and understand its usage.</li>
+                            <li>Detect fraud, misuse, security threats, and policy violations.</li>
+                            <li>Maintain records required for administration and legal compliance.</li>
+                        </ul>
+
+                        <p>
+                            We will aim to collect and use only information that is
+                            reasonably necessary for these purposes.
+                        </p>
+                    </section>
+
+                    <section id="sharing" data-cms-section="4">
+                        <h2>4. When information may be shared</h2>
+                        <p>
+                            We may share information when necessary to operate the
+                            platform, including with:
+                        </p>
+
+                        <ul>
+                            <li>Authorized caretakers handling properties in their assigned locations.</li>
+                            <li>Masitech Accommodation administrators.</li>
+                            <li>Service providers that support authentication, hosting, storage, analytics, or communications.</li>
+                            <li>Professional advisers or authorities where required by law.</li>
+                        </ul>
+
+                        <p>
+                            We do not intend to sell personal information. Public
+                            reviews, display names, and property-related information
+                            may be visible to other platform users depending on the
+                            feature and the choices made by administrators.
+                        </p>
+
+                        <p>
+                            Users should avoid posting sensitive personal information
+                            in public reviews, property descriptions, or inquiry messages.
+                        </p>
+                    </section>
+
+                    <section id="firebase" data-cms-section="5">
+                        <h2>5. Firebase and Cloudinary</h2>
+                        <p>
+                            We use Firebase services for parts of the platform,
+                            including authentication, database functionality, hosting,
+                            and analytics where enabled.
+                        </p>
+
+                        <p>
+                            Firebase Authentication may process information such as
+                            email addresses, phone numbers, user-agent information, and
+                            IP addresses to support authentication, account management,
+                            security, and abuse prevention. Firebase states that the
+                            application owner generally acts as the data controller or
+                            business, while Google generally acts as a processor or
+                            service provider for customer-provided end-user data.
+                        </p>
+
+                        <p>
+                            We may use Cloudinary to store and deliver property images.
+                            Property photos uploaded to the platform may be processed
+                            through Cloudinary and displayed using Cloudinary delivery
+                            URLs.
+                        </p>
+
+                        <p>
+                            More information about Firebase privacy practices is
+                            available on
+                            <a
+                                href="https://firebase.google.com/support/privacy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Google’s Firebase Privacy and Security page
+                            </a>.
+                        </p>
+                    </section>
+
+                    <section id="retention" data-cms-section="6">
+                        <h2>6. Data retention</h2>
+                        <p>
+                            We retain information for as long as reasonably necessary
+                            to provide the platform, manage accounts, handle inquiries,
+                            maintain business records, resolve disputes, prevent abuse,
+                            and comply with legal obligations.
+                        </p>
+
+                        <p>
+                            Retention periods may differ depending on the type of
+                            information, its purpose, account status, and applicable
+                            legal requirements. When information is no longer needed,
+                            we will seek to delete it, anonymize it, or securely dispose
+                            of it where appropriate.
+                        </p>
+                    </section>
+
+                    <section id="rights" data-cms-section="7">
+                        <h2>7. Your privacy rights</h2>
+                        <p>
+                            Depending on the laws that apply to you, you may have rights
+                            relating to your personal information, including the right
+                            to:
+                        </p>
+
+                        <ul>
+                            <li>Ask what personal information we hold about you.</li>
+                            <li>Request correction of inaccurate or incomplete information.</li>
+                            <li>Request deletion where legally permitted.</li>
+                            <li>Object to or restrict certain processing.</li>
+                            <li>Withdraw consent where processing relies on consent.</li>
+                            <li>Request a copy of certain information in a usable format.</li>
+                            <li>Complain to an applicable data-protection authority.</li>
+                        </ul>
+
+                        <p>
+                            Some requests may be subject to legal exceptions or identity
+                            verification requirements. To exercise a right, contact us
+                            using the details in the Contact section.
+                        </p>
+                    </section>
+
+                    <section id="security" data-cms-section="8">
+                        <h2>8. Data security</h2>
+                        <p>
+                            We use reasonable technical and organizational measures
+                            designed to protect information from unauthorized access,
+                            loss, misuse, alteration, or disclosure.
+                        </p>
+
+                        <p>
+                            No internet service can guarantee absolute security. You
+                            are responsible for protecting your password, using a
+                            strong password, and notifying us promptly if you believe
+                            your account has been compromised.
+                        </p>
+
+                        <p>
+                            Access to platform records should be controlled through
+                            Firebase Authentication and Firebase Security Rules.
+                            Internal role and location permissions should also be
+                            enforced on the server and database, not only through
+                            hidden buttons or frontend page restrictions.
+                        </p>
+                    </section>
+
+                    <section id="cookies" data-cms-section="9">
+                        <h2>9. Cookies and analytics</h2>
+                        <p>
+                            The platform may use cookies, browser storage, or similar
+                            technologies to support authentication, remember preferences,
+                            improve security, and understand website usage.
+                        </p>
+
+                        <p>
+                            Google Analytics may be enabled to provide aggregated
+                            information about website visits and feature usage. The
+                            exact analytics configuration and any consent requirements
+                            should be confirmed before the website goes live.
+                        </p>
+
+                        <p>
+                            You may be able to control cookies through your browser
+                            settings. Disabling certain technologies may affect some
+                            platform functions.
+                        </p>
+                    </section>
+
+                    <section id="children" data-cms-section="10">
+                        <h2>10. Children’s privacy</h2>
+                        <p>
+                            The platform is intended for people who are legally able to
+                            use accommodation and related services in their location.
+                            We do not knowingly collect personal information from
+                            children where doing so would violate applicable law.
+                        </p>
+
+                        <p>
+                            If you believe a child has provided personal information
+                            improperly, please contact us so that we can investigate
+                            and take appropriate action.
+                        </p>
+                    </section>
+
+                    <section id="changes" data-cms-section="11">
+                        <h2>11. Changes to this Privacy Policy</h2>
+                        <p>
+                            We may update this Privacy Policy when our services,
+                            technology, legal obligations, or data practices change.
+                            The updated version will be posted on this page with a new
+                            “Last updated” date.
+                        </p>
+
+                        <p>
+                            Where required, we will provide additional notice or seek
+                            consent for material changes.
+                        </p>
+                    </section>
+
+                    <section id="contact" data-cms-section="12">
+                        <h2>12. Contact us</h2>
+                        <p>
+                            If you have a privacy question, want to exercise a privacy
+                            right, or want to report a concern, contact us through:
+                        </p>
+
+                        <ul id="cmsPrivacyContactList">
+                            <li>Email: <a id="cmsPrivacyEmail" href="mailto:privacy@example.com">privacy@example.com</a></li>
+                            <li id="cmsPrivacyPhoneItem">Phone: <span id="cmsPrivacyPhone">+000 000 000 000</span></li>
+                            <li id="cmsPrivacyAddressItem">Address: <span id="cmsPrivacyAddress">Add the registered business address here</span></li>
+                        </ul>
+
+                        <p>
+                            Replace the placeholder contact details above with the
+                            client’s official business contact information before
+                            publishing this page.
+                        </p>
+                    </section>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const SECTION_TITLES = {
+            1: "1. Introduction",
+            2: "2. Information we collect",
+            3: "3. How we use information",
+            4: "4. When information may be shared",
+            5: "5. Firebase and Cloudinary",
+            6: "6. Data retention",
+            7: "7. Your privacy rights",
+            8: "8. Data security",
+            9: "9. Cookies and analytics",
+            10: "10. Children’s privacy",
+            11: "11. Changes to this Privacy Policy",
+            12: "12. Contact us"
+        };
+
+        const menuButton = document.getElementById("menuButton");
+        const mainNav = document.getElementById("mainNav");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        function setText(id, value) {
+            if (value === undefined || value === null) return;
+            const text = String(value).trim();
+            if (!text) return;
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        /**
+         * Converts admin plain-text sections into HTML.
+         * - Blank line starts a new paragraph
+         * - Lines starting with - or • become list items
+         * - Short title-like lines (no period) become h3 subheadings
+         */
+        function textToHtml(text) {
+            if (!text) return "";
+
+            const lines = String(text).replace(/\r/g, "").split("\n");
+            let html = "";
+            let inList = false;
+            let paragraphLines = [];
+
+            const flushList = () => {
+                if (inList) {
+                    html += "</ul>";
+                    inList = false;
+                }
+            };
+
+            const flushParagraph = () => {
+                if (paragraphLines.length) {
+                    html += `<p>${escapeHtml(paragraphLines.join(" "))}</p>`;
+                    paragraphLines = [];
+                }
+            };
+
+            for (const raw of lines) {
+                const line = raw.trim();
+
+                if (!line) {
+                    flushList();
+                    flushParagraph();
+                    continue;
+                }
+
+                if (/^[-•]\s+/.test(line)) {
+                    flushParagraph();
+                    const item = line.replace(/^[-•]\s+/, "");
+                    if (!inList) {
+                        html += "<ul>";
+                        inList = true;
+                    }
+                    html += `<li>${escapeHtml(item)}</li>`;
+                    continue;
+                }
+
+                // Treat short lines without a period as sub-headings
+                // e.g. "Information you provide"
+                if (
+                    line.length <= 60 &&
+                    !line.includes(".") &&
+                    !line.includes(":") &&
+                    /^[A-Za-z0-9]/.test(line)
+                ) {
+                    flushList();
+                    flushParagraph();
+                    html += `<h3>${escapeHtml(line)}</h3>`;
+                    continue;
+                }
+
+                flushList();
+                paragraphLines.push(line);
+            }
+
+            flushList();
+            flushParagraph();
+            return html;
+        }
+
+        function renderSection(sectionNumber, bodyText, contactFields) {
+            const section = document.querySelector(
+                `[data-cms-section="${sectionNumber}"]`
+            );
+            if (!section) return;
+
+            const title =
+                SECTION_TITLES[sectionNumber] ||
+                section.querySelector("h2")?.textContent ||
+                `Section ${sectionNumber}`;
+
+            let html = `<h2>${escapeHtml(title)}</h2>`;
+            html += textToHtml(bodyText);
+
+            if (sectionNumber === 12) {
+                const email =
+                    (contactFields && contactFields.contactEmail) ||
+                    "privacy@example.com";
+                const phone =
+                    (contactFields && contactFields.contactPhone) || "";
+                const address =
+                    (contactFields && contactFields.contactAddress) || "";
+
+                html += `
+                    <ul id="cmsPrivacyContactList">
+                        <li>
+                            Email:
+                            <a id="cmsPrivacyEmail" href="mailto:${escapeHtml(email)}">
+                                ${escapeHtml(email)}
+                            </a>
+                        </li>
+                        <li>
+                            Phone:
+                            <span id="cmsPrivacyPhone">${escapeHtml(phone)}</span>
+                        </li>
+                        <li>
+                            Address:
+                            <span id="cmsPrivacyAddress">${escapeHtml(address)}</span>
+                        </li>
+                    </ul>
+                `;
+            }
+
+            section.innerHTML = html;
+        }
+
+        function applyPrivacyContent(data) {
+            if (!data) return;
+
+            const c =
+                data.contentFields && typeof data.contentFields === "object"
+                    ? data.contentFields
+                    : data;
+
+            setText("cmsHeroTitle", c.heroTitle);
+            setText("cmsHeroSubtitle", c.heroSubtitle);
+            setText("cmsLastUpdated", c.lastUpdated);
+
+            const metaDescription =
+                c.metaDescription || data.metaDescription || "";
+            if (metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", metaDescription);
+            }
+
+            if (c.heroTitle) {
+                document.title = `${c.heroTitle} | Masitech Accommodation`;
+            }
+
+            for (let i = 1; i <= 12; i += 1) {
+                const body = c[`sec${i}`];
+                if (body) {
+                    renderSection(i, body, c);
+                } else if (i === 12) {
+                    // Still update contact details if only those changed
+                    if (c.contactEmail) {
+                        const a = document.getElementById("cmsPrivacyEmail");
+                        if (a) {
+                            a.textContent = c.contactEmail;
+                            a.href = `mailto:${c.contactEmail}`;
+                        }
+                    }
+                    setText("cmsPrivacyPhone", c.contactPhone);
+                    setText("cmsPrivacyAddress", c.contactAddress);
+                }
+            }
+        }
+
+        function bindPrivacyCms() {
+            const pageRef = doc(db, "sitePages", "privacy");
+
+            onSnapshot(
+                pageRef,
+                (snap) => {
+                    if (!snap.exists()) {
+                        console.info(
+                            "[Masitech] No sitePages/privacy draft yet. Showing default policy content."
+                        );
+                        return;
+                    }
+
+                    applyPrivacyContent(snap.data());
+                    console.info(
+                        "[Masitech] Privacy Policy content loaded from admin CMS."
+                    );
+                },
+                (error) => {
+                    console.warn(
+                        "[Masitech] Could not read sitePages/privacy. Check Firestore rules allow public read.",
+                        error
+                    );
+                }
+            );
+        }
+
+        bindPrivacyCms();
+    </script>
+</body>
+</html>

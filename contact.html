@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us | Masitech Accommodation</title>
+
+    <meta
+        name="description"
+        content="Contact Masitech Accommodation for help with student boarding houses, apartments, listings, and inquiries."
+    >
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --red: #dc2626;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 65px 0 53px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.9)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header-content {
+            max-width: 760px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 12px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.15;
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+            font-size: 1.05rem;
+        }
+
+        .contact-area {
+            padding: 50px 0 80px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 0.85fr 1.15fr;
+            align-items: start;
+            gap: 25px;
+        }
+
+        .contact-card,
+        .form-card {
+            padding: 28px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-heading {
+            margin-bottom: 23px;
+        }
+
+        .card-heading h2 {
+            margin-bottom: 7px;
+            color: var(--dark-charcoal);
+            font-size: 1.45rem;
+        }
+
+        .card-heading p {
+            color: var(--medium-grey);
+            font-size: 0.9rem;
+        }
+
+        .contact-methods {
+            display: grid;
+            gap: 15px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 15px;
+            background: var(--light-grey);
+            border-radius: 9px;
+        }
+
+        .contact-icon {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            place-items: center;
+            color: var(--teal);
+            background: #ccfbf1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .contact-method h3 {
+            margin-bottom: 3px;
+            color: var(--dark-charcoal);
+            font-size: 0.92rem;
+        }
+
+        .contact-method p,
+        .contact-method a {
+            color: var(--medium-grey);
+            font-size: 0.84rem;
+        }
+
+        .contact-method a:hover {
+            color: var(--teal);
+            text-decoration: underline;
+        }
+
+        .contact-note {
+            margin-top: 20px;
+            padding: 15px;
+            color: #4b5563;
+            background: #f0fdfa;
+            border-left: 4px solid var(--teal);
+            border-radius: 5px;
+            font-size: 0.83rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            color: var(--charcoal);
+            font-size: 0.83rem;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0 12px;
+            color: var(--dark-charcoal);
+            background: var(--white);
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .form-group input,
+        .form-group select {
+            min-height: 45px;
+        }
+
+        .form-group textarea {
+            min-height: 130px;
+            padding-top: 11px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.11);
+        }
+
+        .form-help {
+            color: var(--medium-grey);
+            font-size: 0.75rem;
+        }
+
+        .submit-button {
+            min-height: 46px;
+            grid-column: span 2;
+            margin-top: 3px;
+            color: var(--white);
+            background: var(--teal);
+            border: 0;
+            border-radius: 7px;
+            font-weight: 700;
+        }
+
+        .submit-button:hover {
+            background: var(--dark-teal);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 17px;
+            padding: 12px 14px;
+            border-radius: 7px;
+            font-size: 0.85rem;
+        }
+
+        .message.success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .message.error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .faq-prompt {
+            margin-top: 25px;
+            padding: 23px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            text-align: center;
+        }
+
+        .faq-prompt h2 {
+            margin-bottom: 6px;
+            font-size: 1.2rem;
+        }
+
+        .faq-prompt p {
+            margin-bottom: 15px;
+            color: var(--medium-grey);
+            font-size: 0.87rem;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 34px 20px 22px;
+            color: #d1d5db;
+            background: var(--dark-charcoal);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 35px;
+            padding-bottom: 25px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 13px;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .footer-brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .footer-description {
+            max-width: 360px;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 11px;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .footer-column a {
+            display: block;
+            margin-bottom: 7px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .footer-column a:hover {
+            color: #5eead4;
+        }
+
+        .copyright {
+            padding-top: 19px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            color: #9ca3af;
+            font-size: 0.84rem;
+            text-align: center;
+        }
+
+        @media (max-width: 950px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .contact-card,
+            .form-card {
+                padding: 22px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width,
+            .submit-button {
+                grid-column: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a
+                class="brand"
+                href="index.html"
+                aria-label="Masitech Accommodation home"
+            >
+                <img
+                    src="logo.jpg"
+                    alt="Masitech Accommodation logo"
+                >
+
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="faqs.html">FAQs</a>
+                <a class="active" href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">
+                    Log in
+                </a>
+
+                <a class="button button-primary" href="signup.html">
+                    Sign up
+                </a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container page-header-content">
+                <h1 id="cmsHeroTitle">Contact us</h1>
+
+                <p id="cmsHeroSubtitle">
+                    Need help with a listing, inquiry, account, or accommodation
+                    question? Our team is ready to assist.
+                </p>
+            </div>
+        </section>
+
+        <section class="contact-area">
+            <div class="container">
+                <div class="contact-grid">
+                    <section
+                        class="contact-card"
+                        aria-labelledby="contactDetailsTitle"
+                    >
+                        <div class="card-heading">
+                            <h2 id="contactDetailsTitle">
+                                Contact details
+                            </h2>
+
+                            <p id="cmsDetailsIntro">
+                                Use any of the contact options below to reach
+                                Masitech Solutions.
+                            </p>
+                        </div>
+
+                        <div class="contact-methods">
+                            <article class="contact-method">
+                                <div
+                                    class="contact-icon"
+                                    aria-hidden="true"
+                                >
+                                    ✉
+                                </div>
+
+                                <div>
+                                    <h3>Email</h3>
+
+                                    <a
+                                        id="cmsEmailLink"
+                                        href="mailto:info@masitechsolutions.com"
+                                    >
+                                        info@masitechsolutions.com
+                                    </a>
+
+                                    <p id="cmsEmailNote">
+                                        For general questions and support.
+                                    </p>
+                                </div>
+                            </article>
+
+                            <article class="contact-method">
+                                <div
+                                    class="contact-icon"
+                                    aria-hidden="true"
+                                >
+                                    ☎
+                                </div>
+
+                                <div>
+                                    <h3>Phone</h3>
+
+                                    <a id="cmsPhoneLink" href="tel:+260967717445">
+                                        +260 967 717 445
+                                    </a>
+
+                                    <p id="cmsPhoneNote">
+                                        Speak to our support team.
+                                    </p>
+                                </div>
+                            </article>
+
+                            <article class="contact-method">
+                                <div
+                                    class="contact-icon"
+                                    aria-hidden="true"
+                                >
+                                    ☎
+                                </div>
+
+                                <div>
+                                    <h3>Alternative phone</h3>
+
+                                    <a id="cmsAltPhoneLink" href="tel:+260973202617">
+                                        +260 973 202 617
+                                    </a>
+
+                                    <p id="cmsAltPhoneNote">
+                                        Additional support line.
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="contact-note" id="cmsContactNote">
+                            For property availability, pricing, viewing times,
+                            and tenancy requirements, please include the
+                            property name and location in your message.
+                        </div>
+                    </section>
+
+                    <section
+                        class="form-card"
+                        aria-labelledby="messageTitle"
+                    >
+                        <div class="card-heading">
+                            <h2 id="messageTitle">
+                                Send us a message
+                            </h2>
+
+                            <p id="cmsFormIntro">
+                                Complete the form and our team will respond using
+                                the contact details you provide.
+                            </p>
+                        </div>
+
+                        <div
+                            class="message"
+                            id="formMessage"
+                            role="status"
+                            aria-live="polite"
+                        ></div>
+
+                        <form id="contactForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fullName">
+                                        Full name
+                                    </label>
+
+                                    <input
+                                        id="fullName"
+                                        name="fullName"
+                                        type="text"
+                                        autocomplete="name"
+                                        placeholder="Enter your full name"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">
+                                        Email address
+                                    </label>
+
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autocomplete="email"
+                                        placeholder="you@example.com"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone">
+                                        Phone number
+                                    </label>
+
+                                    <input
+                                        id="phone"
+                                        name="phone"
+                                        type="tel"
+                                        autocomplete="tel"
+                                        placeholder="+260..."
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="subject">
+                                        Subject
+                                    </label>
+
+                                    <select
+                                        id="subject"
+                                        name="subject"
+                                        required
+                                    >
+                                        <option value="">
+                                            Select a subject
+                                        </option>
+
+                                        <option value="student-housing">
+                                            Student accommodation
+                                        </option>
+
+                                        <option value="apartments">
+                                            Apartments
+                                        </option>
+
+                                        <option value="listing-question">
+                                            Listing question
+                                        </option>
+
+                                        <option value="account-support">
+                                            Account support
+                                        </option>
+
+                                        <option value="caretaker-support">
+                                            Caretaker support
+                                        </option>
+
+                                        <option value="general-question">
+                                            General question
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="location">
+                                        Location
+                                        <span class="form-help">
+                                            (optional)
+                                        </span>
+                                    </label>
+
+                                    <select
+                                        id="location"
+                                        name="location"
+                                    >
+                                        <option value="">
+                                            Select a location
+                                        </option>
+
+                                        <option value="campus-a">
+                                            Campus Location A
+                                        </option>
+
+                                        <option value="campus-b">
+                                            Campus Location B
+                                        </option>
+
+                                        <option value="campus-c">
+                                            Campus Location C
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="message">
+                                        Message
+                                    </label>
+
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        placeholder="Write your message here..."
+                                        minlength="10"
+                                        required
+                                    ></textarea>
+
+                                    <span class="form-help">
+                                        Please provide at least 10 characters.
+                                    </span>
+                                </div>
+
+                                <button
+                                    class="submit-button"
+                                    id="submitButton"
+                                    type="submit"
+                                >
+                                    Send message
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <section class="faq-prompt">
+                    <h2 id="cmsFaqTitle">Have a common question?</h2>
+
+                    <p id="cmsFaqText">
+                        Visit our FAQs page for quick answers about accounts,
+                        listings, inquiries, and reviews.
+                    </p>
+
+                    <a
+                        class="button button-primary"
+                        href="faqs.html"
+                    >
+                        View FAQs
+                    </a>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a
+                        class="footer-brand"
+                        href="index.html"
+                    >
+                        <img
+                            src="logo.jpg"
+                            alt="Masitech Accommodation logo"
+                        >
+
+                        <span>Masitech Accommodation</span>
+                    </a>
+
+                    <p class="footer-description">
+                        Helping students and tenants discover suitable
+                        accommodation in convenient locations.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Explore</h3>
+
+                    <a href="student-listings.html">
+                        Student housing
+                    </a>
+
+                    <a href="apartment-listings.html">
+                        Apartments
+                    </a>
+
+                    <a href="faqs.html">
+                        FAQs
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Company</h3>
+
+                    <a href="about.html">
+                        About Us
+                    </a>
+
+                    <a href="privacy.html">
+                        Privacy Policy
+                    </a>
+
+                    <a href="terms.html">
+                        Terms and Conditions
+                    </a>
+                </div>
+            </div>
+
+            <p class="copyright">
+                © <span id="currentYear"></span>
+                Masitech Accommodation. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            onSnapshot,
+            collection,
+            addDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const menuButton = document.getElementById("menuButton");
+        const mainNav = document.getElementById("mainNav");
+        const contactForm = document.getElementById("contactForm");
+        const formMessage = document.getElementById("formMessage");
+        const submitButton = document.getElementById("submitButton");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        function setText(id, value) {
+            if (value === undefined || value === null) return;
+            const text = String(value).trim();
+            if (!text) return;
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function applyContactContent(data) {
+            if (!data) return;
+
+            const c =
+                data.contentFields && typeof data.contentFields === "object"
+                    ? data.contentFields
+                    : data;
+
+            // Header
+            setText("cmsHeroTitle", c.heroTitle);
+            setText("cmsHeroSubtitle", c.heroSubtitle);
+
+            // Details card
+            setText("contactDetailsTitle", c.detailsTitle);
+            setText("cmsDetailsIntro", c.detailsIntro);
+
+            // Email
+            if (c.email) {
+                const emailLink = document.getElementById("cmsEmailLink");
+                if (emailLink) {
+                    emailLink.textContent = c.email;
+                    emailLink.href = `mailto:${c.email}`;
+                }
+            }
+            setText("cmsEmailNote", c.emailNote);
+
+            // Phone
+            if (c.phone) {
+                const phoneLink = document.getElementById("cmsPhoneLink");
+                if (phoneLink) {
+                    phoneLink.textContent = c.phone;
+                    phoneLink.href = `tel:${String(c.phone).replace(/\s+/g, "")}`;
+                }
+            }
+            setText("cmsPhoneNote", c.phoneNote);
+
+            // Alternative phone
+            if (c.altPhone) {
+                const altLink = document.getElementById("cmsAltPhoneLink");
+                if (altLink) {
+                    altLink.textContent = c.altPhone;
+                    altLink.href = `tel:${String(c.altPhone).replace(/\s+/g, "")}`;
+                }
+            }
+            setText("cmsAltPhoneNote", c.altPhoneNote);
+
+            // Tip note
+            setText("cmsContactNote", c.contactNote);
+
+            // Form card
+            setText("messageTitle", c.formTitle);
+            setText("cmsFormIntro", c.formIntro);
+
+            // FAQ prompt
+            setText("cmsFaqTitle", c.faqTitle);
+            setText("cmsFaqText", c.faqText);
+
+            const metaDescription =
+                c.metaDescription || data.metaDescription || "";
+            if (metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", metaDescription);
+            }
+
+            if (c.heroTitle) {
+                document.title = `${c.heroTitle} | Masitech Accommodation`;
+            }
+        }
+
+        function bindContactCms() {
+            const pageRef = doc(db, "sitePages", "contact");
+
+            onSnapshot(
+                pageRef,
+                (snap) => {
+                    if (!snap.exists()) {
+                        console.info(
+                            "[Masitech] No sitePages/contact draft yet. Showing default contact content."
+                        );
+                        return;
+                    }
+
+                    applyContactContent(snap.data());
+                    console.info(
+                        "[Masitech] Contact page content loaded from admin CMS."
+                    );
+                },
+                (error) => {
+                    console.warn(
+                        "[Masitech] Could not read sitePages/contact. Check Firestore rules allow public read.",
+                        error
+                    );
+                }
+            );
+        }
+
+        if (contactForm) {
+            contactForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const fullName = document.getElementById("fullName").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const subject = document.getElementById("subject").value;
+                const message = document.getElementById("message").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const location = document.getElementById("location").value;
+
+                if (
+                    fullName.length < 2 ||
+                    !email ||
+                    !subject ||
+                    message.length < 10
+                ) {
+                    formMessage.textContent =
+                        "Please complete all required fields correctly.";
+                    formMessage.className = "message error";
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = "Sending...";
+
+                try {
+                    await addDoc(collection(db, "contactMessages"), {
+                        fullName,
+                        email,
+                        phone: phone || null,
+                        subject,
+                        location: location || null,
+                        message,
+                        status: "new",
+                        createdAt: serverTimestamp()
+                    });
+
+                    formMessage.textContent =
+                        "Thank you. Your message has been sent. We will respond using the contact details you provided.";
+                    formMessage.className = "message success";
+                    contactForm.reset();
+                } catch (error) {
+                    console.error("Contact form error:", error);
+
+                    const emailLink = document.getElementById("cmsEmailLink");
+                    const fallbackEmail =
+                        emailLink?.textContent?.trim() ||
+                        "info@masitechsolutions.com";
+
+                    const emailSubject = encodeURIComponent(
+                        `${subject} - Website contact`
+                    );
+                    const emailBody = encodeURIComponent(
+                        `Name: ${fullName}\n` +
+                            `Email: ${email}\n` +
+                            `Phone: ${phone || "Not provided"}\n` +
+                            `Location: ${location || "Not provided"}\n\n` +
+                            `Message:\n${message}`
+                    );
+
+                    window.location.href = `mailto:${fallbackEmail}?subject=${emailSubject}&body=${emailBody}`;
+
+                    formMessage.textContent =
+                        "We could not save your message online. Your email app should open as a backup.";
+                    formMessage.className = "message error";
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Send message";
+                }
+            });
+        }
+
+        bindContactCms();
+    </script>
+</body>
+</html>

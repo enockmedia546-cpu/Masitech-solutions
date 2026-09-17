@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Terms and Conditions | Masitech Accommodation</title>
+
+    <meta
+        name="description"
+        content="Read the Terms and Conditions for using Masitech Accommodation."
+    >
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 58px 0 45px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.9)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header h1 {
+            margin-bottom: 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+        }
+
+        .content-area {
+            padding: 45px 0 80px;
+        }
+
+        .terms-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            align-items: start;
+            gap: 28px;
+        }
+
+        .terms-navigation {
+            position: sticky;
+            top: 100px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .terms-navigation h2 {
+            margin-bottom: 12px;
+            color: var(--dark-charcoal);
+            font-size: 1rem;
+        }
+
+        .terms-navigation a {
+            display: block;
+            padding: 6px 0;
+            color: var(--medium-grey);
+            font-size: 0.86rem;
+            line-height: 1.4;
+        }
+
+        .terms-navigation a:hover {
+            color: var(--teal);
+        }
+
+        .terms-document {
+            padding: 36px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .last-updated {
+            margin-bottom: 30px;
+            padding: 13px 15px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border-left: 4px solid var(--teal);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .terms-document section {
+            scroll-margin-top: 100px;
+            margin-bottom: 32px;
+        }
+
+        .terms-document section:last-child {
+            margin-bottom: 0;
+        }
+
+        .terms-document h2 {
+            margin-bottom: 10px;
+            color: var(--dark-charcoal);
+            font-size: 1.35rem;
+            line-height: 1.3;
+        }
+
+        .terms-document h3 {
+            margin: 18px 0 6px;
+            color: var(--charcoal);
+            font-size: 1.05rem;
+        }
+
+        .terms-document p {
+            margin-bottom: 12px;
+            color: #4b5563;
+            font-size: 0.96rem;
+        }
+
+        .terms-document ul,
+        .terms-document ol {
+            margin: 10px 0 14px 21px;
+            color: #4b5563;
+        }
+
+        .terms-document li {
+            margin-bottom: 7px;
+            font-size: 0.95rem;
+        }
+
+        .terms-document a {
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .terms-document a:hover {
+            text-decoration: underline;
+        }
+
+        .important-notice {
+            margin: 18px 0;
+            padding: 17px;
+            color: #713f12;
+            background: #fef3c7;
+            border-left: 4px solid #d97706;
+            border-radius: 6px;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 24px 20px;
+            color: #9ca3af;
+            background: var(--dark-charcoal);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .terms-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .terms-navigation {
+                position: static;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .terms-document {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="assets/logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="privacy.html">Privacy</a>
+                <a class="active" href="terms.html">Terms</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 id="cmsHeroTitle">Terms and Conditions</h1>
+                <p id="cmsHeroSubtitle">
+                    These terms explain the rules for using Masitech Accommodation.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-area">
+            <div class="container terms-layout">
+                <aside class="terms-navigation" aria-label="Terms and conditions sections">
+                    <h2>On this page</h2>
+                    <a href="#acceptance">Acceptance</a>
+                    <a href="#platform">About the platform</a>
+                    <a href="#accounts">User accounts</a>
+                    <a href="#listings">Property listings</a>
+                    <a href="#inquiries">Inquiries and agreements</a>
+                    <a href="#reviews">Reviews and ratings</a>
+                    <a href="#acceptable-use">Acceptable use</a>
+                    <a href="#content">User content</a>
+                    <a href="#intellectual-property">Intellectual property</a>
+                    <a href="#third-party">Third-party services</a>
+                    <a href="#disclaimer">Disclaimers</a>
+                    <a href="#suspension">Suspension</a>
+                    <a href="#changes">Changes</a>
+                    <a href="#law">Governing law</a>
+                    <a href="#contact">Contact</a>
+                </aside>
+
+                <article class="terms-document">
+                    <div class="last-updated">
+                        <strong>Last updated:</strong>
+                        <span id="cmsLastUpdated">14 September 2026</span>
+                    </div>
+
+                    <div class="important-notice" id="cmsImportantNotice">
+                        <strong>Important:</strong>
+                        <span id="cmsImportantNoticeText">These Terms and Conditions are a general starting draft.
+                        The owner should have them reviewed and customized by a
+                        qualified lawyer before the platform goes live.</span>
+                    </div>
+
+                    <section id="acceptance" data-cms-section="1">
+                        <h2>1. Acceptance of these terms</h2>
+                        <p>
+                            These Terms and Conditions govern your access to and use of
+                            the Masitech Accommodation website and related services.
+                        </p>
+
+                        <p>
+                            By accessing the platform, creating an account, submitting
+                            information, or using any platform feature, you agree to
+                            follow these Terms and Conditions and the
+                            <a href="privacy.html">Privacy Policy</a>.
+                        </p>
+
+                        <p>
+                            If you do not agree with these terms, you should not use the
+                            platform.
+                        </p>
+                    </section>
+
+                    <section id="platform" data-cms-section="2">
+                        <h2>2. About the platform</h2>
+                        <p>
+                            Masitech Accommodation provides an online platform where
+                            students and other tenants can discover accommodation
+                            listings, view property information, make inquiries, and
+                            interact with relevant caretakers or property representatives.
+                        </p>
+
+                        <p>
+                            The platform may contain student boarding houses, apartments,
+                            rooms, beds, property photos, prices, availability details,
+                            amenities, conditions, reviews, announcements, and related
+                            information.
+                        </p>
+
+                        <p>
+                            Unless expressly stated otherwise, Masitech Accommodation
+                            is a platform operator and is not automatically a party to
+                            any rental, lease, booking, payment, or other agreement
+                            between a tenant and a property owner or caretaker.
+                        </p>
+                    </section>
+
+                    <section id="accounts" data-cms-section="3">
+                        <h2>3. User accounts</h2>
+                        <p>
+                            Some platform features require an account. When creating an
+                            account, you agree to provide information that is accurate,
+                            current, and complete.
+                        </p>
+
+                        <p>
+                            You are responsible for maintaining the confidentiality of
+                            your login details and for activity carried out through your
+                            account. Do not share your password with another person.
+                        </p>
+
+                        <p>
+                            You must notify us promptly if you believe that your account
+                            has been accessed without permission.
+                        </p>
+
+                        <h3>Account types</h3>
+                        <p>
+                            The platform may support students, non-student tenants,
+                            caretakers, administrators, and other account types.
+                            Access to features depends on the role assigned to an
+                            account.
+                        </p>
+
+                        <p>
+                            Caretaker and administrator accounts may require approval,
+                            verification, or creation by an authorized administrator.
+                            Users must not misrepresent their identity, position,
+                            property ownership, or authority.
+                        </p>
+                    </section>
+
+                    <section id="listings" data-cms-section="4">
+                        <h2>4. Property listings</h2>
+                        <p>
+                            Property listings may be submitted and managed by
+                            caretakers, administrators, owners, or other authorized
+                            representatives.
+                        </p>
+
+                        <p>
+                            Listing information may include availability, price,
+                            location, property condition, room type, amenities,
+                            images, house rules, and contact information.
+                        </p>
+
+                        <p>
+                            Property representatives are responsible for ensuring that
+                            the information they submit is accurate, lawful, current,
+                            and not misleading.
+                        </p>
+
+                        <p>
+                            Availability, prices, images, conditions, and other details
+                            may change. Users should confirm important information
+                            directly with the relevant caretaker or authorized property
+                            representative before making a decision.
+                        </p>
+
+                        <p>
+                            We may review, edit, reject, suspend, archive, or remove a
+                            listing where we believe it is inaccurate, outdated,
+                            misleading, unlawful, unsafe, or inconsistent with these
+                            Terms.
+                        </p>
+                    </section>
+
+                    <section id="inquiries" data-cms-section="5">
+                        <h2>5. Inquiries, applications, and agreements</h2>
+                        <p>
+                            The platform may allow users to contact caretakers or submit
+                            inquiries about properties. Sending an inquiry does not
+                            guarantee availability, approval, booking, tenancy, or a
+                            rental agreement.
+                        </p>
+
+                        <p>
+                            Any lease, tenancy, payment, deposit, viewing arrangement,
+                            move-in arrangement, or other agreement must be confirmed
+                            directly with the relevant property owner or authorized
+                            representative.
+                        </p>
+
+                        <p>
+                            Users should independently verify the identity of the person
+                            they are dealing with and should use appropriate caution
+                            before sending money, sharing sensitive information, or
+                            entering into a rental agreement.
+                        </p>
+
+                        <p>
+                            Unless expressly agreed in writing, Masitech Accommodation
+                            does not guarantee that a property will remain available or
+                            that a prospective tenant will be accepted.
+                        </p>
+                    </section>
+
+                    <section id="reviews" data-cms-section="6">
+                        <h2>6. Reviews and ratings</h2>
+                        <p>
+                            Registered users may be allowed to submit reviews or ratings
+                            for properties and, where enabled, caretakers.
+                        </p>
+
+                        <p>
+                            Reviews must be based on the user’s genuine experience and
+                            must be fair, relevant, and written in good faith.
+                        </p>
+
+                        <p>Reviews must not:</p>
+
+                        <ul>
+                            <li>Contain false, fabricated, or deliberately misleading information.</li>
+                            <li>Include threats, harassment, hate speech, or abusive language.</li>
+                            <li>Reveal another person’s private or sensitive information.</li>
+                            <li>Contain malicious software, spam, advertising, or unrelated material.</li>
+                            <li>Be submitted in exchange for payment or another improper benefit.</li>
+                            <li>Attempt to manipulate the rating of a property or caretaker.</li>
+                            <li>Impersonate another person or organization.</li>
+                            <li>Make unlawful accusations or include content that violates another person’s rights.</li>
+                        </ul>
+
+                        <p>
+                            Caretakers and property representatives must not edit a
+                            tenant’s review. They may be allowed to respond through the
+                            platform, subject to moderation rules.
+                        </p>
+
+                        <p>
+                            We may moderate, hide, remove, or restrict access to reviews
+                            that violate these Terms or applicable law. A review may
+                            remain the opinion of the user who submitted it and may not
+                            represent the views of Masitech Accommodation.
+                        </p>
+                    </section>
+
+                    <section id="acceptable-use" data-cms-section="7">
+                        <h2>7. Acceptable use</h2>
+                        <p>
+                            You agree to use the platform lawfully, respectfully, and
+                            only for its intended accommodation-related purposes.
+                        </p>
+
+                        <p>You must not:</p>
+
+                        <ul>
+                            <li>Use the platform for fraud, impersonation, harassment, or illegal activity.</li>
+                            <li>Submit false property, identity, availability, or contact information.</li>
+                            <li>Attempt to access another user’s account or private information.</li>
+                            <li>Interfere with the operation, security, or availability of the platform.</li>
+                            <li>Use automated tools to scrape, copy, overload, or monitor the platform without permission.</li>
+                            <li>Upload viruses, malicious code, or harmful files.</li>
+                            <li>Use the platform to discriminate unlawfully against another person.</li>
+                            <li>Use platform information to send unauthorized marketing or spam.</li>
+                        </ul>
+                    </section>
+
+                    <section id="content" data-cms-section="8">
+                        <h2>8. User-submitted content</h2>
+                        <p>
+                            You retain ownership of content that you lawfully submit,
+                            including reviews, comments, messages, images, and property
+                            information, subject to the rights granted below.
+                        </p>
+
+                        <p>
+                            By submitting content to the platform, you grant Masitech
+                            Accommodation a non-exclusive, worldwide, royalty-free
+                            license to host, store, reproduce, display, format, moderate,
+                            and distribute that content as reasonably necessary to
+                            operate, improve, promote, and secure the platform.
+                        </p>
+
+                        <p>
+                            You confirm that you have the necessary rights and
+                            permissions to submit the content and that its publication
+                            will not violate another person’s rights or applicable law.
+                        </p>
+
+                        <p>
+                            We may remove or restrict content that violates these Terms,
+                            the Privacy Policy, applicable law, or the safety and
+                            integrity of the platform.
+                        </p>
+                    </section>
+
+                    <section id="intellectual-property" data-cms-section="9">
+                        <h2>9. Intellectual property</h2>
+                        <p>
+                            Unless otherwise stated, the platform’s design, branding,
+                            logo, text, graphics, software, layout, and other original
+                            materials belong to Masitech Accommodation or its licensors.
+                        </p>
+
+                        <p>
+                            You may use the platform and its content for personal,
+                            lawful, accommodation-related purposes. You must not copy,
+                            reproduce, modify, distribute, sell, reverse engineer, or
+                            commercially exploit platform materials without written
+                            permission.
+                        </p>
+
+                        <p>
+                            Property names, logos, photographs, and other materials
+                            submitted by users or property representatives may belong
+                            to their respective owners.
+                        </p>
+                    </section>
+
+                    <section id="third-party" data-cms-section="10">
+                        <h2>10. Third-party services</h2>
+                        <p>
+                            The platform may rely on third-party services such as
+                            Firebase for authentication, database, hosting, or analytics,
+                            and Cloudinary for image storage and delivery.
+                        </p>
+
+                        <p>
+                            Third-party services may have their own terms, privacy
+                            policies, availability limits, and technical requirements.
+                            We are not responsible for independent third-party services
+                            outside our reasonable control.
+                        </p>
+                    </section>
+
+                    <section id="disclaimer" data-cms-section="11">
+                        <h2>11. Disclaimers and limitation of responsibility</h2>
+                        <p>
+                            The platform is provided on an “as available” basis. We aim
+                            to provide useful and current information, but we do not
+                            guarantee that the platform, listings, content, or services
+                            will always be accurate, complete, available, secure, or
+                            error-free.
+                        </p>
+
+                        <p>
+                            We do not guarantee that a property is suitable, available,
+                            safe, lawful, accurately represented, or appropriate for a
+                            particular user. Users should inspect properties and verify
+                            important information before entering into an agreement or
+                            making a payment.
+                        </p>
+
+                        <p>
+                            To the maximum extent permitted by applicable law,
+                            Masitech Accommodation is not responsible for loss,
+                            damage, fraud, injury, dispute, delay, or other harm arising
+                            from a user’s interaction with a property owner, caretaker,
+                            tenant, or other third party.
+                        </p>
+
+                        <p>
+                            Nothing in these Terms excludes or limits a responsibility
+                            that cannot lawfully be excluded or limited.
+                        </p>
+                    </section>
+
+                    <section id="suspension" data-cms-section="12">
+                        <h2>12. Suspension and termination</h2>
+                        <p>
+                            We may suspend, restrict, or terminate an account or
+                            platform access if we reasonably believe that a user has:
+                        </p>
+
+                        <ul>
+                            <li>Breached these Terms or another platform policy.</li>
+                            <li>Provided false or misleading information.</li>
+                            <li>Misused the platform or harmed another user.</li>
+                            <li>Created a security, legal, or reputational risk.</li>
+                            <li>Engaged in fraud, harassment, abuse, or unlawful conduct.</li>
+                        </ul>
+
+                        <p>
+                            Where appropriate, we may provide notice or an opportunity
+                            to respond. We may also preserve or disclose information
+                            where reasonably necessary for security, legal compliance,
+                            dispute resolution, or investigation.
+                        </p>
+                    </section>
+
+                    <section id="changes" data-cms-section="13">
+                        <h2>13. Changes to these terms</h2>
+                        <p>
+                            We may update these Terms when the platform, services,
+                            business operations, or legal requirements change.
+                        </p>
+
+                        <p>
+                            The updated version will be posted on this page with a new
+                            “Last updated” date. Where required, we will provide
+                            additional notice or request renewed acceptance.
+                        </p>
+
+                        <p>
+                            Continued use of the platform after an update may constitute
+                            acceptance of the updated Terms to the extent permitted by
+                            applicable law.
+                        </p>
+                    </section>
+
+                    <section id="law" data-cms-section="14">
+                        <h2>14. Governing law and disputes</h2>
+                        <p>
+                            These Terms and any dispute arising from the platform or
+                            services will be governed by the laws of:
+                        </p>
+
+                        <p>
+                            <strong id="cmsGoverningLaw">[Insert the applicable country and jurisdiction]</strong>
+                        </p>
+
+                        <p>
+                            Any dispute-resolution process, court jurisdiction,
+                            mediation requirement, or arbitration provision should be
+                            added here after legal review.
+                        </p>
+                    </section>
+
+                    <section id="contact" data-cms-section="15">
+                        <h2>15. Contact us</h2>
+                        <p>
+                            If you have questions about these Terms, contact:
+                        </p>
+
+                        <ul id="cmsTermsContactList">
+                            <li>Email: <a id="cmsTermsEmail" href="mailto:legal@example.com">legal@example.com</a></li>
+                            <li>Phone: <span id="cmsTermsPhone">+000 000 000 000</span></li>
+                            <li>Address: <span id="cmsTermsAddress">Add the registered business address here</span></li>
+                        </ul>
+
+                        <p>
+                            Replace the placeholder details above with the client’s
+                            official business contact information.
+                        </p>
+                    </section>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const SECTION_TITLES = {
+            1: "1. Acceptance of these terms",
+            2: "2. About the platform",
+            3: "3. User accounts",
+            4: "4. Property listings",
+            5: "5. Inquiries, applications, and agreements",
+            6: "6. Reviews and ratings",
+            7: "7. Acceptable use",
+            8: "8. User-submitted content",
+            9: "9. Intellectual property",
+            10: "10. Third-party services",
+            11: "11. Disclaimers and limitation of responsibility",
+            12: "12. Suspension and termination",
+            13: "13. Changes to these terms",
+            14: "14. Governing law and disputes",
+            15: "15. Contact us"
+        };
+
+        const menuButton = document.getElementById("menuButton");
+        const mainNav = document.getElementById("mainNav");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        function setText(id, value) {
+            if (value === undefined || value === null) return;
+            const text = String(value).trim();
+            if (!text) return;
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        /**
+         * Admin plain text → HTML
+         * - Blank line = new paragraph
+         * - Lines starting with - or • = list items
+         * - Short title-like lines = h3 subheadings
+         */
+        function textToHtml(text) {
+            if (!text) return "";
+
+            const lines = String(text).replace(/\r/g, "").split("\n");
+            let html = "";
+            let inList = false;
+            let paragraphLines = [];
+
+            const flushList = () => {
+                if (inList) {
+                    html += "</ul>";
+                    inList = false;
+                }
+            };
+
+            const flushParagraph = () => {
+                if (paragraphLines.length) {
+                    html += `<p>${escapeHtml(paragraphLines.join(" "))}</p>`;
+                    paragraphLines = [];
+                }
+            };
+
+            for (const raw of lines) {
+                const line = raw.trim();
+
+                if (!line) {
+                    flushList();
+                    flushParagraph();
+                    continue;
+                }
+
+                if (/^[-•]\s+/.test(line)) {
+                    flushParagraph();
+                    const item = line.replace(/^[-•]\s+/, "");
+                    if (!inList) {
+                        html += "<ul>";
+                        inList = true;
+                    }
+                    html += `<li>${escapeHtml(item)}</li>`;
+                    continue;
+                }
+
+                if (
+                    line.length <= 60 &&
+                    !line.includes(".") &&
+                    !line.includes(":") &&
+                    /^[A-Za-z0-9]/.test(line)
+                ) {
+                    flushList();
+                    flushParagraph();
+                    html += `<h3>${escapeHtml(line)}</h3>`;
+                    continue;
+                }
+
+                flushList();
+                paragraphLines.push(line);
+            }
+
+            flushList();
+            flushParagraph();
+            return html;
+        }
+
+        function renderSection(sectionNumber, bodyText, fields) {
+            const section = document.querySelector(
+                `[data-cms-section="${sectionNumber}"]`
+            );
+            if (!section) return;
+
+            const title =
+                SECTION_TITLES[sectionNumber] ||
+                section.querySelector("h2")?.textContent ||
+                `Section ${sectionNumber}`;
+
+            let html = `<h2>${escapeHtml(title)}</h2>`;
+            html += textToHtml(bodyText);
+
+            if (sectionNumber === 14 && fields.governingLaw) {
+                html += `<p><strong id="cmsGoverningLaw">${escapeHtml(
+                    fields.governingLaw
+                )}</strong></p>`;
+            }
+
+            if (sectionNumber === 15) {
+                const email = fields.contactEmail || "legal@example.com";
+                const phone = fields.contactPhone || "";
+                const address = fields.contactAddress || "";
+
+                html += `
+                    <ul id="cmsTermsContactList">
+                        <li>
+                            Email:
+                            <a id="cmsTermsEmail" href="mailto:${escapeHtml(email)}">
+                                ${escapeHtml(email)}
+                            </a>
+                        </li>
+                        <li>
+                            Phone:
+                            <span id="cmsTermsPhone">${escapeHtml(phone)}</span>
+                        </li>
+                        <li>
+                            Address:
+                            <span id="cmsTermsAddress">${escapeHtml(address)}</span>
+                        </li>
+                    </ul>
+                `;
+            }
+
+            section.innerHTML = html;
+        }
+
+        function applyTermsContent(data) {
+            if (!data) return;
+
+            const c =
+                data.contentFields && typeof data.contentFields === "object"
+                    ? data.contentFields
+                    : data;
+
+            setText("cmsHeroTitle", c.heroTitle);
+            setText("cmsHeroSubtitle", c.heroSubtitle);
+            setText("cmsLastUpdated", c.lastUpdated);
+
+            // Important notice (amber box)
+            const noticeEl =
+                document.getElementById("cmsImportantNoticeText") ||
+                document.querySelector(".important-notice");
+            if (noticeEl && c.importantNotice) {
+                if (noticeEl.id === "cmsImportantNoticeText") {
+                    noticeEl.textContent = c.importantNotice;
+                } else {
+                    noticeEl.innerHTML =
+                        "<strong>Important:</strong> " +
+                        escapeHtml(c.importantNotice);
+                }
+            }
+
+            const metaDescription =
+                c.metaDescription || data.metaDescription || "";
+            if (metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", metaDescription);
+            }
+
+            if (c.heroTitle) {
+                document.title = `${c.heroTitle} | Masitech Accommodation`;
+            }
+
+            for (let i = 1; i <= 15; i += 1) {
+                const body = c[`sec${i}`];
+                if (body) {
+                    renderSection(i, body, c);
+                }
+            }
+
+            // Contact fallback if section 15 body was empty but contacts exist
+            if (c.contactEmail) {
+                const a = document.getElementById("cmsTermsEmail");
+                if (a) {
+                    a.textContent = c.contactEmail;
+                    a.href = `mailto:${c.contactEmail}`;
+                }
+            }
+            setText("cmsTermsPhone", c.contactPhone);
+            setText("cmsTermsAddress", c.contactAddress);
+            setText("cmsGoverningLaw", c.governingLaw);
+        }
+
+        function bindTermsCms() {
+            const pageRef = doc(db, "sitePages", "terms");
+
+            onSnapshot(
+                pageRef,
+                (snap) => {
+                    if (!snap.exists()) {
+                        console.info(
+                            "[Masitech] No sitePages/terms draft yet. Showing default terms content."
+                        );
+                        return;
+                    }
+
+                    applyTermsContent(snap.data());
+                    console.info(
+                        "[Masitech] Terms content loaded from admin CMS."
+                    );
+                },
+                (error) => {
+                    console.warn(
+                        "[Masitech] Could not read sitePages/terms. Check Firestore rules allow public read.",
+                        error
+                    );
+                }
+            );
+        }
+
+        bindTermsCms();
+    </script>
+</body>
+</html>

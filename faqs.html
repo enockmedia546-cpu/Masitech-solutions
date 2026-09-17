@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FAQs | Masitech Accommodation</title>
+
+    <meta
+        name="description"
+        content="Find answers to common questions about Masitech Accommodation, listings, accounts, properties, and inquiries."
+    >
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 65px 0 54px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.9)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header-content {
+            max-width: 760px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 12px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.15;
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+            font-size: 1.05rem;
+        }
+
+        .faq-area {
+            padding: 48px 0 80px;
+        }
+
+        .faq-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-wrapper label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 14px 0 42px;
+            color: var(--dark-charcoal);
+            background: var(--white);
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: var(--medium-grey);
+            transform: translateY(-50%);
+        }
+
+        .faq-category {
+            margin-bottom: 37px;
+        }
+
+        .faq-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-heading {
+            margin-bottom: 14px;
+            color: var(--dark-charcoal);
+            font-size: 1.45rem;
+        }
+
+        .faq-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            box-shadow: 0 3px 12px rgba(31, 41, 55, 0.03);
+        }
+
+        .faq-item[open] {
+            border-color: rgba(15, 118, 110, 0.45);
+        }
+
+        .faq-item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 18px 20px;
+            color: var(--dark-charcoal);
+            cursor: pointer;
+            list-style: none;
+            font-weight: 700;
+        }
+
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-item summary::after {
+            flex-shrink: 0;
+            color: var(--teal);
+            content: "+";
+            font-size: 1.35rem;
+            font-weight: 400;
+        }
+
+        .faq-item[open] summary::after {
+            content: "−";
+        }
+
+        .faq-answer {
+            padding: 0 20px 19px;
+            color: var(--medium-grey);
+            font-size: 0.94rem;
+        }
+
+        .faq-answer p {
+            margin-bottom: 10px;
+        }
+
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .faq-answer a {
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            display: none;
+            padding: 38px 20px;
+            color: var(--medium-grey);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .contact-card {
+            margin-top: 48px;
+            padding: 34px;
+            color: var(--white);
+            background: var(--teal);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .contact-card h2 {
+            margin-bottom: 9px;
+            font-size: 1.7rem;
+        }
+
+        .contact-card p {
+            margin-bottom: 20px;
+            color: #ccfbf1;
+        }
+
+        .contact-card .button {
+            color: var(--teal);
+            background: var(--white);
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 24px 20px;
+            color: #9ca3af;
+            background: var(--dark-charcoal);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .faq-tools {
+                padding: 15px;
+            }
+
+            .faq-item summary {
+                padding: 16px;
+                font-size: 0.94rem;
+            }
+
+            .faq-answer {
+                padding: 0 16px 17px;
+            }
+
+            .contact-card {
+                padding: 27px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="assets/logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a class="active" href="faqs.html">FAQs</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container page-header-content">
+                <h1 id="cmsHeroTitle">Frequently Asked Questions</h1>
+                <p id="cmsHeroSubtitle">
+                    Find quick answers about listings, accounts, locations,
+                    inquiries, reviews, and caretaker support.
+                </p>
+            </div>
+        </section>
+
+        <section class="faq-area">
+            <div class="container">
+                <div class="faq-tools">
+                    <div class="search-wrapper">
+                        <label for="faqSearch">Search frequently asked questions</label>
+                        <span class="search-icon" aria-hidden="true">⌕</span>
+                        <input
+                            id="faqSearch"
+                            type="search"
+                            placeholder="Search questions..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <button
+                        class="button button-outline"
+                        id="toggleAllButton"
+                        type="button"
+                    >
+                        Open all
+                    </button>
+                </div>
+
+                <div id="faqContent">
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">General questions</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>What is Masitech Accommodation?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Masitech Accommodation is a platform for
+                                        discovering student boarding houses and private
+                                        apartments in different locations.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Who can use the platform?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Students can browse student accommodation,
+                                        while non-student tenants can browse apartments.
+                                        Visitors can view public listings, while an
+                                        account may be required for inquiries, reviews,
+                                        or other features.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Which locations are available?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Available locations are shown in the location
+                                        selector and listing filters. The owner or
+                                        administrator can add, edit, or remove locations
+                                        as the accommodation network changes.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Does the platform guarantee accommodation?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        No. The platform displays accommodation
+                                        information and helps users make inquiries.
+                                        Availability, approval, pricing, viewing
+                                        arrangements, and tenancy agreements must be
+                                        confirmed with the relevant property
+                                        representative.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Listings and properties</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>How do I find a student boarding house?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Select the student listings page, choose a
+                                        location, and use the search or sorting options
+                                        to compare available boarding houses.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>How do I find an apartment?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Open the apartments page, select your preferred
+                                        location, and compare available apartments using
+                                        the search and sorting controls.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>What information is shown on a listing?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        A listing may show photos, property name,
+                                        location, price, room or unit type, condition,
+                                        amenities, availability, ratings, reviews, and
+                                        caretaker contact information.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Why can a listing disappear?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        A listing may be hidden because it is occupied,
+                                        reserved, under maintenance, outdated, awaiting
+                                        approval, or removed by an authorized
+                                        administrator.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Can I trust every detail in a listing?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Users should confirm important details directly
+                                        with the relevant caretaker or property
+                                        representative. Prices, condition, availability,
+                                        and amenities may change.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Accounts and login</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>Do I need an account to browse listings?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Public listings may be browsed without an
+                                        account. An account may be required to submit
+                                        inquiries, save properties, submit reviews, or
+                                        access dashboard features.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>What account types can I create?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Public registration is available for students
+                                        and non-student tenants. Caretaker and
+                                        administrator accounts should be created or
+                                        approved by authorized administrators.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>What if I forget my password?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Use the
+                                        <a href="forgot-password.html">Forgot Password</a>
+                                        page and enter the email address connected to
+                                        your account.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Why do I need to select a location?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Location selection helps organize listings and
+                                        show accommodation information relevant to the
+                                        campus or area where you want to live.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Inquiries and tenancy</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>How do I contact a caretaker?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Open the property details page and use the
+                                        available inquiry or contact option. You may
+                                        need to log in before submitting an inquiry.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Does submitting an inquiry reserve a room?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        No. An inquiry is a request for information or
+                                        communication. It does not automatically reserve
+                                        a room, apartment, or bed.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Where do I confirm rent and availability?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Confirm current rent, availability, deposits,
+                                        viewing times, house rules, and tenancy
+                                        requirements with the relevant caretaker or
+                                        authorized property representative.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Does the platform process rental payments?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Payment functionality depends on the features
+                                        enabled by the owner. Unless the platform
+                                        clearly states otherwise, do not assume that
+                                        the platform processes rent, deposits, or
+                                        booking payments.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Reviews and ratings</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>Who can submit a review?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Registered users may submit reviews where the
+                                        feature is enabled. The platform may later
+                                        require evidence of an inquiry, application, or
+                                        tenancy before accepting a review.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Can a caretaker edit my review?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        No. Caretakers should not edit tenant reviews.
+                                        They may be allowed to respond, while
+                                        administrators may moderate content that
+                                        violates platform rules.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>What should I include in a review?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Reviews should be honest, relevant, respectful,
+                                        and based on your genuine experience. Do not
+                                        publish private information, threats, spam, or
+                                        deliberately false claims.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Caretaker questions</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>What does a caretaker do?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        A caretaker may manage assigned properties,
+                                        update availability, maintain listing details,
+                                        respond to inquiries, and report operational
+                                        issues to administrators.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Can a caretaker manage every location?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        No. Caretaker access should be limited to the
+                                        locations and properties assigned to that
+                                        caretaker by an authorized administrator.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>Can caretakers edit tenant reviews?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        No. Caretakers should not edit or delete tenant
+                                        reviews. Review moderation should be controlled
+                                        by authorized administrators.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">Privacy and security</h2>
+
+                        <div class="faq-list">
+                            <details class="faq-item">
+                                <summary>How is my information used?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Information may be used to manage your account,
+                                        show relevant listings, process inquiries,
+                                        provide support, improve the platform, and
+                                        protect against misuse. Read the
+                                        <a href="privacy.html">Privacy Policy</a>
+                                        for more information.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>How can I request help with my information?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Contact the platform using the details on the
+                                        <a href="contact.html">Contact page</a> and
+                                        describe your request.
+                                    </p>
+                                </div>
+                            </details>
+
+                            <details class="faq-item">
+                                <summary>How do I report suspicious activity?</summary>
+                                <div class="faq-answer">
+                                    <p>
+                                        Contact the platform promptly with the listing,
+                                        account, or message details. Do not send money
+                                        or share sensitive information until the matter
+                                        has been investigated.
+                                    </p>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="no-results" id="noResults">
+                    No questions match your search. Try a different search term or
+                    contact us for assistance.
+                </div>
+
+                <section class="contact-card">
+                    <h2 id="cmsContactTitle">Still have a question?</h2>
+                    <p id="cmsContactText">
+                        Contact our team if you need help that is not covered here.
+                    </p>
+                    <a class="button" href="contact.html">Contact us</a>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const menuButton = document.getElementById("menuButton");
+        const mainNav = document.getElementById("mainNav");
+        const faqSearch = document.getElementById("faqSearch");
+        const toggleAllButton = document.getElementById("toggleAllButton");
+        const noResults = document.getElementById("noResults");
+        const faqContent = document.getElementById("faqContent");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        function setText(id, value) {
+            if (value === undefined || value === null) return;
+            const text = String(value).trim();
+            if (!text) return;
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        /**
+         * Admin FAQs format (one item per line):
+         * Category | Question | Answer
+         */
+        function parseFaqItems(itemsText) {
+            const groups = new Map();
+
+            String(itemsText || "")
+                .replace(/\r/g, "")
+                .split("\n")
+                .forEach((line) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return;
+
+                    const parts = trimmed.split("|").map((part) => part.trim());
+                    if (parts.length < 3) return;
+
+                    const category = parts[0];
+                    const question = parts[1];
+                    const answer = parts.slice(2).join("|").trim();
+
+                    if (!category || !question || !answer) return;
+
+                    if (!groups.has(category)) {
+                        groups.set(category, []);
+                    }
+
+                    groups.get(category).push({ question, answer });
+                });
+
+            return groups;
+        }
+
+        function renderFaqs(itemsText) {
+            if (!faqContent || !itemsText) return;
+
+            const groups = parseFaqItems(itemsText);
+            if (groups.size === 0) return;
+
+            let html = "";
+
+            groups.forEach((items, category) => {
+                html += `
+                    <section class="faq-category" data-category>
+                        <h2 class="category-heading">${escapeHtml(category)}</h2>
+                        <div class="faq-list">
+                `;
+
+                items.forEach((item) => {
+                    html += `
+                        <details class="faq-item">
+                            <summary>${escapeHtml(item.question)}</summary>
+                            <div class="faq-answer">
+                                <p>${escapeHtml(item.answer)}</p>
+                            </div>
+                        </details>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </section>
+                `;
+            });
+
+            faqContent.innerHTML = html;
+            bindFaqInteractions();
+        }
+
+        function bindFaqInteractions() {
+            const faqItems = Array.from(document.querySelectorAll(".faq-item"));
+            const faqCategories = Array.from(
+                document.querySelectorAll("[data-category]")
+            );
+
+            if (toggleAllButton) {
+                toggleAllButton.textContent = "Open all";
+            }
+
+            if (faqSearch) {
+                faqSearch.oninput = () => {
+                    const searchTerm = faqSearch.value.trim().toLowerCase();
+                    let visibleItemCount = 0;
+
+                    faqItems.forEach((item) => {
+                        const matches = item.textContent
+                            .toLowerCase()
+                            .includes(searchTerm);
+
+                        item.style.display = matches ? "" : "none";
+
+                        if (matches) {
+                            visibleItemCount += 1;
+                        }
+                    });
+
+                    faqCategories.forEach((category) => {
+                        const visibleItems = category.querySelectorAll(
+                            ".faq-item:not([style*='display: none'])"
+                        );
+                        category.style.display =
+                            visibleItems.length > 0 ? "" : "none";
+                    });
+
+                    if (noResults) {
+                        noResults.style.display =
+                            visibleItemCount === 0 ? "block" : "none";
+                    }
+
+                    if (searchTerm) {
+                        faqItems.forEach((item) => {
+                            if (item.style.display !== "none") {
+                                item.open = true;
+                            }
+                        });
+                    }
+                };
+            }
+
+            if (toggleAllButton) {
+                toggleAllButton.onclick = () => {
+                    const shouldOpen = faqItems.some((item) => !item.open);
+
+                    faqItems.forEach((item) => {
+                        if (item.style.display !== "none") {
+                            item.open = shouldOpen;
+                        }
+                    });
+
+                    toggleAllButton.textContent = shouldOpen
+                        ? "Close all"
+                        : "Open all";
+                };
+            }
+
+            faqItems.forEach((item) => {
+                item.addEventListener("toggle", () => {
+                    const visibleItems = faqItems.filter(
+                        (faqItem) => faqItem.style.display !== "none"
+                    );
+
+                    const allVisibleOpen =
+                        visibleItems.length > 0 &&
+                        visibleItems.every((faqItem) => faqItem.open);
+
+                    if (toggleAllButton) {
+                        toggleAllButton.textContent = allVisibleOpen
+                            ? "Close all"
+                            : "Open all";
+                    }
+                });
+            });
+        }
+
+        function applyFaqsContent(data) {
+            if (!data) return;
+
+            const c =
+                data.contentFields && typeof data.contentFields === "object"
+                    ? data.contentFields
+                    : data;
+
+            setText("cmsHeroTitle", c.heroTitle);
+            setText("cmsHeroSubtitle", c.heroSubtitle);
+            setText("cmsContactTitle", c.contactTitle);
+            setText("cmsContactText", c.contactText);
+
+            const metaDescription =
+                c.metaDescription || data.metaDescription || "";
+            if (metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", metaDescription);
+            }
+
+            if (c.heroTitle) {
+                document.title = `${c.heroTitle} | Masitech Accommodation`;
+            }
+
+            if (c.itemsText) {
+                renderFaqs(c.itemsText);
+            } else {
+                bindFaqInteractions();
+            }
+        }
+
+        function bindFaqsCms() {
+            const pageRef = doc(db, "sitePages", "faqs");
+
+            onSnapshot(
+                pageRef,
+                (snap) => {
+                    if (!snap.exists()) {
+                        console.info(
+                            "[Masitech] No sitePages/faqs draft yet. Showing default FAQ content."
+                        );
+                        bindFaqInteractions();
+                        return;
+                    }
+
+                    applyFaqsContent(snap.data());
+                    console.info(
+                        "[Masitech] FAQs content loaded from admin CMS."
+                    );
+                },
+                (error) => {
+                    console.warn(
+                        "[Masitech] Could not read sitePages/faqs. Check Firestore rules allow public read.",
+                        error
+                    );
+                    bindFaqInteractions();
+                }
+            );
+        }
+
+        bindFaqsCms();
+    </script>
+</body>
+</html>

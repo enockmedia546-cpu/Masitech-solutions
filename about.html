@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About Us | Masitech Accommodation</title>
+
+    <meta
+        name="description"
+        content="Learn about Masitech Accommodation and how we help students and tenants find suitable boarding houses and apartments."
+    >
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 65px 0 54px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.9)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header-content {
+            max-width: 760px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 12px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.15;
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+            font-size: 1.05rem;
+        }
+
+        .content-area {
+            padding: 48px 0 80px;
+        }
+
+        .intro-card,
+        .section-card {
+            margin-bottom: 24px;
+            padding: 28px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .intro-card h2,
+        .section-card h2 {
+            margin-bottom: 10px;
+            color: var(--dark-charcoal);
+            font-size: 1.45rem;
+        }
+
+        .intro-card p,
+        .section-card p {
+            margin-bottom: 12px;
+            color: #4b5563;
+            font-size: 0.96rem;
+        }
+
+        .intro-card p:last-child,
+        .section-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .value-card {
+            padding: 20px;
+            background: var(--light-grey);
+            border-radius: 10px;
+        }
+
+        .value-card h3 {
+            margin-bottom: 8px;
+            color: var(--dark-charcoal);
+            font-size: 1.05rem;
+        }
+
+        .value-card p {
+            margin: 0;
+            color: var(--medium-grey);
+            font-size: 0.9rem;
+        }
+
+        .audience-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .audience-item {
+            padding: 16px;
+            background: #f0fdfa;
+            border-left: 4px solid var(--teal);
+            border-radius: 6px;
+        }
+
+        .audience-item h3 {
+            margin-bottom: 6px;
+            font-size: 0.98rem;
+        }
+
+        .audience-item p {
+            margin: 0;
+            color: var(--medium-grey);
+            font-size: 0.88rem;
+        }
+
+        .cta-banner {
+            margin-top: 28px;
+            padding: 34px;
+            color: var(--white);
+            background: var(--teal);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .cta-banner h2 {
+            margin-bottom: 9px;
+            font-size: 1.6rem;
+        }
+
+        .cta-banner p {
+            margin-bottom: 18px;
+            color: #ccfbf1;
+        }
+
+        .cta-banner .button {
+            color: var(--teal);
+            background: var(--white);
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 34px 20px 22px;
+            color: #d1d5db;
+            background: var(--dark-charcoal);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 35px;
+            padding-bottom: 25px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 13px;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .footer-brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .footer-description {
+            max-width: 360px;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 11px;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .footer-column a {
+            display: block;
+            margin-bottom: 7px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .footer-column a:hover {
+            color: #5eead4;
+        }
+
+        .copyright {
+            padding-top: 19px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            color: #9ca3af;
+            font-size: 0.84rem;
+            text-align: center;
+        }
+
+        @media (max-width: 950px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .values-grid,
+            .audience-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .intro-card,
+            .section-card,
+            .cta-banner {
+                padding: 22px 18px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a class="active" href="about.html">About Us</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container page-header-content">
+                <h1 id="cmsHeroTitle">About Masitech Accommodation</h1>
+                <p id="cmsHeroSubtitle">
+                    We help students and tenants discover suitable boarding houses
+                    and apartments in convenient locations.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-area">
+            <div class="container">
+                <article class="intro-card">
+                    <h2 id="cmsMissionTitle">Our mission</h2>
+                    <p id="cmsMissionText">
+                        Finding a place to stay should not be confusing or stressful.
+                        Masitech Accommodation brings student boarding houses and
+                        private apartments into one clear platform so people can
+                        compare options, understand key details, and contact the
+                        right caretaker more easily.
+                    </p>
+                </article>
+
+                <article class="section-card">
+                    <h2 id="cmsWhatTitle">What we do</h2>
+                    <p id="cmsWhatText">
+                        We provide an online space where accommodation listings are
+                        organised by location and type. Visitors can explore student
+                        housing and apartments, review property information, and make
+                        inquiries. Caretakers manage assigned properties, while
+                        administrators oversee the platform, approvals, and quality
+                        of information.
+                    </p>
+                </article>
+
+                <article class="section-card">
+                    <h2 id="cmsWhoTitle">Who we serve</h2>
+                    <div class="audience-list">
+                        <div class="audience-item">
+                            <h3 id="cmsAudience1Title">Students</h3>
+                            <p id="cmsAudience1Text">
+                                Browse boarding houses near campus, compare rooms and
+                                availability, and contact caretakers about options that
+                                fit your needs.
+                            </p>
+                        </div>
+                        <div class="audience-item">
+                            <h3 id="cmsAudience2Title">Tenants</h3>
+                            <p id="cmsAudience2Text">
+                                Discover private apartments for individuals, couples,
+                                families, and other non-student tenants in selected areas.
+                            </p>
+                        </div>
+                        <div class="audience-item">
+                            <h3 id="cmsAudience3Title">Caretakers</h3>
+                            <p id="cmsAudience3Text">
+                                Manage assigned properties, keep listing details current,
+                                and respond to inquiries from interested students and tenants.
+                            </p>
+                        </div>
+                        <div class="audience-item">
+                            <h3 id="cmsAudience4Title">Administrators</h3>
+                            <p id="cmsAudience4Text">
+                                Oversee users, locations, property approvals, reviews, and
+                                platform content so the service stays organised and reliable.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="section-card">
+                    <h2 id="cmsValuesTitle">What guides us</h2>
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <h3 id="cmsValue1Title">Clarity</h3>
+                            <p id="cmsValue1Text">
+                                Listings should show useful details such as location,
+                                availability, pricing, and amenities in a straightforward way.
+                            </p>
+                        </div>
+                        <div class="value-card">
+                            <h3 id="cmsValue2Title">Local connection</h3>
+                            <p id="cmsValue2Text">
+                                Accommodation is managed through local caretakers who
+                                understand the properties and can respond to practical questions.
+                            </p>
+                        </div>
+                        <div class="value-card">
+                            <h3 id="cmsValue3Title">Responsible platform use</h3>
+                            <p id="cmsValue3Text">
+                                We encourage accurate information, respectful communication,
+                                and careful decisions before any tenancy or payment agreement.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="section-card">
+                    <h2 id="cmsNoteTitle">A note about agreements</h2>
+                    <p id="cmsNoteText">
+                        Masitech Accommodation is a discovery and inquiry platform.
+                        Rental terms, deposits, viewing arrangements, and final acceptance
+                        are confirmed directly with the relevant property representative
+                        or caretaker. Always verify important details before making a
+                        commitment.
+                    </p>
+                </article>
+
+                <section class="cta-banner">
+                    <h2 id="cmsCtaTitle">Looking for a place to stay?</h2>
+                    <p id="cmsCtaText">
+                        Explore student housing and apartments, or contact us if you need help.
+                    </p>
+                    <a class="button" href="contact.html" id="cmsCtaButton">Contact us</a>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a class="footer-brand" href="index.html">
+                        <img src="logo.jpg" alt="Masitech Accommodation logo">
+                        <span>Masitech Accommodation</span>
+                    </a>
+                    <p class="footer-description" id="cmsFooterDesc">
+                        Helping students and tenants discover suitable accommodation
+                        in convenient locations.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Explore</h3>
+                    <a href="student-listings.html">Student housing</a>
+                    <a href="apartment-listings.html">Apartments</a>
+                    <a href="faqs.html">FAQs</a>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <a href="about.html">About Us</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms and Conditions</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+
+            <p class="copyright">
+                © <span id="currentYear"></span>
+                Masitech Accommodation. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getFirestore,
+            doc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const menuButton = document.getElementById("menuButton");
+        const mainNav = document.getElementById("mainNav");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        function setText(id, value) {
+            if (value === undefined || value === null) return;
+            const text = String(value).trim();
+            if (!text) return;
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function applyAboutContent(data) {
+            if (!data) return;
+
+            const c =
+                data.contentFields && typeof data.contentFields === "object"
+                    ? data.contentFields
+                    : data;
+
+            const map = {
+                cmsHeroTitle: c.heroTitle,
+                cmsHeroSubtitle: c.heroSubtitle,
+                cmsMissionTitle: c.missionTitle,
+                cmsMissionText: c.missionText,
+                cmsWhatTitle: c.whatTitle,
+                cmsWhatText: c.whatText,
+                cmsWhoTitle: c.whoTitle,
+                cmsAudience1Title: c.audience1Title,
+                cmsAudience1Text: c.audience1Text,
+                cmsAudience2Title: c.audience2Title,
+                cmsAudience2Text: c.audience2Text,
+                cmsAudience3Title: c.audience3Title,
+                cmsAudience3Text: c.audience3Text,
+                cmsAudience4Title: c.audience4Title,
+                cmsAudience4Text: c.audience4Text,
+                cmsValuesTitle: c.valuesTitle,
+                cmsValue1Title: c.value1Title,
+                cmsValue1Text: c.value1Text,
+                cmsValue2Title: c.value2Title,
+                cmsValue2Text: c.value2Text,
+                cmsValue3Title: c.value3Title,
+                cmsValue3Text: c.value3Text,
+                cmsNoteTitle: c.noteTitle,
+                cmsNoteText: c.noteText,
+                cmsCtaTitle: c.ctaTitle,
+                cmsCtaText: c.ctaText,
+                cmsCtaButton: c.ctaButton,
+                cmsFooterDesc: c.footerDesc
+            };
+
+            Object.entries(map).forEach(([id, value]) => setText(id, value));
+
+            const metaDescription =
+                c.metaDescription || data.metaDescription || "";
+            if (metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", metaDescription);
+            }
+
+            if (c.heroTitle) {
+                document.title = `${c.heroTitle} | Masitech Accommodation`;
+            }
+        }
+
+        function bindAboutCms() {
+            const pageRef = doc(db, "sitePages", "about");
+
+            onSnapshot(
+                pageRef,
+                (snap) => {
+                    if (!snap.exists()) {
+                        console.info(
+                            "[Masitech] No sitePages/about draft yet. Showing default about content."
+                        );
+                        return;
+                    }
+
+                    applyAboutContent(snap.data());
+                    console.info(
+                        "[Masitech] About page content loaded from admin CMS."
+                    );
+                },
+                (error) => {
+                    console.warn(
+                        "[Masitech] Could not read sitePages/about. Check Firestore rules allow public read.",
+                        error
+                    );
+                }
+            );
+        }
+
+        bindAboutCms();
+    </script>
+</body>
+</html>

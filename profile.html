@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | Masitech Accommodation</title>
+
+    <style>
+        :root {
+            --charcoal: #374151;
+            --dark-charcoal: #1f2937;
+            --teal: #0f766e;
+            --dark-teal: #0b625c;
+            --light-grey: #f3f4f6;
+            --medium-grey: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --amber: #d97706;
+            --red: #dc2626;
+            --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 21px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 41px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .button-primary {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .button-primary:hover {
+            background: var(--dark-teal);
+        }
+
+        .button-outline {
+            color: var(--charcoal);
+            background: var(--white);
+            border-color: var(--border);
+        }
+
+        .button-outline:hover {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .button-danger {
+            color: var(--red);
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .button-danger:hover {
+            color: var(--white);
+            background: var(--red);
+        }
+
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 55px 0 42px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.89), rgba(31, 41, 55, 0.89)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header h1 {
+            margin-bottom: 9px;
+            font-size: clamp(2rem, 4vw, 2.9rem);
+        }
+
+        .page-header p {
+            color: #e5e7eb;
+        }
+
+        .profile-area {
+            padding: 38px 0 75px;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 270px 1fr;
+            align-items: start;
+            gap: 23px;
+        }
+
+        .profile-summary {
+            padding: 25px 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            display: grid;
+            width: 92px;
+            height: 92px;
+            place-items: center;
+            margin: 0 auto 14px;
+            color: var(--white);
+            background: var(--teal);
+            border-radius: 50%;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .profile-summary h2 {
+            margin-bottom: 5px;
+            color: var(--dark-charcoal);
+            font-size: 1.15rem;
+        }
+
+        .profile-summary p {
+            margin-bottom: 13px;
+            color: var(--medium-grey);
+            font-size: 0.83rem;
+            word-break: break-word;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            padding: 5px 10px;
+            color: #115e59;
+            background: #ccfbf1;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .account-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 15px;
+            color: var(--green);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+        }
+
+        .profile-content {
+            display: grid;
+            gap: 20px;
+        }
+
+        .profile-card {
+            padding: 25px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.04);
+        }
+
+        .profile-card-header {
+            margin-bottom: 22px;
+        }
+
+        .profile-card-header h2 {
+            margin-bottom: 4px;
+            color: var(--dark-charcoal);
+            font-size: 1.2rem;
+        }
+
+        .profile-card-header p {
+            color: var(--medium-grey);
+            font-size: 0.84rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            color: var(--charcoal);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            min-height: 45px;
+            padding: 0 12px;
+            color: var(--dark-charcoal);
+            background: var(--white);
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        .form-group input[readonly],
+        .form-group select:disabled {
+            color: var(--medium-grey);
+            background: #f9fafb;
+            cursor: not-allowed;
+        }
+
+        .help-text {
+            color: var(--medium-grey);
+            font-size: 0.75rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            grid-column: span 2;
+            margin-top: 4px;
+        }
+
+        .role-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .role-item {
+            padding: 6px 10px;
+            color: #115e59;
+            background: #ccfbf1;
+            border: 1px solid #99f6e4;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .permission-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .permission-item {
+            padding: 5px 8px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border-radius: 5px;
+            font-size: 0.72rem;
+        }
+
+        .security-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .security-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .security-row:last-child {
+            border-bottom: 0;
+        }
+
+        .security-row h3 {
+            margin-bottom: 3px;
+            color: var(--charcoal);
+            font-size: 0.9rem;
+        }
+
+        .security-row p {
+            color: var(--medium-grey);
+            font-size: 0.78rem;
+        }
+
+        .security-row .button {
+            flex-shrink: 0;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 16px;
+            padding: 11px 13px;
+            border-radius: 7px;
+            font-size: 0.84rem;
+        }
+
+        .message.success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .message.error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+
+        .role-actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .role-action-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 16px;
+            background: #f0fdfa;
+            border: 1px solid #99f6e4;
+            border-radius: 10px;
+        }
+
+        .role-action-card h3 {
+            margin-bottom: 3px;
+            color: var(--dark-charcoal);
+            font-size: 0.92rem;
+        }
+
+        .role-action-card p {
+            color: var(--medium-grey);
+            font-size: 0.78rem;
+        }
+
+        .role-action-card .button {
+            flex-shrink: 0;
+        }
+
+        .ratings-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .rating-stat {
+            min-width: 120px;
+            padding: 14px 16px;
+            background: var(--light-grey);
+            border-radius: 10px;
+        }
+
+        .rating-stat span {
+            display: block;
+            color: var(--medium-grey);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .rating-stat strong {
+            display: block;
+            margin-top: 6px;
+            color: var(--dark-charcoal);
+            font-size: 1.4rem;
+        }
+
+        .review-card {
+            padding: 16px;
+            margin-bottom: 10px;
+            background: var(--light-grey);
+            border-radius: 9px;
+        }
+
+        .review-card h3 {
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        .review-card p {
+            color: var(--medium-grey);
+            font-size: 0.82rem;
+        }
+
+        .review-card small {
+            color: var(--medium-grey);
+            font-size: 0.72rem;
+        }
+
+        .loading-state {
+            padding: 45px;
+            color: var(--medium-grey);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 24px 20px;
+            color: #9ca3af;
+            background: var(--dark-charcoal);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 950px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-summary {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                align-items: center;
+                gap: 12px;
+                text-align: left;
+            }
+
+            .profile-avatar {
+                grid-row: span 3;
+                margin: 0;
+            }
+
+            .account-status {
+                justify-content: flex-start;
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .profile-card {
+                padding: 21px 17px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width,
+            .form-actions {
+                grid-column: auto;
+            }
+
+            .form-actions {
+                justify-content: stretch;
+                flex-direction: column;
+            }
+
+            .security-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .security-row .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
+                <img src="logo.jpg" alt="Masitech Accommodation logo">
+                <span>Masitech Accommodation</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="faqs.html">FAQs</a>
+                <a class="active" href="profile.html">Profile</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="button button-outline" href="index.html">
+                    Home
+                </a>
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>My profile</h1>
+                <p>
+                    Manage your personal account information and view your assigned
+                    roles and permissions.
+                </p>
+            </div>
+        </section>
+
+        <section class="profile-area">
+            <div class="container">
+                <div class="loading-state" id="loadingState">
+                    Loading your profile...
+                </div>
+
+                <div class="profile-layout" id="profileLayout" hidden>
+                    <aside class="profile-summary">
+                        <div class="profile-avatar" id="profileAvatar">
+                            U
+                        </div>
+
+                        <div>
+                            <h2 id="summaryName">User</h2>
+                            <p id="summaryEmail">—</p>
+
+                            <span class="role-badge" id="summaryRole">
+                                User
+                            </span>
+
+                            <div class="account-status">
+                                <span class="status-dot"></span>
+                                <span id="summaryStatus">
+                                    Active account
+                                </span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <div class="profile-content">
+                        <section class="profile-card">
+                            <div class="profile-card-header">
+                                <h2>Personal information</h2>
+                                <p>
+                                    Update the personal information associated with
+                                    your account.
+                                </p>
+                            </div>
+
+                            <div
+                                class="message"
+                                id="profileMessage"
+                                role="alert"
+                            ></div>
+
+                            <form id="profileForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="fullName">
+                                            Full name
+                                        </label>
+
+                                        <input
+                                            id="fullName"
+                                            type="text"
+                                            autocomplete="name"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="phone">
+                                            Phone number
+                                        </label>
+
+                                        <input
+                                            id="phone"
+                                            type="tel"
+                                            autocomplete="tel"
+                                            placeholder="Enter phone number"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email">
+                                            Email address
+                                        </label>
+
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            autocomplete="email"
+                                            readonly
+                                        >
+
+                                        <span class="help-text">
+                                            Email changes require a separate
+                                            verification process.
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="primaryRole">
+                                            Primary role
+                                        </label>
+
+                                        <input
+                                            id="primaryRole"
+                                            type="text"
+                                            readonly
+                                        >
+
+                                        <span class="help-text">
+                                            Roles are managed by authorized
+                                            administrators.
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="preferredLocation">
+                                            Preferred location
+                                        </label>
+
+                                        <select id="preferredLocation">
+                                            <option value="">
+                                                Select location
+                                            </option>
+
+                                            <option value="campus-a">
+                                                Campus Location A
+                                            </option>
+
+                                            <option value="campus-b">
+                                                Campus Location B
+                                            </option>
+
+                                            <option value="campus-c">
+                                                Campus Location C
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="accountCreated">
+                                            Account created
+                                        </label>
+
+                                        <input
+                                            id="accountCreated"
+                                            type="text"
+                                            readonly
+                                        >
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button
+                                            class="button button-outline"
+                                            id="cancelButton"
+                                            type="button"
+                                        >
+                                            Cancel
+                                        </button>
+
+                                        <button
+                                            class="button button-primary"
+                                            id="saveProfileButton"
+                                            type="submit"
+                                        >
+                                            Save changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+
+                        <section class="profile-card">
+                            <div class="profile-card-header">
+                                <h2>Assigned roles</h2>
+                                <p>
+                                    These roles were assigned by an authorized
+                                    administrator.
+                                </p>
+                            </div>
+
+                            <div
+                                class="role-list"
+                                id="assignedRoles"
+                            >
+                                <span class="role-item">
+                                    Loading roles...
+                                </span>
+                            </div>
+                        </section>
+
+                        <section class="profile-card" id="roleWorkspacesCard">
+                            <div class="profile-card-header">
+                                <h2>Your workspaces</h2>
+                                <p>
+                                    Open a dashboard for any extra role assigned
+                                    to your account. Your default login still
+                                    uses student or tenant access.
+                                </p>
+                            </div>
+
+                            <div class="role-actions" id="roleActions">
+                                <p class="help-text">Loading workspace options...</p>
+                            </div>
+                        </section>
+
+                        <section class="profile-card" id="caretakerRatingsCard" hidden>
+                            <div class="profile-card-header">
+                                <h2>Caretaker ratings</h2>
+                                <p>
+                                    Ratings left by tenants. These are read-only.
+                                    Only a super administrator can edit or remove them.
+                                </p>
+                            </div>
+
+                            <div class="ratings-summary">
+                                <div class="rating-stat">
+                                    <span>Average rating</span>
+                                    <strong id="caretakerAvgRating">—</strong>
+                                </div>
+                                <div class="rating-stat">
+                                    <span>Total reviews</span>
+                                    <strong id="caretakerReviewCount">—</strong>
+                                </div>
+                            </div>
+
+                            <div id="caretakerRatingsList">
+                                <p class="help-text">Loading ratings...</p>
+                            </div>
+                        </section>
+
+                        <section class="profile-card">
+                            <div class="profile-card-header">
+                                <h2>Assigned locations</h2>
+                                <p>
+                                    Caretaker and administrative location access is
+                                    controlled by administrators.
+                                </p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="assignedLocations">
+                                        Location access
+                                    </label>
+
+                                    <input
+                                        id="assignedLocations"
+                                        type="text"
+                                        readonly
+                                    >
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="profile-card">
+                            <div class="profile-card-header">
+                                <h2>Permissions</h2>
+                                <p>
+                                    Your current system permissions are shown below.
+                                </p>
+                            </div>
+
+                            <div
+                                class="permission-list"
+                                id="permissionsList"
+                            >
+                                <span class="permission-item">
+                                    Loading permissions...
+                                </span>
+                            </div>
+                        </section>
+
+                        <section class="profile-card">
+                            <div class="profile-card-header">
+                                <h2>Security</h2>
+                                <p>
+                                    Manage your password and email verification.
+                                </p>
+                            </div>
+
+                            <div
+                                class="message"
+                                id="securityMessage"
+                                role="alert"
+                            ></div>
+
+                            <div class="security-list">
+                                <div class="security-row">
+                                    <div>
+                                        <h3>Password</h3>
+                                        <p>
+                                            Change the password used to log in.
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        class="button button-outline"
+                                        id="changePasswordButton"
+                                        type="button"
+                                    >
+                                        Change password
+                                    </button>
+                                </div>
+
+                                <div class="security-row">
+                                    <div>
+                                        <h3>Email verification</h3>
+                                        <p id="verificationText">
+                                            Checking verification status...
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        class="button button-outline"
+                                        id="verificationButton"
+                                        type="button"
+                                    >
+                                        Send verification email
+                                    </button>
+                                </div>
+
+                                <div class="security-row">
+                                    <div>
+                                        <h3>Sign out</h3>
+                                        <p>
+                                            Sign out from this device.
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        class="button button-danger"
+                                        id="logoutButton"
+                                        type="button"
+                                    >
+                                        Log out
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+        import {
+            getAuth,
+            onAuthStateChanged,
+            updateProfile,
+            updatePassword,
+            sendEmailVerification,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            collection,
+            getDocs,
+            query,
+            where,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDg6FOKfNMkj1L-UyxkGqEpPuyw76jLq_c",
+            authDomain: "masitech-solutions.firebaseapp.com",
+            projectId: "masitech-solutions",
+            storageBucket: "masitech-solutions.firebasestorage.app",
+            messagingSenderId: "627121817663",
+            appId: "1:627121817663:web:1d8bc441f6a2daf83bd08a",
+            measurementId: "G-LZQQCZTF1M"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let originalProfile = {};
+        let currentClaims = {};
+
+        const loadingState =
+            document.getElementById("loadingState");
+
+        const profileLayout =
+            document.getElementById("profileLayout");
+
+        const mainNav =
+            document.getElementById("mainNav");
+
+        const menuButton =
+            document.getElementById("menuButton");
+
+        const profileForm =
+            document.getElementById("profileForm");
+
+        const saveProfileButton =
+            document.getElementById("saveProfileButton");
+
+        const cancelButton =
+            document.getElementById("cancelButton");
+
+        const profileMessage =
+            document.getElementById("profileMessage");
+
+        const securityMessage =
+            document.getElementById("securityMessage");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        function showMessage(element, text, type) {
+            element.textContent = text;
+            element.className = `message ${type}`;
+        }
+
+        function hideMessage(element) {
+            element.textContent = "";
+            element.className = "message";
+        }
+
+        function capitalize(value) {
+            if (!value) {
+                return "Not assigned";
+            }
+
+            return String(value)
+                .replaceAll("-", " ")
+                .replace(/\b\w/g, (letter) => letter.toUpperCase());
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        const ADMIN_ROLES = [
+            "super-admin",
+            "main-admin",
+            "sub-admin",
+            "content-admin",
+            "property-admin",
+            "user-admin",
+            "analytics-admin",
+            "location-admin"
+        ];
+
+        function collectRoles(profile, claims) {
+            return getProfileRoles(profile, claims);
+        }
+
+        function hasRole(roles, roleName) {
+            return roles.map(String).includes(roleName);
+        }
+
+        function hasAnyAdminRole(roles) {
+            return roles.some((role) => ADMIN_ROLES.includes(role));
+        }
+
+        function renderRoleActions(profile, claims) {
+            const container = document.getElementById("roleActions");
+            if (!container) return;
+
+            const roles = collectRoles(profile, claims);
+            const actions = [];
+
+            if (hasRole(roles, "student")) {
+                actions.push({
+                    title: "Student dashboard",
+                    description: "Browse student housing, inquiries, and saved properties.",
+                    href: "student-dashboard.html",
+                    label: "Open"
+                });
+            }
+
+            if (hasRole(roles, "tenant")) {
+                actions.push({
+                    title: "Tenant dashboard",
+                    description: "Browse apartments, inquiries, and saved listings.",
+                    href: "tenant-dashboard.html",
+                    label: "Open"
+                });
+            }
+
+            if (hasRole(roles, "caretaker")) {
+                actions.push({
+                    title: "Caretaker workspace",
+                    description: "Manage properties, inquiries, and location operations.",
+                    href: "caretaker.html",
+                    label: "Open"
+                });
+            }
+
+            if (hasAnyAdminRole(roles)) {
+                actions.push({
+                    title: "Admin control center",
+                    description: "Open the administrator tools assigned to your account.",
+                    href: "admin.html",
+                    label: "Open"
+                });
+            }
+
+            actions.push({
+                title: "Public website",
+                description: "View listings and public pages.",
+                href: "index.html",
+                label: "Visit"
+            });
+
+            if (actions.length === 0) {
+                container.innerHTML = `
+                    <p class="help-text">
+                        No extra workspaces yet. When an administrator assigns another role,
+                        a button will appear here.
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = actions
+                .map(
+                    (action) => `
+                    <div class="role-action-card">
+                        <div>
+                            <h3>${escapeHtml(action.title)}</h3>
+                            <p>${escapeHtml(action.description)}</p>
+                        </div>
+                        <a class="button button-primary" href="${action.href}">
+                            ${escapeHtml(action.label)}
+                        </a>
+                    </div>
+                `
+                )
+                .join("");
+        }
+
+        async function loadLocationsIntoSelect() {
+            const select = document.getElementById("preferredLocation");
+            if (!select) return;
+
+            const current = select.value;
+
+            try {
+                const snapshot = await getDocs(collection(db, "locations"));
+                const locations = snapshot.docs.map((docSnap) => ({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                }));
+
+                select.innerHTML = `<option value="">Select location</option>`;
+
+                locations
+                    .sort((a, b) =>
+                        String(a.name || a.id).localeCompare(String(b.name || b.id))
+                    )
+                    .forEach((location) => {
+                        const option = document.createElement("option");
+                        option.value = location.id;
+                        option.textContent = location.name || location.id;
+                        select.appendChild(option);
+                    });
+
+                if (current) {
+                    select.value = current;
+                }
+            } catch (error) {
+                console.warn("Could not load locations:", error);
+            }
+        }
+
+        async function loadCaretakerRatingsIfNeeded(profile, claims) {
+            const card = document.getElementById("caretakerRatingsCard");
+            const list = document.getElementById("caretakerRatingsList");
+            const avgEl = document.getElementById("caretakerAvgRating");
+            const countEl = document.getElementById("caretakerReviewCount");
+
+            if (!card || !list) return;
+
+            const roles = collectRoles(profile, claims);
+            if (!hasRole(roles, "caretaker")) {
+                card.hidden = true;
+                return;
+            }
+
+            card.hidden = false;
+
+            try {
+                const reviewsSnap = await getDocs(collection(db, "reviews"));
+                const reviews = reviewsSnap.docs
+                    .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
+                    .filter((review) => {
+                        if (review.status === "hidden") return false;
+                        return (
+                            review.caretakerId === currentUser.uid ||
+                            review.reviewType === "caretaker"
+                        );
+                    })
+                    .sort(
+                        (a, b) =>
+                            getTimestampValue(b.createdAt) -
+                            getTimestampValue(a.createdAt)
+                    );
+
+                const scores = reviews
+                    .map((r) => Number(r.rating))
+                    .filter((n) => n > 0);
+
+                if (avgEl) {
+                    avgEl.textContent =
+                        scores.length > 0
+                            ? (
+                                  scores.reduce((s, n) => s + n, 0) /
+                                  scores.length
+                              ).toFixed(1)
+                            : "—";
+                }
+
+                if (countEl) {
+                    countEl.textContent = String(reviews.length);
+                }
+
+                if (reviews.length === 0) {
+                    list.innerHTML = `
+                        <p class="help-text">No tenant ratings yet.</p>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = reviews
+                    .map(
+                        (review) => `
+                        <article class="review-card">
+                            <h3>
+                                ★ ${Number(review.rating || 0).toFixed(1)}
+                                · ${escapeHtml(
+                                    review.propertyName ||
+                                        review.targetName ||
+                                        "Review"
+                                )}
+                            </h3>
+                            <p>${escapeHtml(review.comment || "No written comment.")}</p>
+                            <small>
+                                ${formatDate(review.createdAt)}
+                                · Read-only
+                            </small>
+                        </article>
+                    `
+                    )
+                    .join("");
+            } catch (error) {
+                console.warn("Could not load caretaker ratings:", error);
+                list.innerHTML = `
+                    <p class="help-text">Ratings could not be loaded right now.</p>
+                `;
+            }
+        }
+
+        function getInitials(name) {
+            return String(name || "User")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((part) => part[0].toUpperCase())
+                .join("");
+        }
+
+        function getTimestampValue(timestamp) {
+            if (!timestamp) {
+                return 0;
+            }
+
+            if (typeof timestamp.toMillis === "function") {
+                return timestamp.toMillis();
+            }
+
+            if (typeof timestamp.toDate === "function") {
+                return timestamp.toDate().getTime();
+            }
+
+            if (timestamp.seconds) {
+                return timestamp.seconds * 1000;
+            }
+
+            return new Date(timestamp).getTime() || 0;
+        }
+
+        function formatDate(timestamp) {
+            const timestampValue =
+                getTimestampValue(timestamp);
+
+            if (!timestampValue) {
+                return "Not available";
+            }
+
+            return new Date(timestampValue).toLocaleDateString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+        }
+
+        function getProfileRoles(profile, claims) {
+            const profileRoles = Array.isArray(profile.roles)
+                ? profile.roles
+                : profile.role
+                    ? [profile.role]
+                    : [];
+
+            const claimRoles = Array.isArray(claims.roles)
+                ? claims.roles
+                : claims.role
+                    ? [claims.role]
+                    : [];
+
+            return [
+                ...new Set([
+                    ...profileRoles,
+                    ...claimRoles
+                ])
+            ];
+        }
+
+        function getProfilePermissions(profile, claims) {
+            const profilePermissions =
+                Array.isArray(profile.permissions)
+                    ? profile.permissions
+                    : [];
+
+            const claimPermissions =
+                Array.isArray(claims.permissions)
+                    ? claims.permissions
+                    : [];
+
+            return [
+                ...new Set([
+                    ...profilePermissions,
+                    ...claimPermissions
+                ])
+            ];
+        }
+
+        function getLocationIds(profile) {
+            if (Array.isArray(profile.locationIds)) {
+                return profile.locationIds;
+            }
+
+            if (profile.locationId) {
+                return [profile.locationId];
+            }
+
+            return [];
+        }
+
+        function populateRoles(profile, claims) {
+            const roles = getProfileRoles(profile, claims);
+            const rolesContainer =
+                document.getElementById("assignedRoles");
+
+            const primaryRole =
+                profile.role ||
+                roles[0] ||
+                "Not assigned";
+
+            document.getElementById("primaryRole").value =
+                capitalize(primaryRole);
+
+            document.getElementById("summaryRole").textContent =
+                capitalize(primaryRole);
+
+            if (roles.length === 0) {
+                rolesContainer.innerHTML = `
+                    <span class="role-item">
+                        No roles assigned
+                    </span>
+                `;
+
+                return;
+            }
+
+            rolesContainer.innerHTML = roles
+                .map(
+                    (role) => `
+                        <span class="role-item">
+                            ${capitalize(role)}
+                        </span>
+                    `
+                )
+                .join("");
+        }
+
+        function populatePermissions(profile, claims) {
+            const permissions =
+                getProfilePermissions(profile, claims);
+
+            const permissionsContainer =
+                document.getElementById("permissionsList");
+
+            const hasFullAccess =
+                permissions.includes("*") ||
+                claims.admin === true;
+
+            if (hasFullAccess) {
+                permissionsContainer.innerHTML = `
+                    <span class="permission-item">
+                        Full system access
+                    </span>
+                `;
+
+                return;
+            }
+
+            if (permissions.length === 0) {
+                permissionsContainer.innerHTML = `
+                    <span class="permission-item">
+                        No special permissions
+                    </span>
+                `;
+
+                return;
+            }
+
+            permissionsContainer.innerHTML = permissions
+                .map(
+                    (permission) => `
+                        <span class="permission-item">
+                            ${escapeHtml(permission)}
+                        </span>
+                    `
+                )
+                .join("");
+        }
+
+        function populateLocations(profile) {
+            const locationIds = getLocationIds(profile);
+
+            document.getElementById("assignedLocations").value =
+                locationIds.length > 0
+                    ? locationIds.join(", ")
+                    : "No assigned locations";
+        }
+
+        function populateForm(profile) {
+            const fullName =
+                profile.fullName ||
+                currentUser.displayName ||
+                "";
+
+            const phone =
+                profile.phone ||
+                "";
+
+            const locationId =
+                profile.locationId ||
+                "";
+
+            const accountStatus =
+                profile.accountStatus ||
+                "active";
+
+            document.getElementById("fullName").value =
+                fullName;
+
+            document.getElementById("phone").value =
+                phone;
+
+            document.getElementById("email").value =
+                currentUser.email ||
+                profile.email ||
+                "";
+
+            document.getElementById("preferredLocation").value =
+                locationId;
+
+            document.getElementById("accountCreated").value =
+                formatDate(
+                    profile.createdAt ||
+                    currentUser.metadata?.creationTime
+                );
+
+            document.getElementById("summaryName").textContent =
+                fullName || "User";
+
+            document.getElementById("summaryEmail").textContent =
+                currentUser.email ||
+                profile.email ||
+                "No email";
+
+            document.getElementById("summaryStatus").textContent =
+                accountStatus === "active"
+                    ? "Active account"
+                    : capitalize(accountStatus);
+
+            document.getElementById("profileAvatar").textContent =
+                getInitials(fullName);
+
+            const verificationText =
+                document.getElementById("verificationText");
+
+            const verificationButton =
+                document.getElementById("verificationButton");
+
+            if (currentUser.emailVerified) {
+                verificationText.textContent =
+                    "Your email address is verified.";
+
+                verificationButton.disabled = true;
+                verificationButton.textContent =
+                    "Email verified";
+            } else {
+                verificationText.textContent =
+                    "Your email address is not verified.";
+
+                verificationButton.disabled = false;
+                verificationButton.textContent =
+                    "Send verification email";
+            }
+
+            populateRoles(
+                profile,
+                currentClaims
+            );
+
+            populatePermissions(
+                profile,
+                currentClaims
+            );
+
+            populateLocations(profile);
+            renderRoleActions(profile, currentClaims);
+        }
+
+        async function loadProfile(user) {
+            currentUser = user;
+
+            const profileSnapshot = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            let profileData;
+
+            if (profileSnapshot.exists()) {
+                profileData = profileSnapshot.data();
+            } else {
+                profileData = {
+                    uid: user.uid,
+                    fullName: user.displayName || "",
+                    email: user.email || "",
+                    role: "student",
+                    roles: ["student"],
+                    permissions: [],
+                    accountStatus: "active",
+                    locationId: "",
+                    locationIds: [],
+                    createdAt: serverTimestamp()
+                };
+
+                await setDoc(
+                    doc(db, "users", user.uid),
+                    profileData,
+                    {
+                        merge: true
+                    }
+                );
+            }
+
+            try {
+                const tokenResult =
+                    await user.getIdTokenResult(true);
+
+                currentClaims =
+                    tokenResult.claims || {};
+            } catch (claimError) {
+                console.warn(
+                    "Could not load custom claims:",
+                    claimError
+                );
+
+                currentClaims = {};
+            }
+
+            originalProfile = profileData;
+
+            await loadLocationsIntoSelect();
+            populateForm(profileData);
+            await loadCaretakerRatingsIfNeeded(profileData, currentClaims);
+
+            loadingState.hidden = true;
+            profileLayout.hidden = false;
+        }
+
+        profileForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (!currentUser) {
+                return;
+            }
+
+            const fullName = document
+                .getElementById("fullName")
+                .value
+                .trim();
+
+            const phone = document
+                .getElementById("phone")
+                .value
+                .trim();
+
+            const preferredLocation =
+                document.getElementById(
+                    "preferredLocation"
+                ).value;
+
+            if (fullName.length < 2) {
+                showMessage(
+                    profileMessage,
+                    "Please enter your full name.",
+                    "error"
+                );
+
+                return;
+            }
+
+            saveProfileButton.disabled = true;
+            saveProfileButton.textContent = "Saving...";
+            hideMessage(profileMessage);
+
+            try {
+                await updateProfile(currentUser, {
+                    displayName: fullName
+                });
+
+                /*
+                 * Only personal fields are written here.
+                 * Roles, permissions, locations assigned to
+                 * caretakers, and account status are preserved.
+                 */
+                await setDoc(
+                    doc(db, "users", currentUser.uid),
+                    {
+                        uid: currentUser.uid,
+                        fullName,
+                        email: currentUser.email || "",
+                        phone,
+                        locationId: preferredLocation,
+                        updatedAt: serverTimestamp()
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+                originalProfile = {
+                    ...originalProfile,
+                    fullName,
+                    phone,
+                    locationId: preferredLocation
+                };
+
+                populateForm(originalProfile);
+
+                showMessage(
+                    profileMessage,
+                    "Your profile has been updated.",
+                    "success"
+                );
+            } catch (error) {
+                console.error(
+                    "Profile update error:",
+                    error
+                );
+
+                showMessage(
+                    profileMessage,
+                    "We could not update your profile. Check your Firestore Rules.",
+                    "error"
+                );
+            } finally {
+                saveProfileButton.disabled = false;
+                saveProfileButton.textContent =
+                    "Save changes";
+            }
+        });
+
+        cancelButton.addEventListener("click", () => {
+            populateForm(originalProfile);
+            hideMessage(profileMessage);
+        });
+
+        document
+            .getElementById("changePasswordButton")
+            .addEventListener("click", async () => {
+                const newPassword = window.prompt(
+                    "Enter a new password with at least 6 characters:"
+                );
+
+                if (!newPassword) {
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showMessage(
+                        securityMessage,
+                        "The password must contain at least 6 characters.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                try {
+                    await updatePassword(
+                        currentUser,
+                        newPassword
+                    );
+
+                    showMessage(
+                        securityMessage,
+                        "Your password has been changed.",
+                        "success"
+                    );
+                } catch (error) {
+                    console.error(
+                        "Password update error:",
+                        error
+                    );
+
+                    if (
+                        error.code ===
+                        "auth/requires-recent-login"
+                    ) {
+                        showMessage(
+                            securityMessage,
+                            "For security, log out and log in again before changing your password.",
+                            "error"
+                        );
+                    } else {
+                        showMessage(
+                            securityMessage,
+                            "We could not change your password.",
+                            "error"
+                        );
+                    }
+                }
+            });
+
+        document
+            .getElementById("verificationButton")
+            .addEventListener("click", async () => {
+                try {
+                    await sendEmailVerification(
+                        currentUser
+                    );
+
+                    showMessage(
+                        securityMessage,
+                        "A verification email has been sent.",
+                        "success"
+                    );
+                } catch (error) {
+                    console.error(
+                        "Verification email error:",
+                        error
+                    );
+
+                    showMessage(
+                        securityMessage,
+                        "We could not send the verification email.",
+                        "error"
+                    );
+                }
+            });
+
+        document
+            .getElementById("logoutButton")
+            .addEventListener("click", async () => {
+                try {
+                    await signOut(auth);
+                    window.location.href = "login.html";
+                } catch (error) {
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+                    showMessage(
+                        securityMessage,
+                        "Could not log out. Please try again.",
+                        "error"
+                    );
+                }
+            });
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen
+                    ? "Close navigation menu"
+                    : "Open navigation menu"
+            );
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!mainNav.classList.contains("open")) return;
+
+            const insideNav = mainNav.contains(event.target);
+            const onButton = menuButton.contains(event.target);
+
+            if (!insideNav && !onButton) {
+                mainNav.classList.remove("open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+                return;
+            }
+
+            try {
+                await loadProfile(user);
+            } catch (error) {
+                console.error(
+                    "Could not load profile:",
+                    error
+                );
+
+                loadingState.textContent =
+                    "We could not load your profile. Please refresh the page.";
+            }
+        });
+    </script>
+</body>
+</html>

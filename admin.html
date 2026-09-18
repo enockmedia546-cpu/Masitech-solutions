@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Control Center | Masitech Accommodation</title>
+    <title>Admin Control Center | Masitech Solutions</title>
 
     <style>
         :root {
             --charcoal: #374151;
             --dark-charcoal: #1f2937;
-            --teal: #0f766e;
-            --dark-teal: #0b625c;
+            --blue: #2563eb;
+            --dark-blue: #1d4ed8;
+            --teal: #2563eb;
+            --dark-teal: #1d4ed8;
             --light-grey: #f3f4f6;
             --medium-grey: #6b7280;
             --white: #ffffff;
@@ -19,7 +21,6 @@
             --green: #16a34a;
             --amber: #d97706;
             --red: #dc2626;
-            --blue: #2563eb;
             --sidebar-width: 270px;
             --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
         }
@@ -188,12 +189,12 @@
         .nav-item:hover,
         .nav-item.active {
             color: var(--white);
-            background: rgba(15, 118, 110, 0.78);
+            background: rgba(37, 99, 235, 0.78);
         }
 
         .nav-icon {
             width: 21px;
-            color: #99f6e4;
+            color: #93c5fd;
             text-align: center;
         }
 
@@ -466,7 +467,7 @@
             height: 34px;
             place-items: center;
             color: var(--teal);
-            background: #ccfbf1;
+            background: #dbeafe;
             border-radius: 8px;
             font-size: 0.95rem;
         }
@@ -636,7 +637,7 @@
         .form-select:focus,
         .form-textarea:focus {
             border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .table-wrapper {
@@ -708,8 +709,8 @@
 
         .small-button.view {
             color: var(--teal);
-            background: #f0fdfa;
-            border-color: #99f6e4;
+            background: #eff6ff;
+            border-color: #93c5fd;
         }
 
         .small-button.edit {
@@ -991,7 +992,7 @@
     <div class="admin-layout" id="adminLayout" hidden>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="logo.jpg" alt="Masitech Accommodation logo">
+                <img src="logo.jpg" alt="Masitech Solutions logo">
 
                 <div class="sidebar-brand">
                     Masitech Admin
@@ -1611,12 +1612,28 @@
                             <form id="locationForm">
                                 <div class="form-grid">
                                     <div class="form-group">
-                                        <label for="locationName">Location name</label>
-                                        <input class="form-input" id="locationName" type="text" required placeholder="e.g. Main Campus">
+                                        <label for="locationKey">Platform location</label>
+                                        <select class="form-select" id="locationKey" required>
+                                            <option value="">Select location (same as signup)...</option>
+                                            <option value="cbu">CBU (student)</option>
+                                            <option value="unilus">UNILUS (student)</option>
+                                            <option value="mukuba">Mukuba University (student)</option>
+                                            <option value="mulungushi">Mulungushi University (student)</option>
+                                            <option value="lusaka">Lusaka (tenant)</option>
+                                            <option value="kitwe">Kitwe (tenant)</option>
+                                            <option value="solwezi">Solwezi (tenant)</option>
+                                        </select>
+                                        <span class="form-help">
+                                            These match signup preferred locations. Document ID stays the same so caretakers and users never mismatch.
+                                        </span>
                                     </div>
                                     <div class="form-group">
                                         <label for="locationArea">Area</label>
-                                        <input class="form-input" id="locationArea" type="text" placeholder="e.g. North Zone">
+                                        <input class="form-input" id="locationArea" type="text" placeholder="e.g. Riverside, CBD">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="locationStreet">Street</label>
+                                        <input class="form-input" id="locationStreet" type="text" placeholder="e.g. Independence Ave">
                                     </div>
                                     <div class="form-group">
                                         <label for="locationStatus">Status</label>
@@ -1627,11 +1644,11 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label for="locationDescription">Description</label>
-                                        <textarea class="form-textarea" id="locationDescription" placeholder="Optional description..."></textarea>
+                                        <textarea class="form-textarea" id="locationDescription" placeholder="Optional notes for admins and caretakers..."></textarea>
                                     </div>
                                     <div class="form-actions">
                                         <button class="button button-outline" type="button" id="cancelLocationButton">Cancel</button>
-                                        <button class="button button-primary" type="submit">Save location</button>
+                                        <button class="button button-primary" type="submit">Save location details</button>
                                     </div>
                                 </div>
                             </form>
@@ -1644,6 +1661,8 @@
                                         <tr>
                                             <th>Location</th>
                                             <th>Area</th>
+                                            <th>Street</th>
+                                            <th>Type</th>
                                             <th>Properties</th>
                                             <th>Caretakers</th>
                                             <th>Status</th>
@@ -1653,7 +1672,7 @@
 
                                     <tbody id="locationsTableBody">
                                         <tr>
-                                            <td colspan="6" class="empty-state">
+                                            <td colspan="8" class="empty-state">
                                                 Loading locations...
                                             </td>
                                         </tr>
@@ -1912,7 +1931,7 @@
 
                                         <div class="form-group full-width">
                                             <label for="contactMetaDescription">SEO meta description</label>
-                                            <textarea class="form-textarea" id="contactMetaDescription" rows="2" placeholder="Contact Masitech Accommodation for help..."></textarea>
+                                            <textarea class="form-textarea" id="contactMetaDescription" rows="2" placeholder="Contact Masitech Solutions for help..."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -1938,7 +1957,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="privacyMetaDescription">SEO meta description</label>
-                                            <input class="form-input" id="privacyMetaDescription" type="text" placeholder="Read the Masitech Accommodation Privacy Policy.">
+                                            <input class="form-input" id="privacyMetaDescription" type="text" placeholder="Read the Masitech Solutions Privacy Policy.">
                                         </div>
 
                                         <div class="form-group full-width">
@@ -2081,7 +2100,7 @@
                                         <div class="form-group full-width">
                                             <label for="faqsItemsJson">FAQ items (one per line)</label>
                                             <span class="form-help">Format each line as: Category | Question | Answer</span>
-                                            <textarea class="form-textarea" id="faqsItemsJson" rows="18" placeholder="General questions | What is Masitech Accommodation? | Masitech Accommodation is a platform..."></textarea>
+                                            <textarea class="form-textarea" id="faqsItemsJson" rows="18" placeholder="General questions | What is Masitech Solutions? | Masitech Solutions is a platform..."></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="faqsContactTitle">Bottom card title</label>
@@ -2151,7 +2170,7 @@
                                         </div>
                                         <div class="form-group full-width">
                                             <label for="aboutHeroTitle">Header title</label>
-                                            <input class="form-input" id="aboutHeroTitle" type="text" placeholder="About Masitech Accommodation">
+                                            <input class="form-input" id="aboutHeroTitle" type="text" placeholder="About Masitech Solutions">
                                         </div>
                                         <div class="form-group full-width">
                                             <label for="aboutHeroSubtitle">Header subtitle</label>
@@ -2159,7 +2178,7 @@
                                         </div>
                                         <div class="form-group full-width">
                                             <label for="aboutMetaDescription">SEO meta description</label>
-                                            <input class="form-input" id="aboutMetaDescription" type="text" placeholder="Learn about Masitech Accommodation...">
+                                            <input class="form-input" id="aboutMetaDescription" type="text" placeholder="Learn about Masitech Solutions...">
                                         </div>
 
                                         <div class="form-group full-width">
@@ -2302,6 +2321,47 @@
                                     </button>
                                 </div>
                             </form>
+                        </div>
+
+                        <div class="section-heading" style="margin-top: 36px;" data-permission="content.manage">
+                            <div>
+                                <h2>Landing page reviews</h2>
+                                <p>
+                                    Moderate platform reviews submitted from the landing page.
+                                    Approve reviews and choose which ones appear under &ldquo;What students are saying&rdquo;.
+                                </p>
+                            </div>
+                            <div class="section-actions">
+                                <button class="button button-outline" type="button" id="refreshPlatformReviewsButton">
+                                    Refresh reviews
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel" id="platformReviewsPanel" data-permission="content.manage">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>University / area</th>
+                                            <th>Rating</th>
+                                            <th>Experience</th>
+                                            <th>Feedback</th>
+                                            <th>Status</th>
+                                            <th>On landing</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="platformReviewsTableBody">
+                                        <tr>
+                                            <td colspan="8" class="empty-state">
+                                                Loading platform reviews...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </section>
 
@@ -2452,19 +2512,29 @@
                             <form id="roleForm">
                                 <div class="form-grid">
                                     <div class="form-group full-width">
-                                        <label for="roleUserSelect">
-                                            User
+                                        <label for="roleUserSearch">
+                                            Find user
                                         </label>
 
-                                        <select
-                                            class="form-select"
-                                            id="roleUserSelect"
-                                            required
+                                        <input
+                                            class="form-input"
+                                            id="roleUserSearch"
+                                            type="search"
+                                            placeholder="Search by name, email, phone, role, or location..."
+                                            autocomplete="off"
                                         >
-                                            <option value="">
-                                                Select a user
-                                            </option>
-                                        </select>
+
+                                        <input type="hidden" id="roleUserSelect" value="">
+
+                                        <div
+                                            id="roleUserSearchResults"
+                                            class="panel"
+                                            style="margin-top: 8px; max-height: 220px; overflow-y: auto; display: none;"
+                                        ></div>
+
+                                        <p class="form-help" id="roleUserSelectedLabel" style="margin-top: 8px;">
+                                            No user selected yet. Type to search — not case sensitive.
+                                        </p>
                                     </div>
 
                                     <div class="form-group full-width">
@@ -2753,19 +2823,22 @@
                                     </div>
 
                                     <div class="form-group full-width">
-                                        <label for="roleLocationIds">
-                                            Assigned location IDs
+                                        <label>
+                                            Assigned locations
                                         </label>
 
-                                        <input
-                                            class="form-input"
-                                            id="roleLocationIds"
-                                            type="text"
-                                            placeholder="campus-a, campus-b"
+                                        <div
+                                            class="role-checkbox-grid"
+                                            id="roleLocationCheckboxGrid"
                                         >
+                                            <p class="form-help" style="grid-column: 1 / -1; margin: 0;">
+                                                Loading locations...
+                                            </p>
+                                        </div>
 
                                         <span class="form-help">
-                                            Separate location IDs with commas.
+                                            Select one or more locations this caretaker may manage.
+                                            Location name, area, and street are set under Location management.
                                         </span>
                                     </div>
 
@@ -2934,7 +3007,7 @@
                                             class="form-input"
                                             id="siteName"
                                             type="text"
-                                            value="Masitech Accommodation"
+                                            value="Masitech Solutions"
                                         >
                                     </div>
 
@@ -3149,6 +3222,17 @@
             ]
         };
 
+        // Same location IDs as signup.html — never invent different codes
+        const PLATFORM_LOCATIONS = [
+            { id: "cbu", name: "CBU", audience: "student", listingType: "student" },
+            { id: "unilus", name: "UNILUS", audience: "student", listingType: "student" },
+            { id: "mukuba", name: "Mukuba University", audience: "student", listingType: "student" },
+            { id: "mulungushi", name: "Mulungushi University", audience: "student", listingType: "student" },
+            { id: "lusaka", name: "Lusaka", audience: "tenant", listingType: "apartment" },
+            { id: "kitwe", name: "Kitwe", audience: "tenant", listingType: "apartment" },
+            { id: "solwezi", name: "Solwezi", audience: "tenant", listingType: "apartment" }
+        ];
+
         const state = {
             user: null,
             profile: null,
@@ -3159,6 +3243,7 @@
             properties: [],
             locations: [],
             reviews: [],
+            platformReviews: [],
             announcements: [],
             pages: [],
             auditLogs: []
@@ -3572,6 +3657,7 @@
                     properties,
                     locations,
                     reviews,
+                    platformReviews,
                     announcements,
                     pages,
                     auditLogs
@@ -3580,6 +3666,7 @@
                     loadCollection("properties"),
                     loadCollection("locations"),
                     loadCollection("reviews"),
+                    loadCollection("platformReviews"),
                     loadCollection("announcements"),
                     loadCollection("sitePages"),
                     loadCollection("auditLogs")
@@ -3589,6 +3676,7 @@
                 state.properties = properties;
                 state.locations = locations;
                 state.reviews = reviews;
+                state.platformReviews = platformReviews;
                 state.announcements = announcements;
                 state.pages = pages;
                 state.auditLogs = auditLogs;
@@ -3616,10 +3704,12 @@
             renderProperties();
             renderLocations();
             renderReviews();
+            renderPlatformReviews();
             renderAnnouncements();
             renderPages();
             renderAnalytics();
             renderRoleUserOptions();
+            renderRoleLocationCheckboxes();
             renderAuditLogs();
             updateNotificationCount();
         }
@@ -4230,20 +4320,23 @@
                     "locationsTableBody"
                 );
 
-            if (state.locations.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="empty-state">
-                            No locations found.
-                        </td>
-                    </tr>
-                `;
-
-                return;
-            }
+            // Always show signup locations; merge Firestore details when present
+            const locations = PLATFORM_LOCATIONS.map((base) => {
+                const saved = (state.locations || []).find((item) => item.id === base.id);
+                return {
+                    id: base.id,
+                    name: base.name,
+                    audience: base.audience,
+                    listingType: base.listingType,
+                    area: saved?.area || null,
+                    street: saved?.street || null,
+                    status: saved?.status || "active",
+                    description: saved?.description || null
+                };
+            });
 
             tableBody.innerHTML =
-                state.locations
+                locations
                     .map((location) => {
                         const propertyCount =
                             state.properties.filter(
@@ -4289,6 +4382,22 @@
                                 <td>
                                     ${escapeHtml(
                                         location.area || "—"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        location.street || "—"
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        location.listingType === "student"
+                                            ? "Boarding"
+                                            : location.listingType === "apartment"
+                                                ? "Apartments"
+                                                : location.listingType || "Both"
                                     )}
                                 </td>
 
@@ -4449,6 +4558,110 @@
                     .join("");
         }
 
+
+        function renderPlatformReviews() {
+            const tableBody = document.getElementById("platformReviewsTableBody");
+            if (!tableBody) return;
+
+            const reviews = [...(state.platformReviews || [])].sort(
+                (a, b) => getTimestampValue(b.createdAt) - getTimestampValue(a.createdAt)
+            );
+
+            if (reviews.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            No platform reviews yet. Reviews submitted from the landing page will appear here.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = reviews
+                .map((review) => {
+                    const status = review.status || "pending";
+                    const statusClass =
+                        status === "approved"
+                            ? "badge-green"
+                            : status === "rejected"
+                                ? "badge-red"
+                                : "badge-amber";
+                    const onLanding = review.showOnLanding === true;
+                    const experience = String(review.experience || review.comment || "").slice(0, 80);
+                    const feedback = String(review.feedback || "").slice(0, 80);
+
+                    return `
+                        <tr>
+                            <td>
+                                ${escapeHtml(review.name || "Anonymous")}
+                                <br><small>${escapeHtml(review.email || "")}</small>
+                            </td>
+                            <td>${escapeHtml(review.universityLabel || review.university || "—")}</td>
+                            <td>★ ${Number(review.rating || 0).toFixed(1)}</td>
+                            <td>${escapeHtml(experience)}</td>
+                            <td>${escapeHtml(feedback)}</td>
+                            <td><span class="badge ${statusClass}">${escapeHtml(status)}</span></td>
+                            <td>${onLanding ? "Yes" : "No"}</td>
+                            <td>
+                                <div class="table-actions">
+                                    ${
+                                        status !== "approved"
+                                            ? `<button class="small-button approve" type="button" data-platform-review-action="approve" data-id="${review.id}">Approve</button>`
+                                            : ""
+                                    }
+                                    ${
+                                        status !== "rejected"
+                                            ? `<button class="small-button reject" type="button" data-platform-review-action="reject" data-id="${review.id}">Reject</button>`
+                                            : ""
+                                    }
+                                    ${
+                                        status === "approved" && !onLanding
+                                            ? `<button class="small-button view" type="button" data-platform-review-action="show" data-id="${review.id}">Show on landing</button>`
+                                            : ""
+                                    }
+                                    ${
+                                        onLanding
+                                            ? `<button class="small-button edit" type="button" data-platform-review-action="hide" data-id="${review.id}">Hide from landing</button>`
+                                            : ""
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join("");
+        }
+
+        async function updatePlatformReview(reviewId, updates) {
+            if (!hasPermission("content.manage") && !hasPermission("reviews.moderate")) {
+                showToast("You do not have permission to moderate platform reviews.", true);
+                return;
+            }
+
+            const review = (state.platformReviews || []).find((item) => item.id === reviewId);
+
+            try {
+                await updateDoc(doc(db, "platformReviews", reviewId), {
+                    ...updates,
+                    moderatedBy: state.user.uid,
+                    moderatedAt: serverTimestamp()
+                });
+
+                await writeAuditLog("Platform review moderated", {
+                    id: reviewId,
+                    name: review?.name || "Platform review",
+                    details: JSON.stringify(updates)
+                });
+
+                showToast("Platform review updated.");
+                await loadAdminData();
+            } catch (error) {
+                console.error("Could not update platform review:", error);
+                showToast("The platform review could not be updated. Check Firestore rules.", true);
+            }
+        }
+
         function renderAnnouncements() {
             const list =
                 document.getElementById(
@@ -4513,7 +4726,7 @@
         const FIXED_PAGES = {
             index: {
                 label: "Landing page",
-                defaultTitle: "Masitech Accommodation",
+                defaultTitle: "Masitech Solutions",
                 defaults: {
                     heroLabel: "Accommodation made simpler",
                     heroTitle: "Find a place that feels like home.",
@@ -4532,7 +4745,7 @@
                     aptTitle: "Private apartments",
                     aptText:
                         "Find apartments for individuals, couples, families, and other non-student tenants.",
-                    whyHeading: "Why use Masitech Accommodation?",
+                    whyHeading: "Why use Masitech Solutions?",
                     whyIntro:
                         "We are creating a clearer way to discover and compare available accommodation.",
                     feat1Title: "Location-focused search",
@@ -4563,11 +4776,11 @@
                 label: "About us",
                 defaultTitle: "About Us",
                 defaults: {
-                    heroTitle: "About Masitech Accommodation",
+                    heroTitle: "About Masitech Solutions",
                     heroSubtitle: "We help students and tenants discover suitable boarding houses and apartments in convenient locations.",
-                    metaDescription: "Learn about Masitech Accommodation and how we help students and tenants find suitable boarding houses and apartments.",
+                    metaDescription: "Learn about Masitech Solutions and how we help students and tenants find suitable boarding houses and apartments.",
                     missionTitle: "Our mission",
-                    missionText: "Finding a place to stay should not be confusing or stressful. Masitech Accommodation brings student boarding houses and private apartments into one clear platform so people can compare options, understand key details, and contact the right caretaker more easily.",
+                    missionText: "Finding a place to stay should not be confusing or stressful. Masitech Solutions brings student boarding houses and private apartments into one clear platform so people can compare options, understand key details, and contact the right caretaker more easily.",
                     whatTitle: "What we do",
                     whatText: "We provide an online space where accommodation listings are organised by location and type. Visitors can explore student housing and apartments, review property information, and make inquiries. Caretakers manage assigned properties, while administrators oversee the platform, approvals, and quality of information.",
                     whoTitle: "Who we serve",
@@ -4587,7 +4800,7 @@
                     value3Title: "Responsible platform use",
                     value3Text: "We encourage accurate information, respectful communication, and careful decisions before any tenancy or payment agreement.",
                     noteTitle: "A note about agreements",
-                    noteText: "Masitech Accommodation is a discovery and inquiry platform. Rental terms, deposits, viewing arrangements, and final acceptance are confirmed directly with the relevant property representative or caretaker. Always verify important details before making a commitment.",
+                    noteText: "Masitech Solutions is a discovery and inquiry platform. Rental terms, deposits, viewing arrangements, and final acceptance are confirmed directly with the relevant property representative or caretaker. Always verify important details before making a commitment.",
                     ctaTitle: "Looking for a place to stay?",
                     ctaText: "Explore student housing and apartments, or contact us if you need help.",
                     ctaButton: "Contact us",
@@ -4600,18 +4813,18 @@
                 defaults: {
                     heroTitle: "Privacy Policy",
                     heroSubtitle:
-                        "This notice explains how Masitech Accommodation collects, uses, stores, and protects personal information.",
+                        "This notice explains how Masitech Solutions collects, uses, stores, and protects personal information.",
                     lastUpdated: "14 September 2026",
                     metaDescription:
-                        "Read the Masitech Accommodation Privacy Policy.",
+                        "Read the Masitech Solutions Privacy Policy.",
                     sec1:
-                        "Masitech Accommodation operates a platform that helps students and non-student tenants discover accommodation such as boarding houses and apartments.\n\nThis Privacy Policy explains how we handle personal information when you visit our website, create an account, browse listings, contact a caretaker, submit an inquiry, or use another platform feature.\n\nIn this policy, “we,” “us,” and “our” refer to Masitech Accommodation. “You” refers to a visitor, student, tenant, caretaker, administrator, or other person using the platform.",
+                        "Masitech Solutions operates a platform that helps students and non-student tenants discover accommodation such as boarding houses and apartments.\n\nThis Privacy Policy explains how we handle personal information when you visit our website, create an account, browse listings, contact a caretaker, submit an inquiry, or use another platform feature.\n\nIn this policy, “we,” “us,” and “our” refer to Masitech Solutions. “You” refers to a visitor, student, tenant, caretaker, administrator, or other person using the platform.",
                     sec2:
                         "Information you provide\nDepending on how you use the platform, we may collect:\n- Full name.\n- Email address.\n- Phone number.\n- Password-related account information handled by Firebase Authentication.\n- Account type, such as student or non-student tenant.\n- Preferred location or campus area.\n- Property inquiries and messages.\n- Ratings, reviews, and reports.\n- Information submitted when you contact us.\n\nInformation collected automatically\nWe may collect technical information such as browser type, device information, approximate location derived from technical data, IP address, pages visited, and interaction information. Some of this information may be collected by authentication, security, or analytics services.\n\nProperty information\nCaretakers and administrators may submit property details, room information, availability, prices, conditions, photos, amenities, and location information. Some of this information is intended to be publicly displayed on the platform.",
                     sec3:
                         "We may use personal information to:\n- Create and manage user accounts.\n- Authenticate users and protect accounts.\n- Display accommodation listings according to selected locations.\n- Connect prospective tenants with relevant caretakers.\n- Process inquiries, applications, and support requests.\n- Display and manage ratings and reviews.\n- Send important account, service, or platform announcements.\n- Improve the website and understand its usage.\n- Detect fraud, misuse, security threats, and policy violations.\n- Maintain records required for administration and legal compliance.\n\nWe will aim to collect and use only information that is reasonably necessary for these purposes.",
                     sec4:
-                        "We may share information when necessary to operate the platform, including with:\n- Authorized caretakers handling properties in their assigned locations.\n- Masitech Accommodation administrators.\n- Service providers that support authentication, hosting, storage, analytics, or communications.\n- Professional advisers or authorities where required by law.\n\nWe do not intend to sell personal information. Public reviews, display names, and property-related information may be visible to other platform users depending on the feature and the choices made by administrators.\n\nUsers should avoid posting sensitive personal information in public reviews, property descriptions, or inquiry messages.",
+                        "We may share information when necessary to operate the platform, including with:\n- Authorized caretakers handling properties in their assigned locations.\n- Masitech Solutions administrators.\n- Service providers that support authentication, hosting, storage, analytics, or communications.\n- Professional advisers or authorities where required by law.\n\nWe do not intend to sell personal information. Public reviews, display names, and property-related information may be visible to other platform users depending on the feature and the choices made by administrators.\n\nUsers should avoid posting sensitive personal information in public reviews, property descriptions, or inquiry messages.",
                     sec5:
                         "We use Firebase services for parts of the platform, including authentication, database functionality, hosting, and analytics where enabled.\n\nFirebase Authentication may process information such as email addresses, phone numbers, user-agent information, and IP addresses to support authentication, account management, security, and abuse prevention.\n\nWe may use Cloudinary to store and deliver property images. Property photos uploaded to the platform may be processed through Cloudinary and displayed using Cloudinary delivery URLs.\n\nMore information about Firebase privacy practices is available on Google’s Firebase Privacy and Security page.",
                     sec6:
@@ -4638,21 +4851,21 @@
                 defaultTitle: "Terms and Conditions",
                 defaults: {
                     heroTitle: "Terms and Conditions",
-                    heroSubtitle: "These terms explain the rules for using Masitech Accommodation.",
+                    heroSubtitle: "These terms explain the rules for using Masitech Solutions.",
                     lastUpdated: "14 September 2026",
-                    metaDescription: "Read the Terms and Conditions for using Masitech Accommodation.",
+                    metaDescription: "Read the Terms and Conditions for using Masitech Solutions.",
                     importantNotice: "These Terms and Conditions are a general starting draft. The owner should have them reviewed and customized by a qualified lawyer before the platform goes live.",
-                    sec1: "These Terms and Conditions govern your access to and use of the Masitech Accommodation website and related services.\n\nBy accessing the platform, creating an account, submitting information, or using any platform feature, you agree to follow these Terms and Conditions and the Privacy Policy.\n\nIf you do not agree with these terms, you should not use the platform.",
-                    sec2: "Masitech Accommodation provides an online platform where students and other tenants can discover accommodation listings, view property information, make inquiries, and interact with relevant caretakers or property representatives.\n\nThe platform may contain student boarding houses, apartments, rooms, beds, property photos, prices, availability details, amenities, conditions, reviews, announcements, and related information.\n\nUnless expressly stated otherwise, Masitech Accommodation is a platform operator and is not automatically a party to any rental, lease, booking, payment, or other agreement between a tenant and a property owner or caretaker.",
+                    sec1: "These Terms and Conditions govern your access to and use of the Masitech Solutions website and related services.\n\nBy accessing the platform, creating an account, submitting information, or using any platform feature, you agree to follow these Terms and Conditions and the Privacy Policy.\n\nIf you do not agree with these terms, you should not use the platform.",
+                    sec2: "Masitech Solutions provides an online platform where students and other tenants can discover accommodation listings, view property information, make inquiries, and interact with relevant caretakers or property representatives.\n\nThe platform may contain student boarding houses, apartments, rooms, beds, property photos, prices, availability details, amenities, conditions, reviews, announcements, and related information.\n\nUnless expressly stated otherwise, Masitech Solutions is a platform operator and is not automatically a party to any rental, lease, booking, payment, or other agreement between a tenant and a property owner or caretaker.",
                     sec3: "Some platform features require an account. When creating an account, you agree to provide information that is accurate, current, and complete.\n\nYou are responsible for maintaining the confidentiality of your login details and for activity carried out through your account. Do not share your password with another person.\n\nYou must notify us promptly if you believe that your account has been accessed without permission.\n\nAccount types\nThe platform may support students, non-student tenants, caretakers, administrators, and other account types. Access to features depends on the role assigned to an account.\n\nCaretaker and administrator accounts may require approval, verification, or creation by an authorized administrator. Users must not misrepresent their identity, position, property ownership, or authority.",
                     sec4: "Property listings may be submitted and managed by caretakers, administrators, owners, or other authorized representatives.\n\nListing information may include availability, price, location, property condition, room type, amenities, images, house rules, and contact information.\n\nProperty representatives are responsible for ensuring that the information they submit is accurate, lawful, current, and not misleading.\n\nAvailability, prices, images, conditions, and other details may change. Users should confirm important information directly with the relevant caretaker or authorized property representative before making a decision.\n\nWe may review, edit, reject, suspend, archive, or remove a listing where we believe it is inaccurate, outdated, misleading, unlawful, unsafe, or inconsistent with these Terms.",
-                    sec5: "The platform may allow users to contact caretakers or submit inquiries about properties. Sending an inquiry does not guarantee availability, approval, booking, tenancy, or a rental agreement.\n\nAny lease, tenancy, payment, deposit, viewing arrangement, move-in arrangement, or other agreement must be confirmed directly with the relevant property owner or authorized representative.\n\nUsers should independently verify the identity of the person they are dealing with and should use appropriate caution before sending money, sharing sensitive information, or entering into a rental agreement.\n\nUnless expressly agreed in writing, Masitech Accommodation does not guarantee that a property will remain available or that a prospective tenant will be accepted.",
+                    sec5: "The platform may allow users to contact caretakers or submit inquiries about properties. Sending an inquiry does not guarantee availability, approval, booking, tenancy, or a rental agreement.\n\nAny lease, tenancy, payment, deposit, viewing arrangement, move-in arrangement, or other agreement must be confirmed directly with the relevant property owner or authorized representative.\n\nUsers should independently verify the identity of the person they are dealing with and should use appropriate caution before sending money, sharing sensitive information, or entering into a rental agreement.\n\nUnless expressly agreed in writing, Masitech Solutions does not guarantee that a property will remain available or that a prospective tenant will be accepted.",
                     sec6: "Registered users may be allowed to submit reviews or ratings for properties and, where enabled, caretakers.\n\nReviews must be based on the user’s genuine experience and must be fair, relevant, and written in good faith.\n\nReviews must not:\n- Contain false, fabricated, or deliberately misleading information.\n- Include threats, harassment, hate speech, or abusive language.\n- Reveal another person’s private or sensitive information.\n- Contain malicious software, spam, advertising, or unrelated material.\n- Be submitted in exchange for payment or another improper benefit.\n- Attempt to manipulate the rating of a property or caretaker.\n- Impersonate another person or organization.\n- Make unlawful accusations or include content that violates another person’s rights.\n\nCaretakers and property representatives must not edit a tenant’s review. They may be allowed to respond through the platform, subject to moderation rules.\n\nWe may moderate, hide, remove, or restrict access to reviews that violate these Terms or applicable law.",
                     sec7: "You agree to use the platform lawfully, respectfully, and only for its intended accommodation-related purposes.\n\nYou must not:\n- Use the platform for fraud, impersonation, harassment, or illegal activity.\n- Submit false property, identity, availability, or contact information.\n- Attempt to access another user’s account or private information.\n- Interfere with the operation, security, or availability of the platform.\n- Use automated tools to scrape, copy, overload, or monitor the platform without permission.\n- Upload viruses, malicious code, or harmful files.\n- Use the platform to discriminate unlawfully against another person.\n- Use platform information to send unauthorized marketing or spam.",
-                    sec8: "You retain ownership of content that you lawfully submit, including reviews, comments, messages, images, and property information, subject to the rights granted below.\n\nBy submitting content to the platform, you grant Masitech Accommodation a non-exclusive, worldwide, royalty-free license to host, store, reproduce, display, format, moderate, and distribute that content as reasonably necessary to operate, improve, promote, and secure the platform.\n\nYou confirm that you have the necessary rights and permissions to submit the content and that its publication will not violate another person’s rights or applicable law.\n\nWe may remove or restrict content that violates these Terms, the Privacy Policy, applicable law, or the safety and integrity of the platform.",
-                    sec9: "Unless otherwise stated, the platform’s design, branding, logo, text, graphics, software, layout, and other original materials belong to Masitech Accommodation or its licensors.\n\nYou may use the platform and its content for personal, lawful, accommodation-related purposes. You must not copy, reproduce, modify, distribute, sell, reverse engineer, or commercially exploit platform materials without written permission.\n\nProperty names, logos, photographs, and other materials submitted by users or property representatives may belong to their respective owners.",
+                    sec8: "You retain ownership of content that you lawfully submit, including reviews, comments, messages, images, and property information, subject to the rights granted below.\n\nBy submitting content to the platform, you grant Masitech Solutions a non-exclusive, worldwide, royalty-free license to host, store, reproduce, display, format, moderate, and distribute that content as reasonably necessary to operate, improve, promote, and secure the platform.\n\nYou confirm that you have the necessary rights and permissions to submit the content and that its publication will not violate another person’s rights or applicable law.\n\nWe may remove or restrict content that violates these Terms, the Privacy Policy, applicable law, or the safety and integrity of the platform.",
+                    sec9: "Unless otherwise stated, the platform’s design, branding, logo, text, graphics, software, layout, and other original materials belong to Masitech Solutions or its licensors.\n\nYou may use the platform and its content for personal, lawful, accommodation-related purposes. You must not copy, reproduce, modify, distribute, sell, reverse engineer, or commercially exploit platform materials without written permission.\n\nProperty names, logos, photographs, and other materials submitted by users or property representatives may belong to their respective owners.",
                     sec10: "The platform may rely on third-party services such as Firebase for authentication, database, hosting, or analytics, and Cloudinary for image storage and delivery.\n\nThird-party services may have their own terms, privacy policies, availability limits, and technical requirements. We are not responsible for independent third-party services outside our reasonable control.",
-                    sec11: "The platform is provided on an “as available” basis. We aim to provide useful and current information, but we do not guarantee that the platform, listings, content, or services will always be accurate, complete, available, secure, or error-free.\n\nWe do not guarantee that a property is suitable, available, safe, lawful, accurately represented, or appropriate for a particular user. Users should inspect properties and verify important information before entering into an agreement or making a payment.\n\nTo the maximum extent permitted by applicable law, Masitech Accommodation is not responsible for loss, damage, fraud, injury, dispute, delay, or other harm arising from a user’s interaction with a property owner, caretaker, tenant, or other third party.\n\nNothing in these Terms excludes or limits a responsibility that cannot lawfully be excluded or limited.",
+                    sec11: "The platform is provided on an “as available” basis. We aim to provide useful and current information, but we do not guarantee that the platform, listings, content, or services will always be accurate, complete, available, secure, or error-free.\n\nWe do not guarantee that a property is suitable, available, safe, lawful, accurately represented, or appropriate for a particular user. Users should inspect properties and verify important information before entering into an agreement or making a payment.\n\nTo the maximum extent permitted by applicable law, Masitech Solutions is not responsible for loss, damage, fraud, injury, dispute, delay, or other harm arising from a user’s interaction with a property owner, caretaker, tenant, or other third party.\n\nNothing in these Terms excludes or limits a responsibility that cannot lawfully be excluded or limited.",
                     sec12: "We may suspend, restrict, or terminate an account or platform access if we reasonably believe that a user has:\n- Breached these Terms or another platform policy.\n- Provided false or misleading information.\n- Misused the platform or harmed another user.\n- Created a security, legal, or reputational risk.\n- Engaged in fraud, harassment, abuse, or unlawful conduct.\n\nWhere appropriate, we may provide notice or an opportunity to respond. We may also preserve or disclose information where reasonably necessary for security, legal compliance, dispute resolution, or investigation.",
                     sec13: "We may update these Terms when the platform, services, business operations, or legal requirements change.\n\nThe updated version will be posted on this page with a new “Last updated” date. Where required, we will provide additional notice or request renewed acceptance.\n\nContinued use of the platform after an update may constitute acceptance of the updated Terms to the extent permitted by applicable law.",
                     sec14: "These Terms and any dispute arising from the platform or services will be governed by the laws of the jurisdiction set below.\n\nAny dispute-resolution process, court jurisdiction, mediation requirement, or arbitration provision should be added after legal review.",
@@ -4688,7 +4901,7 @@
                     faqText:
                         "Visit our FAQs page for quick answers about accounts, listings, inquiries, and reviews.",
                     metaDescription:
-                        "Contact Masitech Accommodation for help with student boarding houses, apartments, listings, and inquiries."
+                        "Contact Masitech Solutions for help with student boarding houses, apartments, listings, and inquiries."
                 }
             },
             faqs: {
@@ -4699,12 +4912,12 @@
                     heroSubtitle:
                         "Find quick answers about listings, accounts, locations, inquiries, reviews, and caretaker support.",
                     metaDescription:
-                        "Find answers to common questions about Masitech Accommodation, listings, accounts, properties, and inquiries.",
+                        "Find answers to common questions about Masitech Solutions, listings, accounts, properties, and inquiries.",
                     contactTitle: "Still have a question?",
                     contactText:
                         "Contact our team if you need help that is not covered here.",
                     itemsText:
-`General questions | What is Masitech Accommodation? | Masitech Accommodation is a platform for discovering student boarding houses and private apartments in different locations.
+`General questions | What is Masitech Solutions? | Masitech Solutions is a platform for discovering student boarding houses and private apartments in different locations.
 General questions | Who can use the platform? | Students can browse student accommodation, while non-student tenants can browse apartments. Visitors can view public listings, while an account may be required for inquiries, reviews, or other features.
 General questions | Which locations are available? | Available locations are shown in the location selector and listing filters. The owner or administrator can add, edit, or remove locations as the accommodation network changes.
 General questions | Does the platform guarantee accommodation? | No. The platform displays accommodation information and helps users make inquiries. Availability, approval, pricing, viewing arrangements, and tenancy agreements must be confirmed with the relevant property representative.
@@ -5392,56 +5605,184 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     .join("");
         }
 
-        function renderRoleUserOptions() {
-            const select =
-                document.getElementById(
-                    "roleUserSelect"
-                );
+        function renderRoleLocationCheckboxes(selectedIds = []) {
+            const grid = document.getElementById("roleLocationCheckboxGrid");
+            if (!grid) return;
 
-            const currentValue =
-                select.value;
+            const selected = new Set(
+                (selectedIds || []).map(String).filter(Boolean)
+            );
 
-            select.innerHTML = `
-                <option value="">
-                    Select a user
-                </option>
-            `;
+            // Always the same list as signup — enrich with admin area/street when saved
+            const enriched = PLATFORM_LOCATIONS.map((base) => {
+                const saved = (state.locations || []).find((item) => item.id === base.id);
+                return {
+                    ...base,
+                    area: saved?.area || null,
+                    street: saved?.street || null,
+                    status: saved?.status || "active"
+                };
+            });
 
-            state.users
-                .sort((first, second) =>
-                    String(
-                        first.fullName || first.email || ""
-                    ).localeCompare(
-                        String(
-                            second.fullName ||
-                            second.email ||
-                            ""
-                        )
-                    )
-                )
-                .forEach((user) => {
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
+            grid.innerHTML = enriched
+                .map((location) => {
+                    const labelParts = [
+                        location.name,
+                        location.area,
+                        location.street
+                    ].filter(Boolean);
+                    const typeNote =
+                        location.audience === "student"
+                            ? " (student / boarding)"
+                            : " (tenant / apartments)";
+                    const checked = selected.has(String(location.id)) ? "checked" : "";
+                    return `
+                        <label class="checkbox-label">
+                            <input
+                                type="checkbox"
+                                value="${escapeHtml(location.id)}"
+                                data-location-assign
+                                ${checked}
+                            >
+                            ${escapeHtml(labelParts.join(" — "))}${escapeHtml(typeNote)}
+                        </label>`;
+                })
+                .join("");
+        }
 
-                    option.value = user.id;
-                    option.textContent =
-                        `${user.fullName || "Unnamed"} · ${user.email || user.id}`;
+        function normalizeSearchText(value) {
+            return String(value || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9@.+\s_-]/gi, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
 
-                    select.appendChild(option);
-                });
+        function userMatchesQuery(user, query) {
+            if (!query) return true;
+            const haystack = normalizeSearchText(
+                [
+                    user.fullName,
+                    user.displayName,
+                    user.email,
+                    user.phone,
+                    user.role,
+                    ...(Array.isArray(user.roles) ? user.roles : []),
+                    user.locationId,
+                    ...(Array.isArray(user.locationIds) ? user.locationIds : []),
+                    user.accountStatus,
+                    user.id
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+            );
+            const tokens = normalizeSearchText(query).split(" ").filter(Boolean);
+            return tokens.every((token) => haystack.includes(token));
+        }
 
-            if (
-                currentValue &&
-                state.users.some(
-                    (user) => user.id === currentValue
-                )
-            ) {
-                select.value = currentValue;
+        function setSelectedRoleUser(userId) {
+            const hidden = document.getElementById("roleUserSelect");
+            const label = document.getElementById("roleUserSelectedLabel");
+            const results = document.getElementById("roleUserSearchResults");
+            if (hidden) hidden.value = userId || "";
+
+            if (!userId) {
+                if (label) {
+                    label.textContent =
+                        "No user selected yet. Type to search — not case sensitive.";
+                }
+                return;
+            }
+
+            const user = (state.users || []).find((item) => item.id === userId);
+            if (label) {
+                label.innerHTML = user
+                    ? `Selected: <strong>${escapeHtml(user.fullName || user.email || userId)}</strong> (${escapeHtml(user.email || "")})`
+                    : `Selected user ID: ${escapeHtml(userId)}`;
+            }
+            if (results) results.style.display = "none";
+
+            if (user) {
+                populateRoleForm(user);
             }
         }
 
+        function renderRoleUserSearchResults(query) {
+            const results = document.getElementById("roleUserSearchResults");
+            if (!results) return;
+
+            const q = String(query || "").trim();
+            if (!q) {
+                results.style.display = "none";
+                results.innerHTML = "";
+                return;
+            }
+
+            const matches = (state.users || [])
+                .filter((user) => userMatchesQuery(user, q))
+                .sort((a, b) =>
+                    String(a.fullName || a.email || "").localeCompare(
+                        String(b.fullName || b.email || "")
+                    )
+                )
+                .slice(0, 25);
+
+            if (matches.length === 0) {
+                results.style.display = "block";
+                results.innerHTML = `
+                    <div class="empty-state" style="padding: 16px;">
+                        No users match “${escapeHtml(q)}”.
+                    </div>`;
+                return;
+            }
+
+            results.style.display = "block";
+            results.innerHTML = matches
+                .map((user) => {
+                    const name = escapeHtml(user.fullName || user.displayName || "Unnamed");
+                    const email = escapeHtml(user.email || "");
+                    const roles = escapeHtml(
+                        (Array.isArray(user.roles) && user.roles.length
+                            ? user.roles
+                            : [user.role || "student"]
+                        ).join(", ")
+                    );
+                    const loc = escapeHtml(
+                        Array.isArray(user.locationIds) && user.locationIds.length
+                            ? user.locationIds.join(", ")
+                            : user.locationId || "—"
+                    );
+                    return `
+                        <button
+                            type="button"
+                            class="nav-item"
+                            data-select-role-user="${escapeHtml(user.id)}"
+                            style="width: 100%; border-radius: 0; margin: 0;"
+                        >
+                            <span style="text-align: left;">
+                                <strong>${name}</strong><br>
+                                <small>${email} · ${roles} · ${loc}</small>
+                            </span>
+                        </button>`;
+                })
+                .join("");
+        }
+
+        function renderRoleUserOptions() {
+            // Kept for compatibility with renderAll — search UI does not need a full <select> list
+            const hidden = document.getElementById("roleUserSelect");
+            if (hidden && !hidden.value) {
+                const label = document.getElementById("roleUserSelectedLabel");
+                if (label && !label.textContent.includes("Selected:")) {
+                    label.textContent =
+                        "No user selected yet. Type to search — not case sensitive.";
+                }
+            }
+        }
+
+        
         function renderAuditLogs() {
             const searchTerm =
                 document.getElementById(
@@ -5548,12 +5889,17 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
         }
 
         function updateNotificationCount() {
+            const pendingPlatform = (state.platformReviews || []).filter(
+                (r) => (r.status || "pending") === "pending"
+            ).length;
+            const pendingProperty = (state.properties || []).filter(
+                (p) => p.status === "pending"
+            ).length;
             const count =
-                state.announcements.length;
+                state.announcements.length + pendingPlatform + pendingProperty;
 
-            document.getElementById(
-                "notificationCount"
-            ).textContent = count;
+            const el = document.getElementById("notificationCount");
+            if (el) el.textContent = count;
         }
 
         async function writeAuditLog(
@@ -5817,12 +6163,13 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 user.accountStatus ||
                 "active";
 
-            document.getElementById(
-                "roleLocationIds"
-            ).value =
+            const assigned =
                 Array.isArray(user.locationIds)
-                    ? user.locationIds.join(", ")
-                    : user.locationId || "";
+                    ? user.locationIds
+                    : user.locationId
+                        ? [user.locationId]
+                        : [];
+            renderRoleLocationCheckboxes(assigned);
 
             document
                 .querySelectorAll(
@@ -5914,15 +6261,11 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     "accountStatus"
                 ).value;
 
-            const locationIds =
-                document.getElementById(
-                    "roleLocationIds"
-                ).value
-                    .split(",")
-                    .map(
-                        (value) => value.trim()
-                    )
-                    .filter(Boolean);
+            const locationIds = Array.from(
+                document.querySelectorAll(
+                    "[data-location-assign]:checked"
+                )
+            ).map((input) => input.value);
 
             if (selectedRoles.length === 0) {
                 showMessage(
@@ -5978,6 +6321,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         permissions:
                             selectedPermissions,
                         locationIds,
+                        locationId: locationIds[0] || null,
                         accountStatus,
                         updatedBy:
                             state.user.uid,
@@ -6279,38 +6623,69 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             }
             const msgEl = document.getElementById("locationMessage");
             hideMessage(msgEl);
-            const name = document.getElementById("locationName").value.trim();
-            const area = document.getElementById("locationArea").value.trim();
-            const status = document.getElementById("locationStatus").value;
-            const description = document.getElementById("locationDescription").value.trim();
-            if (!name) {
-                showMessage(msgEl, "Location name is required.", "error");
+
+            const locationKey = document.getElementById("locationKey")?.value;
+            const platform = PLATFORM_LOCATIONS.find((item) => item.id === locationKey);
+            if (!platform) {
+                showMessage(msgEl, "Select a platform location that matches signup.", "error");
                 return;
             }
+
+            const area = document.getElementById("locationArea").value.trim();
+            const street = document.getElementById("locationStreet")?.value.trim() || "";
+            const status = document.getElementById("locationStatus").value;
+            const description = document.getElementById("locationDescription").value.trim();
+
             try {
-                const docRef = await addDoc(collection(db, "locations"), {
-                    name,
-                    area: area || null,
-                    status,
-                    description: description || null,
-                    createdBy: state.user.uid,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
+                // Document ID = signup location id (cbu, lusaka, ...) — no mismatch
+                await setDoc(
+                    doc(db, "locations", platform.id),
+                    {
+                        name: platform.name,
+                        area: area || null,
+                        street: street || null,
+                        listingType: platform.listingType,
+                        audience: platform.audience,
+                        status,
+                        description: description || null,
+                        updatedBy: state.user.uid,
+                        updatedAt: serverTimestamp(),
+                        createdAt: serverTimestamp()
+                    },
+                    { merge: true }
+                );
+
+                await writeAuditLog("Location details saved", {
+                    id: platform.id,
+                    name: platform.name,
+                    details: `Area: ${area || "—"} · Street: ${street || "—"}`
                 });
-                await writeAuditLog("Location created", {
-                    id: docRef.id,
-                    name,
-                    details: `Status: ${status}`
-                });
-                showMessage(msgEl, "Location saved successfully.", "success");
+
+                showMessage(msgEl, "Location details saved. Caretakers using this signup location will see the updates.", "success");
                 document.getElementById("locationForm").reset();
                 togglePanel("locationCreatePanel", false);
                 await loadAdminData();
-                showToast("Location created.");
+                showToast("Location updated.");
             } catch (error) {
-                console.error("Could not create location:", error);
+                console.error("Could not save location:", error);
                 showMessage(msgEl, "Could not save location. Check Firestore rules.", "error");
             }
+        });
+
+        document.getElementById("locationKey")?.addEventListener("change", () => {
+            const key = document.getElementById("locationKey").value;
+            const existing = (state.locations || []).find((item) => item.id === key);
+            if (!existing) {
+                document.getElementById("locationArea").value = "";
+                document.getElementById("locationStreet").value = "";
+                document.getElementById("locationDescription").value = "";
+                document.getElementById("locationStatus").value = "active";
+                return;
+            }
+            document.getElementById("locationArea").value = existing.area || "";
+            document.getElementById("locationStreet").value = existing.street || "";
+            document.getElementById("locationDescription").value = existing.description || "";
+            document.getElementById("locationStatus").value = existing.status || "active";
         });
 
         // Announcement create
@@ -6541,20 +6916,32 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             );
 
         document
-            .getElementById("roleUserSelect")
-            .addEventListener(
-                "change",
-                (event) => {
-                    const user =
-                        state.users.find(
-                            (item) =>
-                                item.id ===
-                                event.target.value
-                        );
+            .getElementById("roleUserSearch")
+            ?.addEventListener("input", (event) => {
+                renderRoleUserSearchResults(event.target.value);
+            });
 
-                    populateRoleForm(user);
+        document
+            .getElementById("roleUserSearch")
+            ?.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    const results = document.getElementById("roleUserSearchResults");
+                    if (results) {
+                        results.style.display = "none";
+                        results.innerHTML = "";
+                    }
                 }
-            );
+            });
+
+        document
+            .getElementById("roleUserSearchResults")
+            ?.addEventListener("click", (event) => {
+                const button = event.target.closest("[data-select-role-user]");
+                if (!button) return;
+                setSelectedRoleUser(button.dataset.selectRoleUser);
+                const search = document.getElementById("roleUserSearch");
+                if (search) search.value = "";
+            });
 
         document
             .getElementById("roleForm")
@@ -6578,7 +6965,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
 
                     document
                         .querySelectorAll(
-                            "[data-role-input], [data-permission-input]"
+                            "[data-role-input], [data-permission-input], [data-location-assign]"
                         )
                         .forEach(
                             (input) => {
@@ -6586,6 +6973,11 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                                     false;
                             }
                         );
+
+                    setSelectedRoleUser("");
+                    const search = document.getElementById("roleUserSearch");
+                    if (search) search.value = "";
+                    renderRoleLocationCheckboxes([]);
 
                     hideMessage(
                         document.getElementById(
@@ -6676,20 +7068,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         "edit-roles"
                     ) {
                         openSection("roles");
-
-                        document
-                            .getElementById(
-                                "roleUserSelect"
-                            )
-                            .value = userId;
-
-                        populateRoleForm(
-                            state.users.find(
-                                (user) =>
-                                    user.id ===
-                                    userId
-                            )
-                        );
+                        setSelectedRoleUser(userId);
                     }
                 }
             );
@@ -6712,20 +7091,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         button.dataset.id;
 
                     openSection("roles");
-
-                    document
-                        .getElementById(
-                            "roleUserSelect"
-                        )
-                        .value = userId;
-
-                    populateRoleForm(
-                        state.users.find(
-                            (user) =>
-                                user.id ===
-                                userId
-                        )
-                    );
+                    setSelectedRoleUser(userId);
                 }
             );
 
@@ -6839,6 +7205,48 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     }
                 }
             );
+
+        document
+            .getElementById("platformReviewsTableBody")
+            ?.addEventListener("click", async (event) => {
+                const button = event.target.closest("[data-platform-review-action]");
+                if (!button) return;
+
+                const reviewId = button.dataset.id;
+                const action = button.dataset.platformReviewAction;
+
+                if (action === "approve") {
+                    await updatePlatformReview(reviewId, {
+                        status: "approved",
+                        showOnLanding: true
+                    });
+                } else if (action === "reject") {
+                    await updatePlatformReview(reviewId, {
+                        status: "rejected",
+                        showOnLanding: false
+                    });
+                } else if (action === "show") {
+                    await updatePlatformReview(reviewId, {
+                        status: "approved",
+                        showOnLanding: true
+                    });
+                } else if (action === "hide") {
+                    await updatePlatformReview(reviewId, {
+                        showOnLanding: false
+                    });
+                }
+            });
+
+        document
+            .getElementById("refreshPlatformReviewsButton")
+            ?.addEventListener("click", async () => {
+                try {
+                    await loadAdminData();
+                    showToast("Platform reviews refreshed.");
+                } catch (error) {
+                    showToast("Could not refresh platform reviews.", true);
+                }
+            });
 
         mobileMenuButton.addEventListener(
             "click",

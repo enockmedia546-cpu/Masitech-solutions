@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Apartments | Masitech Accommodation</title>
+    <title>Student Boarding Houses | Masitech Solutions</title>
 
     <style>
         :root {
             --charcoal: #374151;
             --dark-charcoal: #1f2937;
-            --teal: #0f766e;
-            --dark-teal: #0b625c;
+            --blue: #2563eb;
+            --dark-blue: #1d4ed8;
+            --teal: #2563eb;
+            --dark-teal: #1d4ed8;
             --light-grey: #f3f4f6;
             --medium-grey: #6b7280;
             --white: #ffffff;
@@ -217,7 +219,7 @@
         .field-group input:focus,
         .field-group select:focus {
             border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
         .listing-summary {
@@ -461,15 +463,15 @@
 <body>
     <header class="site-header">
         <div class="container header-content">
-            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
-                <img src="assets/logo.jpg" alt="Masitech Accommodation logo">
-                <span>Masitech Accommodation</span>
+            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
+                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
+                <span>Masitech Solutions</span>
             </a>
 
             <nav class="main-nav" id="mainNav" aria-label="Main navigation">
                 <a href="index.html">Home</a>
-                <a href="student-listings.html">Students</a>
-                <a class="active" href="apartment-listings.html">Apartments</a>
+                <a class="active" href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
                 <a href="about.html">About Us</a>
                 <a href="faqs.html">FAQs</a>
                 <a href="contact.html">Contact</a>
@@ -496,10 +498,10 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1>Private apartments</h1>
+                <h1>Student boarding houses</h1>
                 <p>
-                    Find apartments for individuals, couples, families, and other
-                    non-student tenants in convenient locations.
+                    Browse available student accommodation near your campus and
+                    compare rooms, prices, conditions, and facilities.
                 </p>
             </div>
         </section>
@@ -512,7 +514,7 @@
                         <input
                             id="searchInput"
                             type="search"
-                            placeholder="Search by apartment name..."
+                            placeholder="Search by property name..."
                         >
                     </div>
 
@@ -540,30 +542,30 @@
 
                 <div class="listing-summary">
                     <div>
-                        <h2>Available apartments</h2>
+                        <h2>Available student accommodation</h2>
                         <p id="resultCount">Loading listings...</p>
                     </div>
                 </div>
 
                 <div class="loading" id="loadingState">
-                    Loading apartments...
+                    Loading student boarding houses...
                 </div>
 
                 <div class="property-grid" id="propertyGrid"></div>
 
                 <div class="empty-state" id="emptyState" hidden>
-                    No apartments match your search.
+                    No student boarding houses match your search.
                 </div>
 
                 <div class="error-state" id="errorState" hidden>
-                    We could not load the apartment listings. Please try again later.
+                    We could not load the listings. Please try again later.
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        © <span id="currentYear"></span> Masitech Accommodation. All rights reserved.
+        © <span id="currentYear"></span> Masitech Solutions. All rights reserved.
     </footer>
 
     <script type="module">
@@ -603,7 +605,7 @@
         const resultCount = document.getElementById("resultCount");
         const currentYear = document.getElementById("currentYear");
 
-        let allApartments = [];
+        let allProperties = [];
         let locationMap = {};
 
         currentYear.textContent = new Date().getFullYear();
@@ -644,62 +646,62 @@
             return div.innerHTML;
         }
 
-        function getImageUrl(apartment) {
-            if (apartment.imageUrl) return apartment.imageUrl;
-            if (Array.isArray(apartment.imageUrls) && apartment.imageUrls[0]) {
-                return apartment.imageUrls[0];
+        function formatPrice(property) {
+            if (property.priceLabel) {
+                return escapeHtml(property.priceLabel);
             }
 
-            return "https://via.placeholder.com/800x500?text=Apartment";
-        }
-
-        function formatPrice(apartment) {
-            if (apartment.priceLabel) {
-                return escapeHtml(apartment.priceLabel);
-            }
-
-            if (typeof apartment.price === "number") {
-                return `K${apartment.price.toLocaleString()} per month`;
+            if (typeof property.price === "number") {
+                return `K${property.price.toLocaleString()} per month`;
             }
 
             return "Price on inquiry";
         }
 
-        function getRating(apartment) {
-            const rating = Number(apartment.rating);
+        function getImageUrl(property) {
+            if (property.imageUrl) return property.imageUrl;
+            if (Array.isArray(property.imageUrls) && property.imageUrls[0]) {
+                return property.imageUrls[0];
+            }
+
+            return "https://via.placeholder.com/800x500?text=Student+Accommodation";
+        }
+
+        function getRating(property) {
+            const rating = Number(property.rating);
 
             if (!rating) {
                 return "No reviews yet";
             }
 
-            return `★ ${rating.toFixed(1)} (${apartment.reviewCount || 0} reviews)`;
+            return `★ ${rating.toFixed(1)} (${property.reviewCount || 0} reviews)`;
         }
 
-        function getAvailability(apartment) {
-            if (apartment.availableUnits !== undefined && apartment.availableUnits !== null) {
-                return `${apartment.availableUnits} available`;
+        function getAvailabilityLabel(property) {
+            if (property.availableRooms !== undefined && property.availableRooms !== null) {
+                return `${property.availableRooms} available`;
             }
 
-            if (apartment.availableRooms !== undefined && apartment.availableRooms !== null) {
-                return `${apartment.availableRooms} available`;
+            if (property.availableUnits !== undefined && property.availableUnits !== null) {
+                return `${property.availableUnits} available`;
             }
 
             return "Availability on inquiry";
         }
 
-        function getLocationLabel(apartment) {
+        function getLocationLabel(property) {
             return (
-                apartment.locationName ||
-                locationMap[apartment.locationId] ||
-                apartment.locationId ||
+                property.locationName ||
+                locationMap[property.locationId] ||
+                property.locationId ||
                 "Location not provided"
             );
         }
 
-        function displayApartments(apartments) {
+        function displayProperties(properties) {
             propertyGrid.innerHTML = "";
 
-            if (apartments.length === 0) {
+            if (properties.length === 0) {
                 emptyState.hidden = false;
                 resultCount.textContent = "0 listings found";
                 return;
@@ -707,28 +709,27 @@
 
             emptyState.hidden = true;
             resultCount.textContent =
-                `${apartments.length} listing${apartments.length === 1 ? "" : "s"} found`;
+                `${properties.length} listing${properties.length === 1 ? "" : "s"} found`;
 
-            apartments.forEach((apartment) => {
-                const apartmentId = apartment.id;
+            properties.forEach((property) => {
+                const propertyId = property.id;
                 const title = escapeHtml(
-                    apartment.title || "Private apartment"
+                    property.title || "Student boarding house"
                 );
-                const location = escapeHtml(getLocationLabel(apartment));
+                const location = escapeHtml(getLocationLabel(property));
                 const description = escapeHtml(
-                    apartment.description ||
-                    "Apartment details will be provided soon."
+                    property.description || "Property details will be provided soon."
                 );
-                const unitType = escapeHtml(
-                    apartment.unitType ||
-                    apartment.roomType ||
-                    "Apartment details unavailable"
+                const roomType = escapeHtml(
+                    property.roomType ||
+                    property.spaceLabel ||
+                    "Room details unavailable"
                 );
                 const condition = escapeHtml(
-                    apartment.condition || "Condition not provided"
+                    property.condition || "Condition not provided"
                 );
-                const availability = escapeHtml(
-                    getAvailability(apartment)
+                const availableRooms = escapeHtml(
+                    getAvailabilityLabel(property)
                 );
 
                 const card = document.createElement("article");
@@ -738,10 +739,10 @@
                     <div class="property-image-wrapper">
                         <img
                             class="property-image"
-                            src="${getImageUrl(apartment)}"
+                            src="${getImageUrl(property)}"
                             alt="${title}"
                             loading="lazy"
-                            onerror="this.src='https://via.placeholder.com/800x500?text=Apartment'"
+                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Accommodation'"
                         >
                         <span class="status-badge">Available</span>
                     </div>
@@ -752,20 +753,20 @@
                         <p class="property-description">${description}</p>
 
                         <div class="property-meta">
-                            <span class="meta-item">${unitType}</span>
+                            <span class="meta-item">${roomType}</span>
                             <span class="meta-item">${condition}</span>
-                            <span class="meta-item">${availability}</span>
+                            <span class="meta-item">${availableRooms}</span>
                         </div>
 
                         <div class="property-bottom">
                             <div>
-                                <div class="price">${formatPrice(apartment)}</div>
-                                <div class="rating">${getRating(apartment)}</div>
+                                <div class="price">${formatPrice(property)}</div>
+                                <div class="rating">${getRating(property)}</div>
                             </div>
 
                             <a
                                 class="view-button"
-                                href="property-details.html?id=${encodeURIComponent(apartmentId)}"
+                                href="property-details.html?id=${encodeURIComponent(propertyId)}"
                             >
                                 View details
                             </a>
@@ -777,21 +778,21 @@
             });
         }
 
-        function filterAndDisplayApartments() {
+        function filterAndDisplayProperties() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             const selectedLocation = locationFilter.value;
             const selectedSort = sortFilter.value;
 
-            let filteredApartments = allApartments.filter((apartment) => {
+            let filteredProperties = allProperties.filter((property) => {
                 const searchableText = [
-                    apartment.title,
-                    apartment.locationName,
-                    apartment.locationId,
-                    locationMap[apartment.locationId],
-                    apartment.description,
-                    apartment.address,
-                    apartment.unitType,
-                    apartment.roomType
+                    property.title,
+                    property.locationName,
+                    property.locationId,
+                    locationMap[property.locationId],
+                    property.description,
+                    property.address,
+                    property.roomType,
+                    property.spaceLabel
                 ]
                     .filter(Boolean)
                     .join(" ")
@@ -802,12 +803,12 @@
 
                 const matchesLocation =
                     selectedLocation === "all" ||
-                    apartment.locationId === selectedLocation;
+                    property.locationId === selectedLocation;
 
                 return matchesSearch && matchesLocation;
             });
 
-            filteredApartments.sort((first, second) => {
+            filteredProperties.sort((first, second) => {
                 if (selectedSort === "price-low") {
                     return Number(first.price || 0) - Number(second.price || 0);
                 }
@@ -824,7 +825,7 @@
                     getDateValue(first.createdAt);
             });
 
-            displayApartments(filteredApartments);
+            displayProperties(filteredProperties);
         }
 
         function getDateValue(timestamp) {
@@ -878,35 +879,35 @@
 
         filterForm.addEventListener("submit", (event) => {
             event.preventDefault();
-            filterAndDisplayApartments();
+            filterAndDisplayProperties();
         });
 
-        searchInput.addEventListener("input", filterAndDisplayApartments);
-        locationFilter.addEventListener("change", filterAndDisplayApartments);
-        sortFilter.addEventListener("change", filterAndDisplayApartments);
+        searchInput.addEventListener("input", filterAndDisplayProperties);
+        locationFilter.addEventListener("change", filterAndDisplayProperties);
+        sortFilter.addEventListener("change", filterAndDisplayProperties);
 
-        const apartmentsQuery = query(
+        const propertiesQuery = query(
             collection(db, "properties"),
-            where("propertyType", "==", "apartment"),
+            where("propertyType", "==", "student"),
             where("status", "==", "published")
         );
 
         await loadLocations();
 
         onSnapshot(
-            apartmentsQuery,
+            propertiesQuery,
             (snapshot) => {
-                allApartments = snapshot.docs.map((apartmentDocument) => ({
-                    id: apartmentDocument.id,
-                    ...apartmentDocument.data()
+                allProperties = snapshot.docs.map((propertyDocument) => ({
+                    id: propertyDocument.id,
+                    ...propertyDocument.data()
                 }));
 
                 loadingState.style.display = "none";
                 errorState.hidden = true;
-                filterAndDisplayApartments();
+                filterAndDisplayProperties();
             },
             (error) => {
-                console.error("Could not load apartments:", error);
+                console.error("Could not load properties:", error);
 
                 loadingState.style.display = "none";
                 errorState.hidden = false;

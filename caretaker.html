@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Boarding Houses | Masitech Solutions</title>
+    <title>Caretaker Dashboard | Masitech Solutions</title>
 
     <style>
         :root {
@@ -22,6 +22,7 @@
             --amber: #d97706;
             --red: #dc2626;
             --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+            --sidebar-width: 260px;
         }
 
         * {
@@ -37,92 +38,385 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        body.auth-pending .app-layout {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        body.auth-ready .app-layout {
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .auth-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: var(--light-grey);
+        }
+
+        body.auth-ready .auth-gate {
+            display: none;
+        }
+
+        .auth-gate-card {
+            max-width: 420px;
+            width: 100%;
+            padding: 28px;
+            text-align: center;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .auth-gate-card p {
+            color: var(--medium-grey);
+            font-size: 0.92rem;
+        }
+
+        .notification-button svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
         }
 
-        img {
-            display: block;
-            max-width: 100%;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        .container {
-            width: min(1150px, calc(100% - 40px));
-            margin: 0 auto;
-        }
-
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.96);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-
-        .header-content {
-            min-height: 76px;
+        .app-layout {
+            min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 22px;
         }
 
-        .brand {
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 1100;
+            width: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            color: #d1d5db;
+            background: var(--dark-charcoal);
+            transition: transform 0.25s ease;
+        }
+
+        .sidebar-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--dark-charcoal);
+            min-height: 78px;
+            padding: 15px 19px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header img {
+            width: 43px;
+            height: 43px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .sidebar-brand {
+            color: var(--white);
+            font-size: 0.94rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .sidebar-brand small {
+            display: block;
+            margin-top: 3px;
+            color: #9ca3af;
+            font-size: 0.71rem;
+            font-weight: 400;
+        }
+
+        .sidebar-navigation {
+            flex: 1;
+            padding: 20px 12px;
+        }
+
+        .nav-label {
+            margin: 16px 10px 8px;
+            color: #6b7280;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-label:first-child {
+            margin-top: 0;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 4px;
+            padding: 11px 12px;
+            color: #d1d5db;
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.87rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--white);
+            background: rgba(37, 99, 235, 0.78);
+        }
+
+        .nav-icon {
+            width: 20px;
+            color: #93c5fd;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .caretaker-identity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 13px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            color: var(--white);
+            background: var(--teal);
+            border-radius: 50%;
+            font-size: 0.8rem;
             font-weight: 700;
         }
 
-        .brand img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border-radius: 9px;
+        .identity-text {
+            min-width: 0;
         }
 
-        .main-nav {
+        .identity-text strong,
+        .identity-text small {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .identity-text strong {
+            color: var(--white);
+            font-size: 0.8rem;
+        }
+
+        .identity-text small {
+            margin-top: 2px;
+            color: #9ca3af;
+            font-size: 0.71rem;
+        }
+
+        .logout-button {
+            width: 100%;
+            min-height: 37px;
+            color: #fecaca;
+            background: rgba(220, 38, 38, 0.12);
+            border: 1px solid rgba(248, 113, 113, 0.28);
+            border-radius: 7px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .logout-button:hover {
+            background: rgba(220, 38, 38, 0.25);
+        }
+
+        .main-content {
+            width: calc(100% - var(--sidebar-width));
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+        }
+
+        .topbar {
+            min-height: 78px;
             display: flex;
             align-items: center;
-            gap: 22px;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 29px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
         }
 
-        .main-nav a {
-            color: var(--charcoal);
-            font-size: 0.92rem;
-            font-weight: 600;
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .main-nav a:hover,
-        .main-nav a.active {
+        .mobile-menu-button {
+            display: none;
+            padding: 7px 10px;
+            color: var(--dark-charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 7px;
+            font-size: 1.15rem;
+        }
+
+        .page-heading h1 {
+            color: var(--dark-charcoal);
+            font-size: 1.3rem;
+        }
+
+        .page-heading p {
+            margin-top: 3px;
+            color: var(--medium-grey);
+            font-size: 0.8rem;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .view-site-link {
             color: var(--teal);
+            font-size: 0.83rem;
+            font-weight: 700;
         }
 
-        .header-actions {
+        .view-site-link:hover {
+            text-decoration: underline;
+        }
+
+        .notification-button {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            display: grid;
+            width: 18px;
+            height: 18px;
+            place-items: center;
+            color: var(--white);
+            background: var(--red);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            font-size: 0.61rem;
+            font-weight: 700;
+        }
+
+        .page-container {
+            padding: 30px;
+        }
+
+        .loading-screen,
+        .access-denied {
+            min-height: 70vh;
+            display: grid;
+            place-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .access-card {
+            max-width: 500px;
+            padding: 34px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .access-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .access-card p {
+            margin-bottom: 20px;
+            color: var(--medium-grey);
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .section-heading {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 4px;
+            color: var(--dark-charcoal);
+            font-size: 1.45rem;
+        }
+
+        .section-heading p {
+            color: var(--medium-grey);
+            font-size: 0.87rem;
+        }
+
+        .section-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
         }
 
         .button {
             display: inline-flex;
-            min-height: 42px;
+            min-height: 41px;
             align-items: center;
             justify-content: center;
-            padding: 0 16px;
+            padding: 0 15px;
             border: 1px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
+            border-radius: 7px;
+            font-size: 0.83rem;
             font-weight: 700;
         }
 
@@ -146,138 +440,235 @@
             border-color: var(--teal);
         }
 
-        .menu-button {
-            display: none;
-            padding: 8px 10px;
-            color: var(--dark-charcoal);
-            background: var(--light-grey);
-            border: 0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.25rem;
-        }
-
-        .page-header {
-            padding: 60px 0 46px;
+        .button-danger {
             color: var(--white);
-            background:
-                linear-gradient(rgba(31, 41, 55, 0.88), rgba(31, 41, 55, 0.88)),
-                linear-gradient(135deg, #4b5563, #111827);
+            background: var(--red);
         }
 
-        .page-header h1 {
-            margin-bottom: 10px;
-            font-size: clamp(2rem, 4vw, 3rem);
+        .button-danger:hover {
+            background: #b91c1c;
         }
 
-        .page-header p {
-            max-width: 680px;
-            color: #e5e7eb;
-        }
-
-        .listing-area {
-            padding: 38px 0 80px;
-        }
-
-        .filter-card {
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr auto;
-            align-items: end;
-            gap: 14px;
-            margin-bottom: 30px;
-            padding: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 17px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            padding: 19px;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
         }
 
-        .field-group {
+        .stat-top {
             display: flex;
-            flex-direction: column;
-            gap: 7px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
-        .field-group label {
-            color: var(--charcoal);
-            font-size: 0.84rem;
+        .stat-label {
+            color: var(--medium-grey);
+            font-size: 0.77rem;
             font-weight: 700;
         }
 
-        .field-group input,
-        .field-group select {
-            width: 100%;
-            min-height: 43px;
-            padding: 0 11px;
+        .stat-icon {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            color: var(--teal);
+            background: #dbeafe;
+            border-radius: 8px;
+        }
+
+        .stat-value {
             color: var(--dark-charcoal);
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .stat-note {
+            margin-top: 3px;
+            color: var(--medium-grey);
+            font-size: 0.72rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .panel {
+            overflow: hidden;
             background: var(--white);
-            border: 1px solid #d1d5db;
-            border-radius: 7px;
-            outline: none;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
         }
 
-        .field-group input:focus,
-        .field-group select:focus {
-            border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-        }
-
-        .listing-summary {
+        .panel-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 15px;
-            margin-bottom: 18px;
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .listing-summary h2 {
+        .panel-header h3 {
             color: var(--dark-charcoal);
-            font-size: 1.35rem;
+            font-size: 1rem;
         }
 
-        .listing-summary p {
-            color: var(--medium-grey);
-            font-size: 0.9rem;
+        .panel-header a {
+            color: var(--teal);
+            font-size: 0.78rem;
+            font-weight: 700;
         }
 
-        .loading,
-        .empty-state,
-        .error-state {
-            padding: 45px 20px;
+        .panel-body {
+            padding: 20px;
+        }
+
+        .status-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .status-row span:first-child {
+            color: var(--charcoal);
+            font-size: 0.82rem;
+        }
+
+        .status-number {
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+        }
+
+        .activity-dot {
+            flex-shrink: 0;
+            width: 9px;
+            height: 9px;
+            margin-top: 6px;
+            background: var(--teal);
+            border-radius: 50%;
+        }
+
+        .activity-item p {
+            color: var(--charcoal);
+            font-size: 0.82rem;
+        }
+
+        .activity-item small {
+            display: block;
+            margin-top: 3px;
             color: var(--medium-grey);
+            font-size: 0.7rem;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 17px;
+            padding: 15px;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            text-align: center;
+            border-radius: 10px;
         }
 
-        .error-state {
-            color: var(--red);
+        .toolbar-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .search-input,
+        .filter-select,
+        .form-input,
+        .form-select,
+        .form-textarea {
+            min-height: 39px;
+            padding: 0 10px;
+            color: var(--dark-charcoal);
+            background: var(--white);
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.8rem;
+        }
+
+        .search-input {
+            min-width: 230px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+        }
+
+        .form-textarea {
+            min-height: 105px;
+            padding: 10px;
+            resize: vertical;
+        }
+
+        .search-input:focus,
+        .filter-select:focus,
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .property-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
+            gap: 19px;
         }
 
         .property-card {
             overflow: hidden;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 5px 18px rgba(31, 41, 55, 0.05);
-            transition: 0.2s ease;
-        }
-
-        .property-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
+            border-radius: 10px;
+            box-shadow: 0 4px 13px rgba(31, 41, 55, 0.04);
         }
 
         .property-image-wrapper {
             position: relative;
-            height: 205px;
+            height: 170px;
             background: #d1d5db;
         }
 
@@ -287,146 +678,393 @@
             object-fit: cover;
         }
 
-        .status-badge {
+        .property-status {
             position: absolute;
-            top: 13px;
-            left: 13px;
-            padding: 5px 9px;
-            color: var(--white);
-            background: var(--green);
+            top: 11px;
+            left: 11px;
+            padding: 4px 8px;
             border-radius: 5px;
-            font-size: 0.76rem;
+            font-size: 0.68rem;
             font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .status-published {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .status-pending,
+        .status-draft {
+            color: #92400e;
+            background: #fef3c7;
+        }
+
+        .status-rejected,
+        .status-archived {
+            color: #991b1b;
+            background: #fee2e2;
         }
 
         .property-content {
-            padding: 18px;
+            padding: 16px;
         }
 
         .property-content h3 {
-            margin-bottom: 7px;
+            margin-bottom: 5px;
             color: var(--dark-charcoal);
-            font-size: 1.12rem;
+            font-size: 1rem;
         }
 
-        .location {
-            margin-bottom: 12px;
+        .property-location {
+            margin-bottom: 10px;
             color: var(--medium-grey);
-            font-size: 0.86rem;
+            font-size: 0.76rem;
         }
 
-        .location::before {
+        .property-location::before {
             content: "⌖ ";
             color: var(--teal);
             font-weight: 700;
         }
 
-        .property-description {
-            display: -webkit-box;
-            min-height: 43px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            color: var(--medium-grey);
-            font-size: 0.88rem;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-        }
-
         .property-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 7px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
 
         .meta-item {
-            padding: 5px 8px;
+            padding: 4px 7px;
             color: var(--charcoal);
             background: var(--light-grey);
-            border-radius: 5px;
-            font-size: 0.76rem;
+            border-radius: 4px;
+            font-size: 0.68rem;
         }
 
-        .property-bottom {
+        .property-actions {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding-top: 14px;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding-top: 12px;
             border-top: 1px solid var(--border);
         }
 
-        .price {
-            color: var(--teal);
-            font-size: 1rem;
+        .small-button {
+            min-height: 31px;
+            padding: 0 9px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 0.7rem;
             font-weight: 700;
         }
 
-        .rating {
-            margin-top: 3px;
+        .small-button.edit {
+            color: var(--teal);
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .small-button.submit {
+            color: var(--blue);
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .small-button.archive {
+            color: var(--red);
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .small-button.view {
+            color: var(--charcoal);
+            background: var(--white);
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 690px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: middle;
+            font-size: 0.79rem;
+        }
+
+        th {
+            color: var(--medium-grey);
+            background: #f9fafb;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: var(--charcoal);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.67rem;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge-green {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .badge-amber {
+            color: #92400e;
+            background: #fef3c7;
+        }
+
+        .badge-red {
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .badge-grey {
+            color: #4b5563;
+            background: #e5e7eb;
+        }
+
+        .form-panel {
+            max-width: 900px;
+            padding: 23px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            color: var(--charcoal);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .form-help {
+            color: var(--medium-grey);
+            font-size: 0.73rem;
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 9px;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            height: 100px;
+            overflow: hidden;
+            background: var(--light-grey);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview span {
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            left: 4px;
+            overflow: hidden;
+            padding: 3px;
+            color: var(--white);
+            background: rgba(31, 41, 55, 0.7);
+            border-radius: 3px;
+            font-size: 0.6rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            grid-column: span 2;
+            margin-top: 5px;
+        }
+
+        .review-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .review-card {
+            padding: 17px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+        }
+
+        .review-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 9px;
+        }
+
+        .review-card h3 {
+            margin-bottom: 3px;
+            font-size: 0.91rem;
+        }
+
+        .review-card small {
+            color: var(--medium-grey);
+            font-size: 0.71rem;
+        }
+
+        .review-rating {
             color: var(--amber);
             font-size: 0.82rem;
+            white-space: nowrap;
         }
 
-        .view-button {
-            min-height: 38px;
-            padding: 0 12px;
-            color: var(--white);
-            background: var(--charcoal);
-            border: 0;
+        .review-card p {
+            margin-bottom: 11px;
+            color: var(--medium-grey);
+            font-size: 0.8rem;
+        }
+
+        .review-footer {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .review-footer small {
+            color: var(--medium-grey);
+        }
+
+        .report-card {
+            padding: 17px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+        }
+
+        .report-card h3 {
+            margin-bottom: 6px;
+            font-size: 0.91rem;
+        }
+
+        .report-card p {
+            margin-bottom: 9px;
+            color: var(--medium-grey);
+            font-size: 0.8rem;
+        }
+
+        .report-card small {
+            color: var(--medium-grey);
+            font-size: 0.71rem;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 16px;
+            padding: 11px 13px;
             border-radius: 7px;
-            cursor: pointer;
             font-size: 0.82rem;
-            font-weight: 700;
         }
 
-        .view-button:hover {
-            background: var(--teal);
+        .message.success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
         }
 
-        .site-footer {
-            padding: 24px 20px;
-            color: #9ca3af;
-            background: var(--dark-charcoal);
+        .message.error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .empty-state {
+            padding: 34px 20px;
+            color: var(--medium-grey);
             text-align: center;
-            font-size: 0.85rem;
         }
 
-        @media (max-width: 980px) {
-            .main-nav {
-                position: absolute;
-                top: 76px;
-                right: 20px;
-                left: 20px;
-                display: none;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                padding: 12px;
-                background: var(--white);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                box-shadow: var(--shadow);
+        .toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 2000;
+            max-width: 360px;
+            display: none;
+            padding: 13px 16px;
+            color: var(--white);
+            background: var(--dark-charcoal);
+            border-left: 4px solid var(--teal);
+            border-radius: 7px;
+            box-shadow: var(--shadow);
+            font-size: 0.81rem;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            border-left-color: var(--red);
+        }
+
+        @media (max-width: 1160px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .main-nav.open {
-                display: flex;
-            }
-
-            .main-nav a {
-                padding: 10px;
-            }
-
-            .menu-button {
-                display: block;
-            }
-
-            .filter-card {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .filter-card .button {
-                grid-column: span 2;
+            .content-grid {
+                grid-template-columns: 1fr;
             }
 
             .property-grid {
@@ -434,149 +1072,1203 @@
             }
         }
 
+        @media (max-width: 850px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .page-container {
+                padding: 23px 20px;
+            }
+        }
+
         @media (max-width: 620px) {
-            .container {
-                width: min(100% - 28px, 1150px);
-            }
-
-            .header-actions .button-outline {
-                display: none;
-            }
-
-            .filter-card,
-            .property-grid {
+            .stats-grid,
+            .property-grid,
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .filter-card .button {
+            .form-group.full-width,
+            .form-actions {
                 grid-column: auto;
             }
 
-            .listing-summary {
-                align-items: flex-start;
+            .form-actions {
+                justify-content: stretch;
                 flex-direction: column;
+            }
+
+            .section-heading {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .toolbar-group {
+                width: 100%;
+            }
+
+            .toolbar-group > * {
+                flex: 1;
+            }
+
+            .image-preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .topbar-actions .view-site-link {
+                display: none;
             }
         }
     </style>
 </head>
 
-<body>
-    <header class="site-header">
-        <div class="container header-content">
-            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
+<body class="auth-pending">
+    <div class="app-layout" id="appLayout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
                 <img src="assets/logo.jpg" alt="Masitech Solutions logo">
-                <span>Masitech Solutions</span>
-            </a>
 
-            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-                <a href="index.html">Home</a>
-                <a class="active" href="student-listings.html">Students</a>
-                <a href="apartment-listings.html">Apartments</a>
-                <a href="about.html">About Us</a>
-                <a href="faqs.html">FAQs</a>
-                <a href="contact.html">Contact</a>
-            </nav>
+                <div class="sidebar-brand">
+                    Masitech Caretaker
+                    <small>Location workspace</small>
+                </div>
+            </div>
 
-            <div class="header-actions">
-                <a class="button button-outline" href="login.html">Log in</a>
-                <a class="button button-primary" href="signup.html">Sign up</a>
+            <nav class="sidebar-navigation" aria-label="Caretaker navigation">
+                <p class="nav-label">Workspace</p>
 
                 <button
-                    class="menu-button"
-                    id="menuButton"
+                    class="nav-item active"
+                    data-section="dashboard"
                     type="button"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false"
-                    aria-controls="mainNav"
                 >
-                    ☰
+                    <span class="nav-icon">▦</span>
+                    <span>Overview</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="properties"
+                    type="button"
+                >
+                    <span class="nav-icon">⌂</span>
+                    <span>My properties</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="add-property"
+                    type="button"
+                >
+                    <span class="nav-icon">+</span>
+                    <span>Add property</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="inquiries"
+                    type="button"
+                >
+                    <span class="nav-icon">✉</span>
+                    <span>Inquiries</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="reviews"
+                    type="button"
+                >
+                    <span class="nav-icon">★</span>
+                    <span>Reviews</span>
+                </button>
+
+                <p class="nav-label">Operations</p>
+
+                <button
+                    class="nav-item"
+                    data-section="reports"
+                    type="button"
+                >
+                    <span class="nav-icon">!</span>
+                    <span>Submit report</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="analytics"
+                    type="button"
+                >
+                    <span class="nav-icon">▥</span>
+                    <span>My analytics</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="announcements"
+                    type="button"
+                >
+                    <span class="nav-icon">✉</span>
+                    <span>Announcements</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="profile"
+                    type="button"
+                    id="profileNavButton"
+                >
+                    <span class="nav-icon">♙</span>
+                    <span>My profile</span>
+                </button>
+
+                <a
+                    class="nav-item"
+                    href="profile.html"
+                    style="text-decoration:none"
+                >
+                    <span class="nav-icon">↗</span>
+                    <span>Full profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="caretaker-identity">
+                    <div class="avatar" id="sidebarAvatar">C</div>
+
+                    <div class="identity-text">
+                        <strong id="sidebarName">Caretaker</strong>
+                        <small id="sidebarLocation">Loading location...</small>
+                    </div>
+                </div>
+
+                <button class="logout-button" id="logoutButton" type="button">
+                    Log out
                 </button>
             </div>
-        </div>
-    </header>
+        </aside>
 
-    <main>
-        <section class="page-header">
-            <div class="container">
-                <h1>Student boarding houses</h1>
-                <p>
-                    Browse available student accommodation near your campus and
-                    compare rooms, prices, conditions, and facilities.
-                </p>
-            </div>
-        </section>
-
-        <section class="listing-area">
-            <div class="container">
-                <form class="filter-card" id="filterForm">
-                    <div class="field-group">
-                        <label for="searchInput">Search</label>
-                        <input
-                            id="searchInput"
-                            type="search"
-                            placeholder="Search by property name..."
-                        >
-                    </div>
-
-                    <div class="field-group">
-                        <label for="locationFilter">Location</label>
-                        <select id="locationFilter">
-                            <option value="all">All locations</option>
-                        </select>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="sortFilter">Sort by</label>
-                        <select id="sortFilter">
-                            <option value="newest">Newest first</option>
-                            <option value="price-low">Price: low to high</option>
-                            <option value="price-high">Price: high to low</option>
-                            <option value="rating">Highest rated</option>
-                        </select>
-                    </div>
-
-                    <button class="button button-primary" type="submit">
-                        Apply filters
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button
+                        class="mobile-menu-button"
+                        id="mobileMenuButton"
+                        type="button"
+                        aria-label="Open caretaker navigation"
+                        aria-expanded="false"
+                    >
+                        ☰
                     </button>
-                </form>
 
-                <div class="listing-summary">
-                    <div>
-                        <h2>Available student accommodation</h2>
-                        <p id="resultCount">Loading listings...</p>
+                    <div class="page-heading">
+                        <h1 id="pageTitle">Caretaker overview</h1>
+                        <p id="pageSubtitle">
+                            Manage properties assigned to your location
+                        </p>
                     </div>
                 </div>
 
-                <div class="loading" id="loadingState">
-                    Loading student boarding houses...
+                <div class="topbar-actions">
+                    <a
+                        class="view-site-link"
+                        href="index.html"
+                        target="_blank"
+                    >
+                        View website
+                    </a>
+
+                    <button
+                        class="notification-button"
+                        id="notificationButton"
+                        type="button"
+                        aria-label="View announcements"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-count" id="notificationCount">
+                            0
+                        </span>
+                    </button>
                 </div>
+            </header>
 
-                <div class="property-grid" id="propertyGrid"></div>
+            <main class="page-container">
+                <div id="caretakerApp">
+                    <section
+                        class="dashboard-section active"
+                        id="section-dashboard"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Location overview</h2>
+                                <p>
+                                    Monitor your assigned properties and daily activity.
+                                </p>
+                            </div>
 
-                <div class="empty-state" id="emptyState" hidden>
-                    No student boarding houses match your search.
+                            <div class="section-actions">
+                                <button
+                                    class="button button-outline"
+                                    id="refreshButton"
+                                    type="button"
+                                >
+                                    Refresh
+                                </button>
+
+                                <button
+                                    class="button button-primary"
+                                    data-open-section="add-property"
+                                    type="button"
+                                >
+                                    Add property
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">My properties</span>
+                                    <span class="stat-icon">⌂</span>
+                                </div>
+
+                                <div class="stat-value" id="totalProperties">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Properties in assigned locations
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Available units</span>
+                                    <span class="stat-icon">✓</span>
+                                </div>
+
+                                <div class="stat-value" id="availableUnits">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Rooms or apartment units
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Pending approval</span>
+                                    <span class="stat-icon">!</span>
+                                </div>
+
+                                <div class="stat-value" id="pendingProperties">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Waiting for administrator review
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Average rating</span>
+                                    <span class="stat-icon">★</span>
+                                </div>
+
+                                <div class="stat-value" id="averageRating">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Feedback from tenants
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="content-grid">
+                            <div class="panel">
+                                <div class="panel-header">
+                                    <h3>Recent activity</h3>
+                                    <a href="#" data-open-section="reports">
+                                        Submit a report
+                                    </a>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div
+                                        class="activity-list"
+                                        id="recentActivity"
+                                    >
+                                        <div class="empty-state">
+                                            Loading activity...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <div class="panel-header">
+                                    <h3>Assigned locations</h3>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div
+                                        class="status-list"
+                                        id="assignedLocationsList"
+                                    >
+                                        <div class="empty-state">
+                                            Loading locations...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-properties"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>My properties</h2>
+                                <p>
+                                    Manage only the properties assigned to your locations.
+                                </p>
+                            </div>
+
+                            <div class="section-actions">
+                                <button
+                                    class="button button-primary"
+                                    data-open-section="add-property"
+                                    type="button"
+                                >
+                                    Add property
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="toolbar">
+                            <div class="toolbar-group">
+                                <input
+                                    class="search-input"
+                                    id="propertySearch"
+                                    type="search"
+                                    placeholder="Search properties..."
+                                >
+
+                                <select
+                                    class="filter-select"
+                                    id="propertyTypeFilter"
+                                >
+                                    <option value="all">All types</option>
+                                    <option value="student">Student</option>
+                                    <option value="apartment">Apartment</option>
+                                </select>
+
+                                <select
+                                    class="filter-select"
+                                    id="propertyStatusFilter"
+                                >
+                                    <option value="all">All statuses</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="published">Published</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="property-grid" id="propertyGrid">
+                            <div class="empty-state">
+                                Loading properties...
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-add-property"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Add a property</h2>
+                                <p>
+                                    Create a boarding house or apartment in an assigned
+                                    location.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-panel">
+                            <div
+                                class="message"
+                                id="propertyMessage"
+                                role="alert"
+                            ></div>
+
+                            <form id="propertyForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="propertyTitle">
+                                            Property name
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyTitle"
+                                            type="text"
+                                            placeholder="Example: Green View House"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyType">
+                                            Property type
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            id="propertyType"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select property type
+                                            </option>
+                                            <option value="student">
+                                                Student boarding house
+                                            </option>
+                                            <option value="apartment">
+                                                Apartment
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyLocation">
+                                            Location
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            id="propertyLocation"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select assigned location
+                                            </option>
+                                        </select>
+
+                                        <span class="form-help" id="propertyLocationHelp">
+                                            You can select only a location assigned
+                                            to your caretaker account. Street and area
+                                            are managed by administrators.
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyAddress">
+                                            Address
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyAddress"
+                                            type="text"
+                                            placeholder="Street or area"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyPrice">
+                                            Monthly price
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyPrice"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            placeholder="0"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyPriceLabel">
+                                            Price display label
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyPriceLabel"
+                                            type="text"
+                                            placeholder="Example: K850 per month"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="roomOrUnitType">
+                                            Room or unit type
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="roomOrUnitType"
+                                            type="text"
+                                            placeholder="Single room or two-bedroom apartment"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="propertyCondition">
+                                            Condition
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            id="propertyCondition"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select condition
+                                            </option>
+                                            <option value="new">New</option>
+                                            <option value="excellent">Excellent</option>
+                                            <option value="good">Good</option>
+                                            <option value="fair">Fair</option>
+                                            <option value="needs-maintenance">
+                                                Needs maintenance
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="totalUnits">
+                                            Total rooms or units
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="totalUnits"
+                                            type="number"
+                                            min="1"
+                                            step="1"
+                                            placeholder="0"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="availableUnits">
+                                            Available rooms or units
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="availableUnits"
+                                            type="number"
+                                            min="0"
+                                            step="1"
+                                            placeholder="0"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="propertyAmenities">
+                                            Amenities
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyAmenities"
+                                            type="text"
+                                            placeholder="Wi-Fi, water, security, parking"
+                                        >
+
+                                        <span class="form-help">
+                                            Separate amenities with commas.
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="propertyDescription">
+                                            Description
+                                        </label>
+
+                                        <textarea
+                                            class="form-textarea"
+                                            id="propertyDescription"
+                                            placeholder="Describe the property, rooms, surroundings, and important information..."
+                                            required
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="propertyRules">
+                                            House or property rules
+                                        </label>
+
+                                        <textarea
+                                            class="form-textarea"
+                                            id="propertyRules"
+                                            placeholder="Enter rules tenants should know..."
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="propertyImages">
+                                            Property images
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="propertyImages"
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp"
+                                            multiple
+                                        >
+
+                                        <span class="form-help">
+                                            Add clear photos of the exterior,
+                                            rooms, bathrooms, kitchen, and other
+                                            important areas.
+                                        </span>
+
+                                        <div
+                                            class="image-preview-grid"
+                                            id="imagePreviewGrid"
+                                        ></div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button
+                                            class="button button-outline"
+                                            id="saveDraftButton"
+                                            type="button"
+                                        >
+                                            Save draft
+                                        </button>
+
+                                        <button
+                                            class="button button-primary"
+                                            id="submitPropertyButton"
+                                            type="submit"
+                                        >
+                                            Submit for approval
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-inquiries"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Property inquiries</h2>
+                                <p>
+                                    Respond to prospective students and tenants.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="toolbar">
+                            <div class="toolbar-group">
+                                <select
+                                    class="filter-select"
+                                    id="inquiryStatusFilter"
+                                >
+                                    <option value="all">All inquiries</option>
+                                    <option value="new">New</option>
+                                    <option value="in-progress">In progress</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tenant</th>
+                                            <th>Property</th>
+                                            <th>Message</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="inquiriesTableBody">
+                                        <tr>
+                                            <td colspan="6" class="empty-state">
+                                                Loading inquiries...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-reviews"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Reviews and ratings</h2>
+                                <p>
+                                    View feedback from tenants. Reviews cannot be edited
+                                    from this dashboard.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="review-list" id="reviewList">
+                            <div class="empty-state">
+                                Loading reviews...
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-reports"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Submit an operational report</h2>
+                                <p>
+                                    Send maintenance, availability, or caretaker
+                                    reports to administrators.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-panel">
+                            <div
+                                class="message"
+                                id="reportMessage"
+                                role="alert"
+                            ></div>
+
+                            <form id="reportForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="reportType">
+                                            Report type
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            id="reportType"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select report type
+                                            </option>
+                                            <option value="maintenance">
+                                                Maintenance issue
+                                            </option>
+                                            <option value="availability">
+                                                Availability update
+                                            </option>
+                                            <option value="tenant-issue">
+                                                Tenant-related issue
+                                            </option>
+                                            <option value="safety">
+                                                Safety concern
+                                            </option>
+                                            <option value="other">
+                                                Other
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="reportProperty">
+                                            Related property
+                                        </label>
+
+                                        <select
+                                            class="form-select"
+                                            id="reportProperty"
+                                        >
+                                            <option value="">
+                                                Select property
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="reportSubject">
+                                            Subject
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="reportSubject"
+                                            type="text"
+                                            placeholder="Short report subject"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="reportDescription">
+                                            Details
+                                        </label>
+
+                                        <textarea
+                                            class="form-textarea"
+                                            id="reportDescription"
+                                            placeholder="Describe what happened and what action is needed..."
+                                            required
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button
+                                            class="button button-primary"
+                                            type="submit"
+                                        >
+                                            Submit report
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="panel" style="margin-top: 20px;">
+                            <div class="panel-header">
+                                <h3>My submitted reports</h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <div
+                                    class="review-list"
+                                    id="reportList"
+                                >
+                                    <div class="empty-state">
+                                        Loading reports...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-analytics"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>My analytics</h2>
+                                <p>
+                                    Review activity for your assigned locations and
+                                    properties.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Listing views</span>
+                                    <span class="stat-icon">◉</span>
+                                </div>
+
+                                <div class="stat-value" id="analyticsViews">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Across assigned properties
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Inquiries</span>
+                                    <span class="stat-icon">✉</span>
+                                </div>
+
+                                <div class="stat-value" id="analyticsInquiries">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Property inquiries received
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Published listings</span>
+                                    <span class="stat-icon">✓</span>
+                                </div>
+
+                                <div class="stat-value" id="analyticsPublished">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Visible to users
+                                </div>
+                            </article>
+
+                            <article class="stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-label">Review count</span>
+                                    <span class="stat-icon">★</span>
+                                </div>
+
+                                <div class="stat-value" id="analyticsReviews">
+                                    —
+                                </div>
+
+                                <div class="stat-note">
+                                    Property and caretaker feedback
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>Property performance</h3>
+                            </div>
+
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Property</th>
+                                            <th>Views</th>
+                                            <th>Inquiries</th>
+                                            <th>Available</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="analyticsTableBody">
+                                        <tr>
+                                            <td colspan="5" class="empty-state">
+                                                Loading analytics...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-announcements"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Announcements</h2>
+                                <p>
+                                    Read messages sent by administrators to caretakers.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="review-list" id="announcementList">
+                            <div class="empty-state">
+                                Loading announcements...
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-profile"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>Caretaker workspace profile</h2>
+                                <p>
+                                    Contact details for this workspace. Ratings from tenants
+                                    are read-only here. Full account settings open on the main profile page.
+                                </p>
+                                <p style="margin-top:10px">
+                                    <a class="button button-outline" href="profile.html">Open full profile</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-panel">
+                            <div
+                                class="message"
+                                id="profileMessage"
+                                role="alert"
+                            ></div>
+
+                            <form id="profileForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="caretakerName">
+                                            Full name
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="caretakerName"
+                                            type="text"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="caretakerPhone">
+                                            Phone number
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="caretakerPhone"
+                                            type="tel"
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="caretakerEmail">
+                                            Email address
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="caretakerEmail"
+                                            type="email"
+                                            readonly
+                                        >
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="caretakerRole">
+                                            Account role
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="caretakerRole"
+                                            type="text"
+                                            readonly
+                                        >
+                                    </div>
+
+                                    <div class="form-group full-width">
+                                        <label for="caretakerLocations">
+                                            Assigned locations
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="caretakerLocations"
+                                            type="text"
+                                            readonly
+                                        >
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button
+                                            class="button button-primary"
+                                            type="submit"
+                                        >
+                                            Save profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div style="margin-top: 22px;">
+                                <h3 style="margin-bottom: 8px; font-size: 1rem;">Your ratings from tenants</h3>
+                                <p style="color: var(--medium-grey); font-size: 0.84rem; margin-bottom: 14px;">
+                                    These ratings are submitted by tenants. You can view them here, but only a super administrator can edit or remove them.
+                                </p>
+                                <div id="caretakerRatingsSummary" style="display:flex; gap:18px; flex-wrap:wrap; margin-bottom: 14px;">
+                                    <div class="stat-card" style="min-width:140px;">
+                                        <div class="stat-label">Average rating</div>
+                                        <div class="stat-value" id="profileAvgRating">—</div>
+                                    </div>
+                                    <div class="stat-card" style="min-width:140px;">
+                                        <div class="stat-label">Total reviews</div>
+                                        <div class="stat-value" id="profileReviewCount">—</div>
+                                    </div>
+                                </div>
+                                <div class="review-list" id="caretakerRatingsList">
+                                    <div class="empty-state">Loading ratings...</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
                 </div>
+            </main>
+        </div>
+    </div>
 
-                <div class="error-state" id="errorState" hidden>
-                    We could not load the listings. Please try again later.
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        © <span id="currentYear"></span> Masitech Solutions. All rights reserved.
-    </footer>
+    <div class="toast" id="toast" role="status"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import {
+            getAuth,
+            onAuthStateChanged,
+            signOut,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import {
             getFirestore,
             collection,
+            doc,
+            getDoc,
+            getDocs,
+            addDoc,
+            updateDoc,
             query,
             where,
-            onSnapshot,
-            getDocs
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -590,55 +2282,86 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const mainNav = document.getElementById("mainNav");
-        const menuButton = document.getElementById("menuButton");
-        const filterForm = document.getElementById("filterForm");
-        const searchInput = document.getElementById("searchInput");
-        const locationFilter = document.getElementById("locationFilter");
-        const sortFilter = document.getElementById("sortFilter");
-        const propertyGrid = document.getElementById("propertyGrid");
-        const loadingState = document.getElementById("loadingState");
-        const emptyState = document.getElementById("emptyState");
-        const errorState = document.getElementById("errorState");
-        const resultCount = document.getElementById("resultCount");
-        const currentYear = document.getElementById("currentYear");
+        const state = {
+            user: null,
+            profile: null,
+            locationIds: [],
+            locations: [],
+            properties: [],
+            inquiries: [],
+            reviews: [],
+            reports: [],
+            announcements: [],
+            uploadedImages: []
+        };
 
-        let allProperties = [];
-        let locationMap = {};
+        const caretakerApp = document.getElementById("caretakerApp");
+        const sidebar = document.getElementById("sidebar");
+        const mobileMenuButton = document.getElementById("mobileMenuButton");
+        const mainNavItems = document.querySelectorAll(".nav-item");
+        const toast = document.getElementById("toast");
 
-        currentYear.textContent = new Date().getFullYear();
+        const sectionTitles = {
+            dashboard: [
+                "Caretaker overview",
+                "Manage properties assigned to your location"
+            ],
+            properties: [
+                "My properties",
+                "Manage properties in your assigned locations"
+            ],
+            "add-property": [
+                "Add a property",
+                "Create a boarding house or apartment listing"
+            ],
+            inquiries: [
+                "Property inquiries",
+                "Respond to prospective students and tenants"
+            ],
+            reviews: [
+                "Reviews and ratings",
+                "View feedback from tenants"
+            ],
+            reports: [
+                "Operational reports",
+                "Report maintenance and property issues"
+            ],
+            analytics: [
+                "My analytics",
+                "Review activity for assigned properties"
+            ],
+            announcements: [
+                "Announcements",
+                "Read messages from administrators"
+            ],
+            profile: [
+                "My profile",
+                "Manage your caretaker account information"
+            ]
+        };
 
-        const urlLocation = new URLSearchParams(window.location.search).get(
-            "location"
-        );
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.className = `toast show${isError ? " error" : ""}`;
 
-        menuButton.addEventListener("click", () => {
-            const isOpen = mainNav.classList.toggle("open");
+            window.clearTimeout(showToast.timeout);
+            showToast.timeout = window.setTimeout(() => {
+                toast.className = "toast";
+            }, 3500);
+        }
 
-            menuButton.setAttribute("aria-expanded", String(isOpen));
-            menuButton.setAttribute(
-                "aria-label",
-                isOpen ? "Close navigation menu" : "Open navigation menu"
-            );
-        });
+        function showMessage(element, text, type) {
+            element.textContent = text;
+            element.className = `message ${type}`;
+        }
 
-        document.addEventListener("click", (event) => {
-            if (!mainNav.classList.contains("open")) return;
-
-            const insideNav = mainNav.contains(event.target);
-            const onButton = menuButton.contains(event.target);
-
-            if (!insideNav && !onButton) {
-                mainNav.classList.remove("open");
-                menuButton.setAttribute("aria-expanded", "false");
-                menuButton.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-            }
-        });
+        function hideMessage(element) {
+            element.textContent = "";
+            element.className = "message";
+        }
 
         function escapeHtml(value) {
             const div = document.createElement("div");
@@ -646,195 +2369,26 @@
             return div.innerHTML;
         }
 
-        function formatPrice(property) {
-            if (property.priceLabel) {
-                return escapeHtml(property.priceLabel);
-            }
-
-            if (typeof property.price === "number") {
-                return `K${property.price.toLocaleString()} per month`;
-            }
-
-            return "Price on inquiry";
+        function getInitials(name) {
+            return String(name || "Caretaker")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((part) => part[0].toUpperCase())
+                .join("");
         }
 
-        function getImageUrl(property) {
-            if (property.imageUrl) return property.imageUrl;
-            if (Array.isArray(property.imageUrls) && property.imageUrls[0]) {
-                return property.imageUrls[0];
-            }
-
-            return "https://via.placeholder.com/800x500?text=Student+Accommodation";
-        }
-
-        function getRating(property) {
-            const rating = Number(property.rating);
-
-            if (!rating) {
-                return "No reviews yet";
-            }
-
-            return `★ ${rating.toFixed(1)} (${property.reviewCount || 0} reviews)`;
-        }
-
-        function getAvailabilityLabel(property) {
-            if (property.availableRooms !== undefined && property.availableRooms !== null) {
-                return `${property.availableRooms} available`;
-            }
-
-            if (property.availableUnits !== undefined && property.availableUnits !== null) {
-                return `${property.availableUnits} available`;
-            }
-
-            return "Availability on inquiry";
-        }
-
-        function getLocationLabel(property) {
-            return (
-                property.locationName ||
-                locationMap[property.locationId] ||
-                property.locationId ||
-                "Location not provided"
-            );
-        }
-
-        function displayProperties(properties) {
-            propertyGrid.innerHTML = "";
-
-            if (properties.length === 0) {
-                emptyState.hidden = false;
-                resultCount.textContent = "0 listings found";
-                return;
-            }
-
-            emptyState.hidden = true;
-            resultCount.textContent =
-                `${properties.length} listing${properties.length === 1 ? "" : "s"} found`;
-
-            properties.forEach((property) => {
-                const propertyId = property.id;
-                const title = escapeHtml(
-                    property.title || "Student boarding house"
-                );
-                const location = escapeHtml(getLocationLabel(property));
-                const description = escapeHtml(
-                    property.description || "Property details will be provided soon."
-                );
-                const roomType = escapeHtml(
-                    property.roomType ||
-                    property.spaceLabel ||
-                    "Room details unavailable"
-                );
-                const condition = escapeHtml(
-                    property.condition || "Condition not provided"
-                );
-                const availableRooms = escapeHtml(
-                    getAvailabilityLabel(property)
-                );
-
-                const card = document.createElement("article");
-                card.className = "property-card";
-
-                card.innerHTML = `
-                    <div class="property-image-wrapper">
-                        <img
-                            class="property-image"
-                            src="${getImageUrl(property)}"
-                            alt="${title}"
-                            loading="lazy"
-                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Accommodation'"
-                        >
-                        <span class="status-badge">Available</span>
-                    </div>
-
-                    <div class="property-content">
-                        <h3>${title}</h3>
-                        <p class="location">${location}</p>
-                        <p class="property-description">${description}</p>
-
-                        <div class="property-meta">
-                            <span class="meta-item">${roomType}</span>
-                            <span class="meta-item">${condition}</span>
-                            <span class="meta-item">${availableRooms}</span>
-                        </div>
-
-                        <div class="property-bottom">
-                            <div>
-                                <div class="price">${formatPrice(property)}</div>
-                                <div class="rating">${getRating(property)}</div>
-                            </div>
-
-                            <a
-                                class="view-button"
-                                href="property-details.html?id=${encodeURIComponent(propertyId)}"
-                            >
-                                View details
-                            </a>
-                        </div>
-                    </div>
-                `;
-
-                propertyGrid.appendChild(card);
-            });
-        }
-
-        function filterAndDisplayProperties() {
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            const selectedLocation = locationFilter.value;
-            const selectedSort = sortFilter.value;
-
-            let filteredProperties = allProperties.filter((property) => {
-                const searchableText = [
-                    property.title,
-                    property.locationName,
-                    property.locationId,
-                    locationMap[property.locationId],
-                    property.description,
-                    property.address,
-                    property.roomType,
-                    property.spaceLabel
-                ]
-                    .filter(Boolean)
-                    .join(" ")
-                    .toLowerCase();
-
-                const matchesSearch =
-                    !searchTerm || searchableText.includes(searchTerm);
-
-                const matchesLocation =
-                    selectedLocation === "all" ||
-                    property.locationId === selectedLocation;
-
-                return matchesSearch && matchesLocation;
-            });
-
-            filteredProperties.sort((first, second) => {
-                if (selectedSort === "price-low") {
-                    return Number(first.price || 0) - Number(second.price || 0);
-                }
-
-                if (selectedSort === "price-high") {
-                    return Number(second.price || 0) - Number(first.price || 0);
-                }
-
-                if (selectedSort === "rating") {
-                    return Number(second.rating || 0) - Number(first.rating || 0);
-                }
-
-                return getDateValue(second.createdAt) -
-                    getDateValue(first.createdAt);
-            });
-
-            displayProperties(filteredProperties);
-        }
-
-        function getDateValue(timestamp) {
+        function getTimestampValue(timestamp) {
             if (!timestamp) {
                 return 0;
             }
 
             if (typeof timestamp.toMillis === "function") {
                 return timestamp.toMillis();
+            }
+
+            if (typeof timestamp.toDate === "function") {
+                return timestamp.toDate().getTime();
             }
 
             if (timestamp.seconds) {
@@ -844,76 +2398,1703 @@
             return new Date(timestamp).getTime() || 0;
         }
 
-        async function loadLocations() {
-            try {
-                const snapshot = await getDocs(collection(db, "locations"));
-                const locations = snapshot.docs.map((docSnap) => ({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                }));
+        function formatDate(timestamp) {
+            const value = getTimestampValue(timestamp);
 
-                locationMap = {};
-                locationFilter.innerHTML =
-                    `<option value="all">All locations</option>`;
+            if (!value) {
+                return "—";
+            }
 
-                locations
-                    .sort((a, b) =>
-                        String(a.name || a.id).localeCompare(String(b.name || b.id))
-                    )
-                    .forEach((location) => {
-                        locationMap[location.id] = location.name || location.id;
+            return new Date(value).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        }
 
-                        const option = document.createElement("option");
-                        option.value = location.id;
-                        option.textContent = location.name || location.id;
-                        locationFilter.appendChild(option);
-                    });
+        function formatDateTime(timestamp) {
+            const value = getTimestampValue(timestamp);
 
-                if (urlLocation) {
-                    locationFilter.value = urlLocation;
+            if (!value) {
+                return "—";
+            }
+
+            return new Date(value).toLocaleString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function capitalize(value) {
+            if (!value) {
+                return "—";
+            }
+
+            return String(value)
+                .replaceAll("-", " ")
+                .replace(/\b\w/g, (letter) => letter.toUpperCase());
+        }
+
+        function getPropertyImage(property) {
+            return (
+                property.imageUrl ||
+                "https://via.placeholder.com/800x500?text=Property"
+            );
+        }
+
+        function isAssignedLocation(locationId) {
+            return state.locationIds.includes(locationId);
+        }
+
+        function propertyBelongsToCaretaker(property) {
+            return (
+                property.createdBy === state.user.uid ||
+                isAssignedLocation(property.locationId)
+            );
+        }
+
+        function showCaretakerApp() {
+            document.body.classList.remove("auth-pending");
+            document.body.classList.add("auth-ready");
+
+            const layout = document.getElementById("appLayout");
+            if (layout) layout.hidden = false;
+
+            const app = document.getElementById("caretakerApp");
+            if (app) app.hidden = false;
+        }
+
+        function showAccessDenied(message) {
+            // Wrong role: redirect immediately — no restricted card flash
+            window.location.replace("profile.html");
+        }
+
+        function hasCaretakerRole(profile) {
+            if (!profile) return false;
+            if (profile.accountStatus === "suspended") return false;
+
+            const roles = [];
+            if (Array.isArray(profile.roles)) {
+                roles.push(...profile.roles);
+            }
+            if (profile.role) {
+                roles.push(profile.role);
+            }
+
+            return roles.map(String).includes("caretaker");
+        }
+
+        function setIdentity() {
+            const name =
+                state.profile?.fullName ||
+                state.user?.displayName ||
+                "Caretaker";
+
+            document.getElementById("sidebarName").textContent = name;
+            document.getElementById("sidebarAvatar").textContent =
+                getInitials(name);
+
+            const locationNames = state.locations
+                .filter((location) =>
+                    state.locationIds.includes(location.id)
+                )
+                .map((location) => location.name || location.id);
+
+            document.getElementById("sidebarLocation").textContent =
+                locationNames.length > 0
+                    ? locationNames.join(", ")
+                    : "No location assigned";
+
+            document.getElementById("caretakerName").value = name;
+            document.getElementById("caretakerPhone").value =
+                state.profile?.phone || "";
+            document.getElementById("caretakerEmail").value =
+                state.user.email || state.profile?.email || "";
+            document.getElementById("caretakerRole").value =
+                state.profile?.role || "caretaker";
+            document.getElementById("caretakerLocations").value =
+                locationNames.join(", ") || "No location assigned";
+        }
+
+        async function loadUserProfile(user) {
+            const profileSnapshot = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            if (!profileSnapshot.exists()) {
+                return null;
+            }
+
+            return profileSnapshot.data();
+        }
+
+        async function loadCollection(collectionName) {
+            const snapshot = await getDocs(
+                collection(db, collectionName)
+            );
+
+            return snapshot.docs.map((document) => ({
+                id: document.id,
+                ...document.data()
+            }));
+        }
+
+        async function loadCaretakerData() {
+            const profile = await loadUserProfile(state.user);
+
+            if (!profile) {
+                showAccessDenied();
+                return;
+            }
+
+            if (!hasCaretakerRole(profile)) {
+                showAccessDenied();
+                return;
+            }
+
+            state.profile = profile;
+
+            state.locationIds =
+                profile.locationIds ||
+                (profile.locationId ? [profile.locationId] : []);
+
+            const [
+                locations,
+                properties,
+                inquiries,
+                reviews,
+                reports,
+                announcements
+            ] = await Promise.all([
+                loadCollection("locations"),
+                loadCollection("properties"),
+                loadCollection("inquiries"),
+                loadCollection("reviews"),
+                loadCollection("reports"),
+                loadCollection("announcements")
+            ]);
+
+            state.locations = locations.filter((location) =>
+                state.locationIds.includes(location.id)
+            );
+
+            state.properties = properties.filter((property) =>
+                propertyBelongsToCaretaker(property)
+            );
+
+            state.inquiries = inquiries.filter((inquiry) =>
+                state.properties.some(
+                    (property) =>
+                        property.id === inquiry.propertyId ||
+                        property.locationId === inquiry.locationId
+                )
+            );
+
+            state.reviews = reviews.filter((review) =>
+                state.properties.some(
+                    (property) =>
+                        property.id === review.propertyId ||
+                        property.locationId === review.locationId
+                ) ||
+                review.caretakerId === state.user.uid
+            );
+
+            state.reports = reports.filter(
+                (report) => report.createdBy === state.user.uid
+            );
+
+            state.announcements = announcements.filter((announcement) => {
+                const status = (announcement.status || "published").toLowerCase();
+                if (status === "draft" || status === "archived") {
+                    return false;
                 }
-            } catch (error) {
-                console.warn("Could not load locations:", error);
+
+                const audience = String(
+                    announcement.audienceType ||
+                        announcement.audience ||
+                        "everyone"
+                ).toLowerCase();
+
+                return (
+                    audience === "everyone" ||
+                    audience === "all" ||
+                    audience === "caretakers" ||
+                    audience === "caretaker" ||
+                    announcement.createdFor === state.user.uid ||
+                    (announcement.locationId &&
+                        state.locationIds.includes(announcement.locationId))
+                );
+            });
+
+            setIdentity();
+            populateLocationOptions();
+            populatePropertyOptions();
+            renderAll();
+            showCaretakerApp();
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderProperties();
+            renderInquiries();
+            renderReviews();
+            renderReports();
+            renderAnalytics();
+            renderAnnouncements();
+            renderCaretakerRatings();
+            updateNotificationCount();
+        }
+
+        function renderCaretakerRatings() {
+            const list = document.getElementById("caretakerRatingsList");
+            const avgEl = document.getElementById("profileAvgRating");
+            const countEl = document.getElementById("profileReviewCount");
+
+            if (!list) return;
+
+            // Ratings about this caretaker (or their properties) — display only
+            const ratings = state.reviews
+                .filter((review) => {
+                    if (review.status === "hidden") return false;
+                    return (
+                        review.caretakerId === state.user.uid ||
+                        review.reviewType === "caretaker" ||
+                        state.properties.some(
+                            (property) => property.id === review.propertyId
+                        )
+                    );
+                })
+                .sort(
+                    (a, b) =>
+                        getTimestampValue(b.createdAt) -
+                        getTimestampValue(a.createdAt)
+                );
+
+            const scoreValues = ratings
+                .map((r) => Number(r.rating))
+                .filter((n) => n > 0);
+
+            if (avgEl) {
+                avgEl.textContent =
+                    scoreValues.length > 0
+                        ? (
+                              scoreValues.reduce((s, n) => s + n, 0) /
+                              scoreValues.length
+                          ).toFixed(1)
+                        : "—";
+            }
+
+            if (countEl) {
+                countEl.textContent = String(ratings.length);
+            }
+
+            if (ratings.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        No tenant ratings yet.
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = ratings
+                .map(
+                    (review) => `
+                    <article class="review-card">
+                        <div class="review-card-header">
+                            <div>
+                                <h3>
+                                    ${escapeHtml(
+                                        review.targetName ||
+                                            review.propertyName ||
+                                            "Tenant review"
+                                    )}
+                                </h3>
+                                <small>
+                                    ${formatDate(review.createdAt)}
+                                    · ${escapeHtml(
+                                        capitalize(review.reviewType || "property")
+                                    )}
+                                </small>
+                            </div>
+                            <span class="review-rating">
+                                ★ ${Number(review.rating || 0).toFixed(1)}
+                            </span>
+                        </div>
+                        <p>${escapeHtml(review.comment || "No written comment.")}</p>
+                        <div class="review-footer">
+                            <small>Read-only · moderated by administrators</small>
+                        </div>
+                    </article>
+                `
+                )
+                .join("");
+        }
+
+        function renderDashboard() {
+            const properties = state.properties;
+            const availableUnits = properties.reduce(
+                (total, property) =>
+                    total +
+                    Number(
+                        property.availableRooms ??
+                        property.availableUnits ??
+                        0
+                    ),
+                0
+            );
+
+            const pendingCount = properties.filter(
+                (property) => property.status === "pending"
+            ).length;
+
+            const ratings = state.reviews
+                .map((review) => Number(review.rating))
+                .filter((rating) => rating > 0);
+
+            const averageRating =
+                ratings.length > 0
+                    ? (
+                        ratings.reduce((sum, rating) => sum + rating, 0) /
+                        ratings.length
+                    ).toFixed(1)
+                    : "0.0";
+
+            document.getElementById("totalProperties").textContent =
+                properties.length;
+
+            document.getElementById("availableUnits").textContent =
+                availableUnits;
+
+            document.getElementById("pendingProperties").textContent =
+                pendingCount;
+
+            document.getElementById("averageRating").textContent =
+                averageRating;
+
+            const locationsList = document.getElementById(
+                "assignedLocationsList"
+            );
+
+            if (state.locations.length === 0) {
+                locationsList.innerHTML = `
+                    <div class="empty-state">
+                        No locations are assigned to your account.
+                    </div>
+                `;
+            } else {
+                locationsList.innerHTML = state.locations
+                    .map((location) => {
+                        const propertyCount = properties.filter(
+                            (property) =>
+                                property.locationId === location.id
+                        ).length;
+
+                        return `
+                            <div class="status-row">
+                                <span>${escapeHtml(location.name || location.id)}</span>
+                                <span class="status-number">
+                                    ${propertyCount} properties
+                                </span>
+                            </div>
+                        `;
+                    })
+                    .join("");
+            }
+
+            const activities = [
+                ...properties.map((property) => ({
+                    text: `Property: ${property.title || "Unnamed property"}`,
+                    date: property.updatedAt || property.createdAt
+                })),
+                ...state.reports.map((report) => ({
+                    text: `Report: ${report.subject || "Operational report"}`,
+                    date: report.createdAt
+                }))
+            ]
+                .sort(
+                    (first, second) =>
+                        getTimestampValue(second.date) -
+                        getTimestampValue(first.date)
+                )
+                .slice(0, 6);
+
+            const activityList =
+                document.getElementById("recentActivity");
+
+            if (activities.length === 0) {
+                activityList.innerHTML = `
+                    <div class="empty-state">
+                        No recent activity found.
+                    </div>
+                `;
+            } else {
+                activityList.innerHTML = activities
+                    .map(
+                        (activity) => `
+                            <div class="activity-item">
+                                <span class="activity-dot"></span>
+                                <div>
+                                    <p>${escapeHtml(activity.text)}</p>
+                                    <small>${formatDateTime(activity.date)}</small>
+                                </div>
+                            </div>
+                        `
+                    )
+                    .join("");
             }
         }
 
-        filterForm.addEventListener("submit", (event) => {
+        function renderProperties() {
+            const searchTerm =
+                document
+                    .getElementById("propertySearch")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const typeFilter =
+                document.getElementById("propertyTypeFilter").value;
+
+            const statusFilter =
+                document.getElementById("propertyStatusFilter").value;
+
+            const properties = state.properties.filter((property) => {
+                const searchableText = [
+                    property.title,
+                    property.locationName,
+                    property.locationId,
+                    property.address,
+                    property.description
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                return (
+                    (!searchTerm || searchableText.includes(searchTerm)) &&
+                    (typeFilter === "all" ||
+                        property.propertyType === typeFilter) &&
+                    (statusFilter === "all" ||
+                        property.status === statusFilter)
+                );
+            });
+
+            const propertyGrid = document.getElementById("propertyGrid");
+
+            if (properties.length === 0) {
+                propertyGrid.innerHTML = `
+                    <div class="empty-state">
+                        No properties match your filters.
+                    </div>
+                `;
+                return;
+            }
+
+            propertyGrid.innerHTML = properties
+                .map((property) => {
+                    const status = property.status || "draft";
+                    const statusClass = `status-${status}`;
+                    const availability =
+                        property.availableRooms ??
+                        property.availableUnits ??
+                        "On inquiry";
+
+                    return `
+                        <article class="property-card">
+                            <div class="property-image-wrapper">
+                                <img
+                                    class="property-image"
+                                    src="${getPropertyImage(property)}"
+                                    alt="${escapeHtml(property.title || "Property")}"
+                                    loading="lazy"
+                                    onerror="this.src='https://via.placeholder.com/800x500?text=Property'"
+                                >
+
+                                <span class="property-status ${statusClass}">
+                                    ${escapeHtml(status)}
+                                </span>
+                            </div>
+
+                            <div class="property-content">
+                                <h3>
+                                    ${escapeHtml(property.title || "Unnamed property")}
+                                </h3>
+
+                                <p class="property-location">
+                                    ${escapeHtml(
+                                        property.locationName ||
+                                        property.locationId ||
+                                        "Location unavailable"
+                                    )}
+                                </p>
+
+                                <div class="property-meta">
+                                    <span class="meta-item">
+                                        ${escapeHtml(capitalize(property.propertyType))}
+                                    </span>
+
+                                    <span class="meta-item">
+                                        ${escapeHtml(property.roomType || property.unitType || "Type not set")}
+                                    </span>
+
+                                    <span class="meta-item">
+                                        ${escapeHtml(String(availability))} available
+                                    </span>
+                                </div>
+
+                                <div class="property-actions">
+                                    <button
+                                        class="small-button edit"
+                                        data-property-action="edit"
+                                        data-id="${property.id}"
+                                        type="button"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        class="small-button view"
+                                        data-property-action="view"
+                                        data-id="${property.id}"
+                                        type="button"
+                                    >
+                                        View
+                                    </button>
+
+                                    ${
+                                        status === "draft" ||
+                                        status === "rejected"
+                                            ? `
+                                                <button
+                                                    class="small-button submit"
+                                                    data-property-action="submit"
+                                                    data-id="${property.id}"
+                                                    type="button"
+                                                >
+                                                    Submit
+                                                </button>
+                                            `
+                                            : ""
+                                    }
+
+                                    ${
+                                        status !== "archived"
+                                            ? `
+                                                <button
+                                                    class="small-button archive"
+                                                    data-property-action="archive"
+                                                    data-id="${property.id}"
+                                                    type="button"
+                                                >
+                                                    Archive
+                                                </button>
+                                            `
+                                            : ""
+                                    }
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                })
+                .join("");
+        }
+
+        function renderInquiries() {
+            const statusFilter =
+                document.getElementById("inquiryStatusFilter").value;
+
+            const inquiries = state.inquiries.filter(
+                (inquiry) =>
+                    statusFilter === "all" ||
+                    (inquiry.status || "new") === statusFilter
+            );
+
+            const tableBody = document.getElementById(
+                "inquiriesTableBody"
+            );
+
+            if (inquiries.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            No inquiries found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = inquiries
+                .sort(
+                    (first, second) =>
+                        getTimestampValue(second.createdAt) -
+                        getTimestampValue(first.createdAt)
+                )
+                .map((inquiry) => {
+                    const property = state.properties.find(
+                        (item) => item.id === inquiry.propertyId
+                    );
+
+                    const status = inquiry.status || "new";
+                    const badgeClass =
+                        status === "new"
+                            ? "badge-amber"
+                            : status === "resolved"
+                                ? "badge-green"
+                                : status === "closed"
+                                    ? "badge-grey"
+                                    : "badge-amber";
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(inquiry.tenantName || inquiry.userId || "Tenant")}</td>
+                            <td>${escapeHtml(property?.title || inquiry.propertyName || "Property")}</td>
+                            <td>${escapeHtml((inquiry.message || "—").slice(0, 75))}</td>
+                            <td>${formatDate(inquiry.createdAt)}</td>
+                            <td>
+                                <span class="badge ${badgeClass}">
+                                    ${escapeHtml(status)}
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="small-button edit"
+                                    data-inquiry-action="status"
+                                    data-id="${inquiry.id}"
+                                    type="button"
+                                >
+                                    Update
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join("");
+        }
+
+        function renderReviews() {
+            const reviewList = document.getElementById("reviewList");
+
+            if (state.reviews.length === 0) {
+                reviewList.innerHTML = `
+                    <div class="empty-state">
+                        No reviews have been submitted for your properties.
+                    </div>
+                `;
+                return;
+            }
+
+            reviewList.innerHTML = state.reviews
+                .sort(
+                    (first, second) =>
+                        getTimestampValue(second.createdAt) -
+                        getTimestampValue(first.createdAt)
+                )
+                .map(
+                    (review) => `
+                        <article class="review-card">
+                            <div class="review-card-header">
+                                <div>
+                                    <h3>
+                                        ${escapeHtml(
+                                            review.targetName ||
+                                            review.propertyName ||
+                                            "Accommodation review"
+                                        )}
+                                    </h3>
+
+                                    <small>
+                                        By ${escapeHtml(
+                                            review.reviewerName ||
+                                            review.userId ||
+                                            "Tenant"
+                                        )}
+                                        · ${formatDate(review.createdAt)}
+                                    </small>
+                                </div>
+
+                                <span class="review-rating">
+                                    ★ ${Number(review.rating || 0).toFixed(1)}
+                                </span>
+                            </div>
+
+                            <p>
+                                ${escapeHtml(
+                                    review.comment || "No written comment."
+                                )}
+                            </p>
+
+                            <div class="review-footer">
+                                <small>
+                                    ${escapeHtml(
+                                        capitalize(
+                                            review.reviewType || "property"
+                                        )
+                                    )}
+                                    review
+                                </small>
+
+                                <span class="badge ${
+                                    review.status === "hidden"
+                                        ? "badge-grey"
+                                        : "badge-green"
+                                }">
+                                    ${escapeHtml(review.status || "visible")}
+                                </span>
+                            </div>
+                        </article>
+                    `
+                )
+                .join("");
+        }
+
+        function renderReports() {
+            const reportList = document.getElementById("reportList");
+
+            if (state.reports.length === 0) {
+                reportList.innerHTML = `
+                    <div class="empty-state">
+                        You have not submitted any reports.
+                    </div>
+                `;
+                return;
+            }
+
+            reportList.innerHTML = state.reports
+                .sort(
+                    (first, second) =>
+                        getTimestampValue(second.createdAt) -
+                        getTimestampValue(first.createdAt)
+                )
+                .map(
+                    (report) => `
+                        <article class="report-card">
+                            <h3>${escapeHtml(report.subject || "Operational report")}</h3>
+                            <p>${escapeHtml(report.description || "")}</p>
+                            <small>
+                                ${escapeHtml(capitalize(report.type || "other"))}
+                                · ${formatDateTime(report.createdAt)}
+                                · ${escapeHtml(report.status || "submitted")}
+                            </small>
+                        </article>
+                    `
+                )
+                .join("");
+        }
+
+        function renderAnalytics() {
+            const properties = state.properties;
+
+            document.getElementById("analyticsViews").textContent =
+                properties.reduce(
+                    (total, property) =>
+                        total + Number(property.viewCount || 0),
+                    0
+                );
+
+            document.getElementById("analyticsInquiries").textContent =
+                state.inquiries.length;
+
+            document.getElementById("analyticsPublished").textContent =
+                properties.filter(
+                    (property) => property.status === "published"
+                ).length;
+
+            document.getElementById("analyticsReviews").textContent =
+                state.reviews.length;
+
+            const tableBody = document.getElementById(
+                "analyticsTableBody"
+            );
+
+            if (properties.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            No property analytics available.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = properties
+                .map((property) => {
+                    const propertyInquiries = state.inquiries.filter(
+                        (inquiry) =>
+                            inquiry.propertyId === property.id
+                    ).length;
+
+                    const propertyReviews = state.reviews.filter(
+                        (review) =>
+                            review.propertyId === property.id
+                    );
+
+                    const ratings = propertyReviews
+                        .map((review) => Number(review.rating))
+                        .filter((rating) => rating > 0);
+
+                    const rating =
+                        ratings.length > 0
+                            ? (
+                                ratings.reduce(
+                                    (sum, value) => sum + value,
+                                    0
+                                ) / ratings.length
+                            ).toFixed(1)
+                            : "0.0";
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(property.title || "Property")}</td>
+                            <td>${Number(property.viewCount || 0)}</td>
+                            <td>${propertyInquiries}</td>
+                            <td>${property.availableRooms ?? property.availableUnits ?? "—"}</td>
+                            <td>★ ${rating}</td>
+                        </tr>
+                    `;
+                })
+                .join("");
+        }
+
+        function renderAnnouncements() {
+            const list = document.getElementById("announcementList");
+
+            if (state.announcements.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        No announcements are currently available.
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = state.announcements
+                .sort(
+                    (first, second) =>
+                        getTimestampValue(second.createdAt) -
+                        getTimestampValue(first.createdAt)
+                )
+                .map(
+                    (announcement) => `
+                        <article class="review-card">
+                            <div class="review-card-header">
+                                <div>
+                                    <h3>${escapeHtml(announcement.title || "Announcement")}</h3>
+                                    <small>${formatDateTime(announcement.createdAt)}</small>
+                                </div>
+
+                                <span class="badge badge-green">
+                                    ${escapeHtml(announcement.audienceType || "Everyone")}
+                                </span>
+                            </div>
+
+                            <p>${escapeHtml(announcement.message || "")}</p>
+                        </article>
+                    `
+                )
+                .join("");
+        }
+
+        function updateNotificationCount() {
+            const unreadCount = state.announcements.filter(
+                (announcement) => announcement.readBy?.includes?.(state.user.uid) !== true
+            ).length;
+
+            document.getElementById("notificationCount").textContent =
+                unreadCount;
+        }
+
+        function formatLocationLabel(location) {
+            const name = location.name || location.id;
+            const parts = [
+                location.area,
+                location.street,
+                location.address
+            ].filter(Boolean);
+            if (parts.length === 0) return name;
+            return `${name} — ${parts.join(", ")}`;
+        }
+
+        function getDefaultLocationId() {
+            if (
+                state.profile?.locationId &&
+                state.locationIds.includes(state.profile.locationId)
+            ) {
+                return state.profile.locationId;
+            }
+            if (state.locationIds.length === 1) {
+                return state.locationIds[0];
+            }
+            return state.locationIds[0] || "";
+        }
+
+        function applyLocationDetailsToForm(locationId) {
+            const location = state.locations.find((item) => item.id === locationId);
+            const help = document.getElementById("propertyLocationHelp");
+            const addressInput = document.getElementById("propertyAddress");
+
+            if (!location) {
+                if (help) {
+                    help.textContent =
+                        "You can select only a location assigned to your caretaker account. Street and area are managed by administrators.";
+                }
+                return;
+            }
+
+            const areaBits = [
+                location.area,
+                location.street,
+                location.address,
+                location.description
+            ].filter(Boolean);
+
+            if (help) {
+                help.textContent = areaBits.length
+                    ? `Admin location details: ${areaBits.join(" · ")}`
+                    : "Street and area for this location are set by administrators.";
+            }
+
+            // Prefill address from admin-managed fields when empty or when location changes
+            if (addressInput) {
+                const adminAddress = [location.street, location.area, location.address]
+                    .filter(Boolean)
+                    .join(", ");
+                if (adminAddress) {
+                    addressInput.value = adminAddress;
+                    addressInput.placeholder = adminAddress;
+                }
+            }
+        }
+
+        function populateLocationOptions() {
+            const select = document.getElementById("propertyLocation");
+            if (!select) return;
+
+            select.innerHTML = `
+                <option value="">Select assigned location</option>
+            `;
+
+            state.locations.forEach((location) => {
+                const option = document.createElement("option");
+                option.value = location.id;
+                option.textContent = formatLocationLabel(location);
+                select.appendChild(option);
+            });
+
+            const defaultId = getDefaultLocationId();
+            if (defaultId) {
+                select.value = defaultId;
+                applyLocationDetailsToForm(defaultId);
+            }
+
+            select.onchange = () => applyLocationDetailsToForm(select.value);
+        }
+
+        function populatePropertyOptions() {
+            const select = document.getElementById("reportProperty");
+
+            select.innerHTML = `
+                <option value="">Select property</option>
+            `;
+
+            state.properties.forEach((property) => {
+                const option = document.createElement("option");
+                option.value = property.id;
+                option.textContent = property.title || property.id;
+                select.appendChild(option);
+            });
+        }
+
+        async function uploadImageToCloudinary(file) {
+            const cloudName = "uxvihl5r";
+            const uploadPreset = "MASITECH";
+
+            if (!cloudName || !uploadPreset) {
+                throw new Error(
+                    "Cloudinary cloud name and upload preset have not been configured."
+                );
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", uploadPreset);
+
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Cloudinary upload failed.");
+            }
+
+            const result = await response.json();
+
+            return {
+                secureUrl: result.secure_url,
+                publicId: result.public_id
+            };
+        }
+
+        async function uploadSelectedImages() {
+            const files = Array.from(
+                document.getElementById("propertyImages").files
+            );
+
+            if (files.length === 0) {
+                return [];
+            }
+
+            if (files.length > 8) {
+                throw new Error("You can upload a maximum of 8 images.");
+            }
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            for (const file of files) {
+                if (!allowedTypes.includes(file.type)) {
+                    throw new Error(
+                        "Only JPG, PNG, and WebP images are allowed."
+                    );
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    throw new Error(
+                        "Each image must be smaller than 5 MB."
+                    );
+                }
+            }
+
+            return Promise.all(
+                files.map((file) => uploadImageToCloudinary(file))
+            );
+        }
+
+        function previewSelectedImages() {
+            const files = Array.from(
+                document.getElementById("propertyImages").files
+            );
+
+            const previewGrid =
+                document.getElementById("imagePreviewGrid");
+
+            previewGrid.innerHTML = "";
+
+            files.forEach((file) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    const preview = document.createElement("div");
+                    preview.className = "image-preview";
+
+                    preview.innerHTML = `
+                        <img src="${reader.result}" alt="Selected property image">
+                        <span>${escapeHtml(file.name)}</span>
+                    `;
+
+                    previewGrid.appendChild(preview);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function getPropertyFormData(status) {
+            const title = document
+                .getElementById("propertyTitle")
+                .value
+                .trim();
+
+            const propertyType =
+                document.getElementById("propertyType").value;
+
+            const locationId =
+                document.getElementById("propertyLocation").value;
+
+            const location = state.locations.find(
+                (item) => item.id === locationId
+            );
+
+            const totalUnits = Number(
+                document.getElementById("totalUnits").value
+            );
+
+            const availableUnits = Number(
+                document.getElementById("availableUnits").value
+            );
+
+            const amenities = document
+                .getElementById("propertyAmenities")
+                .value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean);
+
+            return {
+                title,
+                propertyType,
+                locationId,
+                locationName: location?.name || locationId,
+                locationArea: location?.area || null,
+                locationStreet: location?.street || null,
+                address: document
+                    .getElementById("propertyAddress")
+                    .value
+                    .trim() ||
+                    [location?.street, location?.area, location?.address]
+                        .filter(Boolean)
+                        .join(", "),
+                price: Number(
+                    document.getElementById("propertyPrice").value
+                ),
+                priceLabel: document
+                    .getElementById("propertyPriceLabel")
+                    .value
+                    .trim(),
+                roomType:
+                    propertyType === "student"
+                        ? document.getElementById("roomOrUnitType").value.trim()
+                        : null,
+                unitType:
+                    propertyType === "apartment"
+                        ? document.getElementById("roomOrUnitType").value.trim()
+                        : null,
+                condition:
+                    document.getElementById("propertyCondition").value,
+                totalRooms:
+                    propertyType === "student" ? totalUnits : null,
+                availableRooms:
+                    propertyType === "student" ? availableUnits : null,
+                totalUnits:
+                    propertyType === "apartment" ? totalUnits : null,
+                availableUnits:
+                    propertyType === "apartment" ? availableUnits : null,
+                amenities,
+                description: document
+                    .getElementById("propertyDescription")
+                    .value
+                    .trim(),
+                rules: document
+                    .getElementById("propertyRules")
+                    .value
+                    .trim(),
+                status,
+                createdBy: state.user.uid,
+                createdByName:
+                    state.profile?.fullName ||
+                    state.user.displayName ||
+                    state.user.email,
+                caretakerId: state.user.uid,
+                updatedAt: serverTimestamp()
+            };
+        }
+
+        function validatePropertyData(data) {
+            if (!data.title || !data.propertyType || !data.locationId) {
+                return "Complete the property name, type, and location.";
+            }
+
+            if (!isAssignedLocation(data.locationId)) {
+                return "You can only create properties in assigned locations.";
+            }
+
+            if (data.totalRooms < data.availableRooms) {
+                return "Available rooms cannot exceed total rooms.";
+            }
+
+            if (data.totalUnits < data.availableUnits) {
+                return "Available units cannot exceed total units.";
+            }
+
+            if (data.price < 0) {
+                return "Price cannot be negative.";
+            }
+
+            return "";
+        }
+
+        async function saveProperty(status) {
+            const propertyMessage =
+                document.getElementById("propertyMessage");
+
+            hideMessage(propertyMessage);
+
+            const data = getPropertyFormData(status);
+            const validationError = validatePropertyData(data);
+
+            if (validationError) {
+                showMessage(propertyMessage, validationError, "error");
+                return;
+            }
+
+            const saveButton =
+                status === "draft"
+                    ? document.getElementById("saveDraftButton")
+                    : document.getElementById("submitPropertyButton");
+
+            saveButton.disabled = true;
+            saveButton.textContent =
+                status === "draft" ? "Saving..." : "Submitting...";
+
+            try {
+                const uploadedImages = await uploadSelectedImages();
+
+                data.imageUrl = uploadedImages[0]?.secureUrl || null;
+                data.imageUrls = uploadedImages.map(
+                    (image) => image.secureUrl
+                );
+                data.cloudinaryPublicIds = uploadedImages.map(
+                    (image) => image.publicId
+                );
+                data.createdAt = serverTimestamp();
+
+                await addDoc(collection(db, "properties"), data);
+
+                showMessage(
+                    propertyMessage,
+                    status === "draft"
+                        ? "The property draft was saved."
+                        : "The property was submitted for administrator approval.",
+                    "success"
+                );
+
+                document.getElementById("propertyForm").reset();
+                document.getElementById("imagePreviewGrid").innerHTML = "";
+
+                await loadCaretakerData();
+                openSection("properties");
+            } catch (error) {
+                console.error("Could not save property:", error);
+
+                showMessage(
+                    propertyMessage,
+                    error.message ||
+                        "The property could not be saved. Please try again.",
+                    "error"
+                );
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent =
+                    status === "draft"
+                        ? "Save draft"
+                        : "Submit for approval";
+            }
+        }
+
+        async function updatePropertyStatus(propertyId, status) {
+            const property = state.properties.find(
+                (item) => item.id === propertyId
+            );
+
+            if (!property) {
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "properties", propertyId), {
+                    status,
+                    updatedAt: serverTimestamp()
+                });
+
+                showToast(`Property marked as ${status}.`);
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Could not update property:", error);
+                showToast(
+                    "The property could not be updated.",
+                    true
+                );
+            }
+        }
+
+        async function updateInquiryStatus(inquiryId) {
+            const inquiry = state.inquiries.find(
+                (item) => item.id === inquiryId
+            );
+
+            if (!inquiry) {
+                return;
+            }
+
+            const statuses = [
+                "new",
+                "in-progress",
+                "resolved",
+                "closed"
+            ];
+
+            const currentIndex = statuses.indexOf(
+                inquiry.status || "new"
+            );
+
+            const nextStatus =
+                statuses[(currentIndex + 1) % statuses.length];
+
+            try {
+                await updateDoc(doc(db, "inquiries", inquiryId), {
+                    status: nextStatus,
+                    updatedAt: serverTimestamp(),
+                    updatedBy: state.user.uid
+                });
+
+                showToast(`Inquiry marked as ${nextStatus}.`);
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Could not update inquiry:", error);
+                showToast(
+                    "The inquiry could not be updated.",
+                    true
+                );
+            }
+        }
+
+        async function saveReport(event) {
             event.preventDefault();
-            filterAndDisplayProperties();
+
+            const reportMessage =
+                document.getElementById("reportMessage");
+
+            hideMessage(reportMessage);
+
+            const propertyId =
+                document.getElementById("reportProperty").value;
+
+            const property = state.properties.find(
+                (item) => item.id === propertyId
+            );
+
+            const report = {
+                type: document.getElementById("reportType").value,
+                propertyId: propertyId || null,
+                propertyName: property?.title || null,
+                locationId: property?.locationId || null,
+                subject: document
+                    .getElementById("reportSubject")
+                    .value
+                    .trim(),
+                description: document
+                    .getElementById("reportDescription")
+                    .value
+                    .trim(),
+                status: "submitted",
+                createdBy: state.user.uid,
+                createdByName:
+                    state.profile?.fullName ||
+                    state.user.displayName ||
+                    state.user.email,
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                await addDoc(collection(db, "reports"), report);
+
+                showMessage(
+                    reportMessage,
+                    "Your report has been submitted to administrators.",
+                    "success"
+                );
+
+                document.getElementById("reportForm").reset();
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Could not save report:", error);
+
+                showMessage(
+                    reportMessage,
+                    "The report could not be submitted.",
+                    "error"
+                );
+            }
+        }
+
+        async function saveProfile(event) {
+            event.preventDefault();
+
+            const profileMessage =
+                document.getElementById("profileMessage");
+
+            hideMessage(profileMessage);
+
+            const fullName = document
+                .getElementById("caretakerName")
+                .value
+                .trim();
+
+            const phone = document
+                .getElementById("caretakerPhone")
+                .value
+                .trim();
+
+            if (fullName.length < 2) {
+                showMessage(
+                    profileMessage,
+                    "Enter a valid full name.",
+                    "error"
+                );
+                return;
+            }
+
+            try {
+                await updateProfile(state.user, {
+                    displayName: fullName
+                });
+
+                await updateDoc(doc(db, "users", state.user.uid), {
+                    fullName,
+                    phone,
+                    updatedAt: serverTimestamp()
+                });
+
+                showMessage(
+                    profileMessage,
+                    "Your profile has been updated.",
+                    "success"
+                );
+
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Could not update profile:", error);
+
+                showMessage(
+                    profileMessage,
+                    "Your profile could not be updated.",
+                    "error"
+                );
+            }
+        }
+
+        function openSection(sectionName) {
+            const targetSection = document.getElementById(
+                `section-${sectionName}`
+            );
+
+            if (!targetSection) {
+                return;
+            }
+
+            document
+                .querySelectorAll(".dashboard-section")
+                .forEach((section) => {
+                    section.classList.remove("active");
+                });
+
+            mainNavItems.forEach((item) => {
+                item.classList.remove("active");
+            });
+
+            targetSection.classList.add("active");
+
+            const navItem = document.querySelector(
+                `.nav-item[data-section="${sectionName}"]`
+            );
+
+            if (navItem) {
+                navItem.classList.add("active");
+            }
+
+            const [title, subtitle] =
+                sectionTitles[sectionName] || sectionTitles.dashboard;
+
+            document.getElementById("pageTitle").textContent = title;
+            document.getElementById("pageSubtitle").textContent = subtitle;
+
+            if (sectionName === "add-property") {
+                populateLocationOptions();
+            }
+
+            sidebar.classList.remove("open");
+            mobileMenuButton.setAttribute("aria-expanded", "false");
+        }
+
+        document.querySelectorAll(".nav-item").forEach((item) => {
+            item.addEventListener("click", () => {
+                openSection(item.dataset.section);
+            });
         });
 
-        searchInput.addEventListener("input", filterAndDisplayProperties);
-        locationFilter.addEventListener("change", filterAndDisplayProperties);
-        sortFilter.addEventListener("change", filterAndDisplayProperties);
+        document.querySelectorAll("[data-open-section]").forEach((button) => {
+            button.addEventListener("click", () => {
+                openSection(button.dataset.openSection);
+            });
+        });
 
-        const propertiesQuery = query(
-            collection(db, "properties"),
-            where("propertyType", "==", "student"),
-            where("status", "==", "published")
-        );
+        document
+            .getElementById("propertySearch")
+            .addEventListener("input", renderProperties);
 
-        await loadLocations();
+        document
+            .getElementById("propertyTypeFilter")
+            .addEventListener("change", renderProperties);
 
-        onSnapshot(
-            propertiesQuery,
-            (snapshot) => {
-                allProperties = snapshot.docs.map((propertyDocument) => ({
-                    id: propertyDocument.id,
-                    ...propertyDocument.data()
-                }));
+        document
+            .getElementById("propertyStatusFilter")
+            .addEventListener("change", renderProperties);
 
-                loadingState.style.display = "none";
-                errorState.hidden = true;
-                filterAndDisplayProperties();
-            },
-            (error) => {
-                console.error("Could not load properties:", error);
+        document
+            .getElementById("inquiryStatusFilter")
+            .addEventListener("change", renderInquiries);
 
-                loadingState.style.display = "none";
-                errorState.hidden = false;
-                resultCount.textContent = "Listings unavailable";
+        document
+            .getElementById("propertyImages")
+            .addEventListener("change", previewSelectedImages);
+
+        document
+            .getElementById("saveDraftButton")
+            .addEventListener("click", () => saveProperty("draft"));
+
+        document
+            .getElementById("propertyForm")
+            .addEventListener("submit", (event) => {
+                event.preventDefault();
+                saveProperty("pending");
+            });
+
+        document
+            .getElementById("reportForm")
+            .addEventListener("submit", saveReport);
+
+        document
+            .getElementById("profileForm")
+            .addEventListener("submit", saveProfile);
+
+        document
+            .getElementById("propertyGrid")
+            .addEventListener("click", async (event) => {
+                const button = event.target.closest(
+                    "[data-property-action]"
+                );
+
+                if (!button) {
+                    return;
+                }
+
+                const propertyId = button.dataset.id;
+                const action = button.dataset.propertyAction;
+                const property = state.properties.find(
+                    (item) => item.id === propertyId
+                );
+
+                if (action === "view") {
+                    window.open(
+                        `property-details.html?id=${encodeURIComponent(propertyId)}`,
+                        "_blank"
+                    );
+                    return;
+                }
+
+                if (action === "edit") {
+                    showToast(
+                        `${property?.title || "Property"} editing will be connected to the property editor next.`
+                    );
+                    return;
+                }
+
+                if (action === "submit") {
+                    await updatePropertyStatus(propertyId, "pending");
+                    return;
+                }
+
+                if (action === "archive") {
+                    await updatePropertyStatus(propertyId, "archived");
+                }
+            });
+
+        document
+            .getElementById("inquiriesTableBody")
+            .addEventListener("click", async (event) => {
+                const button = event.target.closest(
+                    "[data-inquiry-action]"
+                );
+
+                if (!button) {
+                    return;
+                }
+
+                await updateInquiryStatus(button.dataset.id);
+            });
+
+        document
+            .getElementById("refreshButton")
+            .addEventListener("click", async () => {
+                try {
+                    await loadCaretakerData();
+                    showToast("Caretaker data refreshed.");
+                } catch (error) {
+                    showToast(
+                        "Could not refresh caretaker data.",
+                        true
+                    );
+                }
+            });
+
+        document
+            .getElementById("notificationButton")
+            .addEventListener("click", () => {
+                openSection("announcements");
+            });
+
+        mobileMenuButton.addEventListener("click", () => {
+            const isOpen = sidebar.classList.toggle("open");
+
+            mobileMenuButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+        });
+
+        document
+            .getElementById("logoutButton")
+            .addEventListener("click", async () => {
+                try {
+                    await signOut(auth);
+                    window.location.href = "login.html";
+                } catch (error) {
+                    console.error("Logout error:", error);
+                    showToast("Could not log out.", true);
+                }
+            });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener("click", (event) => {
+            if (!sidebar.classList.contains("open")) return;
+
+            const clickedInsideSidebar = sidebar.contains(event.target);
+            const clickedMenuButton = mobileMenuButton.contains(event.target);
+
+            if (!clickedInsideSidebar && !clickedMenuButton) {
+                sidebar.classList.remove("open");
+                mobileMenuButton.setAttribute("aria-expanded", "false");
             }
-        );
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+                return;
+            }
+
+            state.user = user;
+
+            try {
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Caretaker dashboard error:", error);
+                // Authenticated but data failed — still allow if role ok was not reached
+                window.location.replace("profile.html");
+            }
+        });
     </script>
 </body>
 </html>

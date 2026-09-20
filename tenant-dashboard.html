@@ -38,44 +38,15 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        body.auth-pending .app-layout {
-            visibility: hidden;
+        /* No full-page auth gate — avoid blank flash */
+        body.auth-pending .page-container {
+            opacity: 0.55;
             pointer-events: none;
         }
 
-        body.auth-ready .app-layout {
-            visibility: visible;
+        body.auth-ready .page-container {
+            opacity: 1;
             pointer-events: auto;
-        }
-
-        .auth-gate {
-            position: fixed;
-            inset: 0;
-            z-index: 5000;
-            display: grid;
-            place-items: center;
-            padding: 24px;
-            background: var(--light-grey);
-        }
-
-        body.auth-ready .auth-gate {
-            display: none;
-        }
-
-        .auth-gate-card {
-            max-width: 420px;
-            width: 100%;
-            padding: 28px;
-            text-align: center;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .auth-gate-card p {
-            color: var(--medium-grey);
-            font-size: 0.92rem;
         }
 
         .notification-button {
@@ -351,32 +322,8 @@
             padding: 30px;
         }
 
-        .loading-screen,
-        .access-denied {
-            min-height: 70vh;
-            display: grid;
-            place-items: center;
-            padding: 30px;
-            text-align: center;
-        }
+        /* loading/access full-page states removed */
 
-        .access-card {
-            max-width: 500px;
-            padding: 34px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 13px;
-            box-shadow: var(--shadow);
-        }
-
-        .access-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .access-card p {
-            margin-bottom: 20px;
-            color: var(--medium-grey);
-        }
 
         .dashboard-section {
             display: none;
@@ -749,6 +696,11 @@
             background: #fef2f2;
             border-color: #fecaca;
         }
+        .small-button.book {
+            color: #166534;
+            background: #dcfce7;
+            border-color: #86efac;
+        }
 
         .table-wrapper {
             width: 100%;
@@ -1041,20 +993,104 @@
                 display: none;
             }
         }
+
+        .property-image-wrapper { cursor: pointer; }
+
+        .property-modal-overlay {
+            position: fixed; inset: 0; z-index: 4000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(17, 24, 39, 0.72);
+        }
+        .property-modal-overlay.open { display: flex; }
+        .property-modal {
+            width: min(920px, 100%); max-height: min(92vh, 900px);
+            overflow: auto; background: var(--white); border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+        }
+        .property-modal-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--border);
+        }
+        .property-modal-header h2 { font-size: 1.15rem; color: var(--dark-charcoal); }
+        .property-modal-header p { margin-top: 4px; color: var(--medium-grey); font-size: 0.82rem; }
+        .modal-close {
+            flex-shrink: 0; width: 36px; height: 36px; border: 0; border-radius: 8px;
+            background: var(--light-grey); color: var(--dark-charcoal); font-size: 1.25rem; cursor: pointer;
+        }
+        .property-modal-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; }
+        .gallery-pane { padding: 16px; background: #111827; }
+        .gallery-main {
+            position: relative; display: grid; place-items: center; min-height: 280px;
+            background: #0f172a; border-radius: 10px; overflow: hidden;
+        }
+        .gallery-main img { width: 100%; max-height: 360px; object-fit: contain; display: block; }
+        .gallery-nav {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px;
+            border: 0; border-radius: 50%; background: rgba(255,255,255,0.92);
+            color: var(--dark-charcoal); font-size: 1.2rem; font-weight: 700; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .gallery-nav.prev { left: 10px; }
+        .gallery-nav.next { right: 10px; }
+        .gallery-nav:disabled { opacity: 0.35; cursor: default; }
+        .gallery-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .gallery-thumb {
+            width: 64px; height: 48px; padding: 0; border: 2px solid transparent;
+            border-radius: 6px; overflow: hidden; background: #1f2937; cursor: pointer;
+        }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .gallery-thumb.active { border-color: var(--teal); }
+        .gallery-counter { margin-top: 8px; color: #d1d5db; font-size: 0.75rem; text-align: center; }
+        .details-pane { padding: 18px 20px 22px; }
+        .details-pane .price-line { margin-bottom: 10px; color: var(--teal); font-size: 1.05rem; font-weight: 700; }
+        .details-pane .meta-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+        .details-pane .description { margin-bottom: 14px; color: var(--charcoal); font-size: 0.88rem; line-height: 1.55; }
+        .details-pane .detail-list { display: grid; gap: 8px; margin-bottom: 16px; }
+        .details-pane .detail-list div { display: flex; justify-content: space-between; gap: 12px; font-size: 0.8rem; }
+        .details-pane .detail-list span:first-child { color: var(--medium-grey); }
+        .details-pane .detail-list span:last-child { color: var(--dark-charcoal); font-weight: 600; text-align: right; }
+        .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        @media (max-width: 780px) {
+            .property-modal-body { grid-template-columns: 1fr; }
+            .gallery-main img { max-height: 260px; }
+        }
+
+
+        .book-modal-overlay {
+            position: fixed; inset: 0; z-index: 4100; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(17, 24, 39, 0.72);
+        }
+        .book-modal-overlay.open { display: flex; }
+        .book-modal {
+            width: min(480px, 100%); background: var(--white);
+            border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,0.28); overflow: hidden;
+        }
+        .book-modal-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--border);
+        }
+        .book-modal-header h2 { font-size: 1.1rem; }
+        .book-modal-header p { margin-top: 4px; color: var(--medium-grey); font-size: 0.8rem; }
+        .book-modal-body { padding: 18px 20px 22px; display: grid; gap: 14px; }
+        .contact-block {
+            padding: 14px; background: #f9fafb; border: 1px solid var(--border);
+            border-radius: 10px; display: grid; gap: 8px;
+        }
+        .contact-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .book-modal textarea {
+            width: 100%; min-height: 90px; padding: 10px; border: 1px solid #d1d5db;
+            border-radius: 7px; font: inherit; resize: vertical;
+        }
+
     </style>
 </head>
 
 <body class="auth-pending">
-    <div class="auth-gate" id="authGate" aria-live="polite">
-        <div class="auth-gate-card">
-            <p>Checking tenant access...</p>
-        </div>
-    </div>
-
-    <div class="app-layout" id="appLayout" hidden>
+    <div class="app-layout" id="appLayout">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
+                <img src="logo.jpg" alt="Masitech Solutions logo">
 
                 <div class="sidebar-brand">
                     Masitech Tenant
@@ -1202,24 +1238,7 @@
             </header>
 
             <main class="page-container">
-                <div class="loading-screen" id="loadingScreen">
-                    <p>Loading your tenant dashboard...</p>
-                </div>
-
-                <div class="access-denied" id="accessDenied" hidden>
-                    <div class="access-card">
-                        <h2>Access restricted</h2>
-                        <p>
-                            This dashboard is available only to active tenant
-                            accounts.
-                        </p>
-                        <a class="button button-primary" href="login.html">
-                            Return to login
-                        </a>
-                    </div>
-                </div>
-
-                <div id="tenantApp" hidden>
+                <div id="tenantApp">
                     <section
                         class="dashboard-section active"
                         id="section-dashboard"
@@ -1245,13 +1264,12 @@
                                     Refresh
                                 </button>
 
-                                <button
+                                <a
                                     class="button button-primary"
-                                    data-open-section="listings"
-                                    type="button"
+                                    href="apartment-listings.html"
                                 >
                                     Browse apartments
-                                </button>
+                                </a>
                             </div>
                         </div>
 
@@ -1333,7 +1351,7 @@
                                 <div class="panel-header">
                                     <h3>Recommended apartments</h3>
 
-                                    <a href="#" data-open-section="listings">
+                                    <a href="apartment-listings.html">
                                         View all
                                     </a>
                                 </div>
@@ -1691,6 +1709,73 @@
         </div>
     </div>
 
+
+    <div class="property-modal-overlay" id="propertyModal" aria-hidden="true">
+        <div class="property-modal" role="dialog" aria-modal="true" aria-labelledby="modalPropertyTitle">
+            <div class="property-modal-header">
+                <div>
+                    <h2 id="modalPropertyTitle">Apartment</h2>
+                    <p id="modalPropertyLocation"></p>
+                </div>
+                <button class="modal-close" id="modalCloseButton" type="button" aria-label="Close">×</button>
+            </div>
+            <div class="property-modal-body">
+                <div class="gallery-pane">
+                    <div class="gallery-main">
+                        <button class="gallery-nav prev" id="galleryPrev" type="button" aria-label="Previous photo">‹</button>
+                        <img id="galleryMainImage" src="" alt="Apartment photo">
+                        <button class="gallery-nav next" id="galleryNext" type="button" aria-label="Next photo">›</button>
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs"></div>
+                    <div class="gallery-counter" id="galleryCounter"></div>
+                </div>
+                <div class="details-pane">
+                    <div class="price-line" id="modalPrice"></div>
+                    <div class="meta-row" id="modalMeta"></div>
+                    <p class="description" id="modalDescription"></p>
+                    <div class="detail-list" id="modalDetails"></div>
+                    <div class="modal-actions">
+                        <button class="button button-primary" id="modalBookButton" type="button">Book / Contact</button>
+                        <button class="button button-outline" id="modalSaveButton" type="button">Save</button>
+                        <a class="button button-outline" id="modalFullLink" href="apartment-listings.html">See all apartments</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="book-modal-overlay" id="bookModal" aria-hidden="true">
+        <div class="book-modal" role="dialog" aria-modal="true">
+            <div class="book-modal-header">
+                <div>
+                    <h2 id="bookModalTitle">Book / Contact</h2>
+                    <p id="bookModalProperty"></p>
+                </div>
+                <button class="modal-close" id="bookModalClose" type="button" aria-label="Close">×</button>
+            </div>
+            <div class="book-modal-body">
+                <div class="contact-block">
+                    <strong id="bookContactName">Caretaker</strong>
+                    <div><span id="bookContactPhone">Phone not provided</span></div>
+                    <div class="contact-actions">
+                        <a class="button button-outline" id="bookCallLink" href="#" style="display:none">Call</a>
+                        <a class="button button-primary" id="bookWhatsAppLink" href="#" target="_blank" rel="noopener" style="display:none">WhatsApp</a>
+                    </div>
+                </div>
+                <div>
+                    <label for="bookMessage" style="display:block;font-size:0.78rem;font-weight:700;margin-bottom:6px">Message on platform</label>
+                    <textarea id="bookMessage" placeholder="Hi, I am interested in this apartment..."></textarea>
+                </div>
+                <div class="message" id="bookMessageStatus" role="status"></div>
+                <div class="modal-actions">
+                    <button class="button button-primary" id="bookSendInquiry" type="button">Send inquiry</button>
+                    <button class="button button-outline" id="bookModalCancel" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast" role="status"></div>
 
     <script type="module">
@@ -1712,6 +1797,7 @@
             where,
             updateDoc,
             setDoc,
+            addDoc,
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
@@ -1776,9 +1862,6 @@
             ]
         };
 
-        const loadingScreen = document.getElementById("loadingScreen");
-        const accessDenied = document.getElementById("accessDenied");
-        const tenantApp = document.getElementById("tenantApp");
         const sidebar = document.getElementById("sidebar");
         const mobileMenuButton =
             document.getElementById("mobileMenuButton");
@@ -1870,11 +1953,131 @@
             });
         }
 
+        function getPropertyImages(property) {
+            const urls = [];
+            if (Array.isArray(property.imageUrls)) {
+                property.imageUrls.forEach((url) => {
+                    if (url && !urls.includes(url)) urls.push(url);
+                });
+            }
+            if (property.imageUrl && !urls.includes(property.imageUrl)) {
+                urls.unshift(property.imageUrl);
+            }
+            if (urls.length === 0) {
+                urls.push("https://via.placeholder.com/800x500?text=Apartment");
+            }
+            return urls;
+        }
+
         function getPropertyImage(property) {
-            return (
-                property.imageUrl ||
-                "https://via.placeholder.com/800x500?text=Apartment"
+            return getPropertyImages(property)[0];
+        }
+
+        const propertyModal = {
+            el: document.getElementById("propertyModal"),
+            property: null,
+            images: [],
+            index: 0
+        };
+
+        function openPropertyModal(propertyId) {
+            const property = state.properties.find((item) => item.id === propertyId);
+            if (!property) return;
+
+            propertyModal.property = property;
+            propertyModal.images = getPropertyImages(property);
+            propertyModal.index = 0;
+
+            document.getElementById("modalPropertyTitle").textContent =
+                property.title || "Private apartment";
+            document.getElementById("modalPropertyLocation").textContent =
+                property.locationName || property.locationId || "Location unavailable";
+
+            if (property.priceLabel) {
+                document.getElementById("modalPrice").textContent = property.priceLabel;
+            } else if (typeof property.price === "number") {
+                document.getElementById("modalPrice").textContent =
+                    `K${property.price.toLocaleString()} per month`;
+            } else {
+                document.getElementById("modalPrice").textContent = "Price on inquiry";
+            }
+
+            document.getElementById("modalDescription").textContent =
+                property.description || "Apartment details will be provided soon.";
+
+            const meta = document.getElementById("modalMeta");
+            meta.innerHTML = "";
+            [
+                property.unitType || property.roomType,
+                `${getPropertyAvailability(property)} available`,
+                property.condition ? capitalize(property.condition) : null
+            ].filter(Boolean).forEach((label) => {
+                const span = document.createElement("span");
+                span.className = "meta-item";
+                span.textContent = label;
+                meta.appendChild(span);
+            });
+
+            const details = document.getElementById("modalDetails");
+            details.innerHTML = `
+                <div><span>Rating</span><span>★ ${Number(property.rating || 0).toFixed(1)} (${property.reviewCount || 0})</span></div>
+                <div><span>Type</span><span>${escapeHtml(capitalize(property.propertyType || "apartment"))}</span></div>
+                <div><span>Address</span><span>${escapeHtml(property.address || "On inquiry")}</span></div>
+            `;
+            if (Array.isArray(property.amenities) && property.amenities.length) {
+                details.innerHTML += `<div><span>Amenities</span><span>${escapeHtml(property.amenities.join(", "))}</span></div>`;
+            }
+
+            const savedProperty = state.savedProperties.find(
+                (saved) => saved.propertyId === property.id && saved.status !== "removed"
             );
+            const saveButton = document.getElementById("modalSaveButton");
+            saveButton.textContent = savedProperty ? "Saved" : "Save";
+            saveButton.dataset.id = property.id;
+            saveButton.dataset.saveAction = savedProperty ? "remove" : "save";
+
+            document.getElementById("modalFullLink").href = "apartment-listings.html";
+
+            renderGallery();
+            propertyModal.el.classList.add("open");
+            propertyModal.el.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closePropertyModal() {
+            propertyModal.el.classList.remove("open");
+            propertyModal.el.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            propertyModal.property = null;
+        }
+
+        function renderGallery() {
+            const images = propertyModal.images;
+            const index = propertyModal.index;
+            const mainImage = document.getElementById("galleryMainImage");
+            const thumbs = document.getElementById("galleryThumbs");
+            const counter = document.getElementById("galleryCounter");
+            const prev = document.getElementById("galleryPrev");
+            const next = document.getElementById("galleryNext");
+
+            mainImage.src = images[index];
+            mainImage.alt = propertyModal.property?.title || "Apartment photo";
+            counter.textContent = `${index + 1} / ${images.length}`;
+            prev.disabled = images.length <= 1;
+            next.disabled = images.length <= 1;
+
+            thumbs.innerHTML = images.map((url, i) => `
+                <button class="gallery-thumb ${i === index ? "active" : ""}" type="button" data-index="${i}" aria-label="Photo ${i + 1}">
+                    <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy">
+                </button>
+            `).join("");
+        }
+
+        function shiftGallery(delta) {
+            const total = propertyModal.images.length;
+            if (total <= 1) return;
+            propertyModal.index = (propertyModal.index + delta + total) % total;
+            renderGallery();
         }
 
         function getPropertyPrice(property) {
@@ -1910,13 +2113,6 @@
         function showTenantApp() {
             document.body.classList.remove("auth-pending");
             document.body.classList.add("auth-ready");
-
-            const layout = document.getElementById("appLayout");
-            if (layout) layout.hidden = false;
-
-            if (loadingScreen) loadingScreen.hidden = true;
-            if (accessDenied) accessDenied.hidden = true;
-            if (tenantApp) tenantApp.hidden = false;
         }
 
         function showAccessDenied() {
@@ -2327,8 +2523,14 @@
                     const isSaved = Boolean(savedProperty);
 
                     return `
-                        <article class="property-card">
-                            <div class="property-image-wrapper">
+                        <article class="property-card" data-property-id="${property.id}">
+                            <div
+                                class="property-image-wrapper"
+                                data-open-property="${property.id}"
+                                role="button"
+                                tabindex="0"
+                                aria-label="View ${escapeHtml(property.title || "apartment")}"
+                            >
                                 <img
                                     class="property-image"
                                     src="${getPropertyImage(property)}"
@@ -2402,15 +2604,20 @@
                                     </div>
 
                                     <div class="property-card-actions">
-                                        <a
+                                        <button
                                             class="small-button view"
-                                            href="property-details.html?id=${encodeURIComponent(
-                                                property.id
-                                            )}"
+                                            data-open-property="${property.id}"
+                                            type="button"
                                         >
                                             View
-                                        </a>
-
+                                        </button>
+                                        <button
+                                            class="small-button book"
+                                            data-book-property="${property.id}"
+                                            type="button"
+                                        >
+                                            Book
+                                        </button>
                                         <button
                                             class="small-button ${
                                                 isSaved
@@ -2574,14 +2781,13 @@
                             </td>
 
                             <td>
-                                <a
+                                <button
                                     class="small-button view"
-                                    href="property-details.html?id=${encodeURIComponent(
-                                        inquiry.propertyId || ""
-                                    )}"
+                                    type="button"
+                                    data-open-property="${escapeHtml(inquiry.propertyId || "")}"
                                 >
                                     View apartment
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -2939,47 +3145,178 @@
                 });
             });
 
-        document
-            .getElementById("recommendedGrid")
-            .addEventListener("click", async (event) => {
-                const button = event.target.closest(
-                    "[data-save-action]"
-                );
 
-                if (!button) {
-                    return;
-                }
+        const bookModal = {
+            el: document.getElementById("bookModal"),
+            property: null
+        };
 
-                await saveProperty(button.dataset.id);
+        function normalizePhone(phone) {
+            return String(phone || "").replace(/[^0-9+]/g, "");
+        }
+
+        function whatsappLink(phone) {
+            let digits = normalizePhone(phone).replace(/^\+/, "");
+            if (!digits) return "";
+            if (digits.startsWith("0")) digits = "260" + digits.slice(1);
+            return `https://wa.me/${digits}`;
+        }
+
+        function openBookModal(propertyId) {
+            const property = state.properties.find((p) => p.id === propertyId);
+            if (!property) {
+                showToast("Apartment not found.", true);
+                return;
+            }
+            bookModal.property = property;
+            document.getElementById("bookModalTitle").textContent = "Book / Contact caretaker";
+            document.getElementById("bookModalProperty").textContent =
+                property.title || "Private apartment";
+            const name = property.contactName || property.createdByName || "Caretaker / Landlord";
+            const phone = property.contactPhone || property.contactWhatsApp || property.caretakerPhone || "";
+            document.getElementById("bookContactName").textContent = name;
+            document.getElementById("bookContactPhone").textContent = phone || "Phone not provided yet";
+            const callLink = document.getElementById("bookCallLink");
+            const waLink = document.getElementById("bookWhatsAppLink");
+            if (phone) {
+                callLink.href = `tel:${normalizePhone(phone)}`;
+                callLink.style.display = "inline-flex";
+                const wa = whatsappLink(phone);
+                if (wa) { waLink.href = wa; waLink.style.display = "inline-flex"; }
+                else waLink.style.display = "none";
+            } else {
+                callLink.style.display = "none";
+                waLink.style.display = "none";
+            }
+            document.getElementById("bookMessage").value =
+                `Hi, I am interested in "${property.title || "this apartment"}". Please share availability and viewing details.`;
+            const status = document.getElementById("bookMessageStatus");
+            status.className = "message";
+            status.textContent = "";
+            bookModal.el.classList.add("open");
+            bookModal.el.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeBookModal() {
+            bookModal.el.classList.remove("open");
+            bookModal.el.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            bookModal.property = null;
+        }
+
+        async function sendBookingInquiry() {
+            if (!state.user) {
+                window.location.href = "login.html";
+                return;
+            }
+            const property = bookModal.property;
+            if (!property) return;
+            const message = document.getElementById("bookMessage").value.trim();
+            const status = document.getElementById("bookMessageStatus");
+            if (message.length < 5) {
+                status.className = "message error";
+                status.textContent = "Please enter a short message.";
+                return;
+            }
+            const sendBtn = document.getElementById("bookSendInquiry");
+            sendBtn.disabled = true;
+            sendBtn.textContent = "Sending...";
+            try {
+                await addDoc(collection(db, "inquiries"), {
+                    userId: state.user.uid,
+                    tenantName: state.profile?.fullName || state.user.displayName || state.user.email || "Tenant",
+                    tenantEmail: state.user.email || "",
+                    tenantPhone: state.profile?.phone || "",
+                    propertyId: property.id,
+                    propertyName: property.title || "",
+                    locationId: property.locationId || "",
+                    caretakerId: property.caretakerId || property.createdBy || null,
+                    message,
+                    status: "new",
+                    source: "book",
+                    createdAt: serverTimestamp()
+                });
+                status.className = "message success";
+                status.textContent = "Inquiry sent. The caretaker can reply from their dashboard.";
+                showToast("Inquiry sent to the caretaker.");
+            } catch (error) {
+                console.error("Inquiry error:", error);
+                status.className = "message error";
+                status.textContent = "Could not send inquiry. Please try again.";
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = "Send inquiry";
+            }
+        }
+
+        async function handlePropertyGridClick(event) {
+            const openTarget = event.target.closest("[data-open-property]");
+            if (openTarget) {
+                openPropertyModal(openTarget.dataset.openProperty);
+                return;
+            }
+            const bookTarget = event.target.closest("[data-book-property]");
+            if (bookTarget) {
+                openBookModal(bookTarget.dataset.bookProperty);
+                return;
+            }
+            const button = event.target.closest("[data-save-action]");
+            if (!button) return;
+            await saveProperty(button.dataset.id);
+        }
+
+        document.getElementById("recommendedGrid").addEventListener("click", handlePropertyGridClick);
+        document.getElementById("allPropertiesGrid").addEventListener("click", handlePropertyGridClick);
+        document.getElementById("savedPropertiesGrid").addEventListener("click", handlePropertyGridClick);
+
+        document.getElementById("inquiriesTableBody").addEventListener("click", (event) => {
+            const openTarget = event.target.closest("[data-open-property]");
+            if (!openTarget) return;
+            const propertyId = openTarget.dataset.openProperty;
+            if (!propertyId) return;
+            if (state.properties.some((p) => p.id === propertyId)) {
+                openPropertyModal(propertyId);
+            } else {
+                window.location.href = "apartment-listings.html";
+            }
+        });
+
+        document.getElementById("modalCloseButton").addEventListener("click", closePropertyModal);
+        document.getElementById("galleryPrev").addEventListener("click", () => shiftGallery(-1));
+        document.getElementById("galleryNext").addEventListener("click", () => shiftGallery(1));
+        document.getElementById("galleryThumbs").addEventListener("click", (event) => {
+            const thumb = event.target.closest("[data-index]");
+            if (!thumb) return;
+            propertyModal.index = Number(thumb.dataset.index);
+            renderGallery();
+        });
+        document.getElementById("modalSaveButton").addEventListener("click", async (event) => {
+            const button = event.currentTarget;
+            await saveProperty(button.dataset.id);
+            if (propertyModal.property) openPropertyModal(propertyModal.property.id);
+        });
+
+        document.getElementById("bookModalClose").addEventListener("click", closeBookModal);
+        document.getElementById("bookModalCancel").addEventListener("click", closeBookModal);
+        document.getElementById("bookSendInquiry").addEventListener("click", sendBookingInquiry);
+        bookModal.el.addEventListener("click", (e) => { if (e.target === bookModal.el) closeBookModal(); });
+        const modalBookButton = document.getElementById("modalBookButton");
+        if (modalBookButton) {
+            modalBookButton.addEventListener("click", () => {
+                if (propertyModal.property) openBookModal(propertyModal.property.id);
             });
+        }
 
-        document
-            .getElementById("allPropertiesGrid")
-            .addEventListener("click", async (event) => {
-                const button = event.target.closest(
-                    "[data-save-action]"
-                );
-
-                if (!button) {
-                    return;
-                }
-
-                await saveProperty(button.dataset.id);
-            });
-
-        document
-            .getElementById("savedPropertiesGrid")
-            .addEventListener("click", async (event) => {
-                const button = event.target.closest(
-                    "[data-save-action]"
-                );
-
-                if (!button) {
-                    return;
-                }
-
-                await saveProperty(button.dataset.id);
-            });
+        propertyModal.el.addEventListener("click", (event) => {
+            if (event.target === propertyModal.el) closePropertyModal();
+        });
+        document.addEventListener("keydown", (event) => {
+            if (!propertyModal.el.classList.contains("open")) return;
+            if (event.key === "Escape") closePropertyModal();
+            else if (event.key === "ArrowLeft") shiftGallery(-1);
+            else if (event.key === "ArrowRight") shiftGallery(1);
+        });
 
         document
             .getElementById("propertySearch")

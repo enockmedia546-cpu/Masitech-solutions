@@ -884,6 +884,140 @@
             font-size: 0.73rem;
         }
 
+        .amenity-section {
+            display: grid;
+            gap: 14px;
+            padding: 14px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .amenity-section h4 {
+            color: var(--dark-charcoal);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 32px;
+            font-size: 0.8rem;
+            color: var(--charcoal);
+        }
+
+        .checkbox-item input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--teal);
+            flex-shrink: 0;
+        }
+
+        .amenity-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .template-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .template-toolbar .small-button {
+            min-height: 30px;
+            padding: 0 10px;
+            cursor: pointer;
+            background: var(--white);
+        }
+
+        .template-toolbar .small-button:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+        }
+
+        .template-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .template-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+        }
+
+        .template-item p {
+            flex: 1;
+            min-width: 0;
+            color: var(--charcoal);
+            font-size: 0.78rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            max-height: 3.6em;
+            overflow: hidden;
+        }
+
+        .template-item-actions {
+            display: flex;
+            flex-shrink: 0;
+            gap: 5px;
+        }
+
+        .template-item-actions button {
+            min-height: 28px;
+            padding: 0 8px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: var(--white);
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .template-item-actions .use-btn {
+            color: var(--teal);
+            border-color: #93c5fd;
+            background: #eff6ff;
+        }
+
+        .template-item-actions .delete-btn {
+            color: var(--red);
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .template-empty {
+            color: var(--medium-grey);
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 620px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .amenity-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .image-preview-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1147,7 +1281,7 @@
     <div class="app-layout" id="appLayout">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
+                <img src="logo.jpg" alt="Masitech Solutions logo">
 
                 <div class="sidebar-brand">
                     Masitech Caretaker
@@ -1706,20 +1840,86 @@
                                     </div>
 
                                     <div class="form-group full-width">
-                                        <label for="propertyAmenities">
-                                            Amenities
-                                        </label>
+                                        <label>Amenities</label>
+                                        <div class="amenity-section">
+                                            <div>
+                                                <h4>Facilities</h4>
+                                                <div class="checkbox-grid" id="amenityCheckboxes">
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Wi-Fi">
+                                                        Wi-Fi
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Water">
+                                                        Water
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Parking">
+                                                        Parking
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Kitchen">
+                                                        Kitchen
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Bathroom">
+                                                        Bathroom
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Laundry">
+                                                        Laundry
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Study area">
+                                                        Study area
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Furniture">
+                                                        Furniture
+                                                    </label>
+                                                    <label class="checkbox-item">
+                                                        <input type="checkbox" name="amenity" value="Borehole">
+                                                        Borehole
+                                                    </label>
+                                                </div>
+                                            </div>
 
-                                        <input
-                                            class="form-input"
-                                            id="propertyAmenities"
-                                            type="text"
-                                            placeholder="Wi-Fi, water, security, parking"
-                                        >
+                                            <div class="amenity-row">
+                                                <div class="form-group">
+                                                    <label for="securityType">Security</label>
+                                                    <select class="form-select" id="securityType">
+                                                        <option value="">Select security type</option>
+                                                        <option value="None">None</option>
+                                                        <option value="Guard">Guard</option>
+                                                        <option value="CCTV">CCTV</option>
+                                                        <option value="Guard and CCTV">Guard and CCTV</option>
+                                                        <option value="Gated community">Gated community</option>
+                                                        <option value="Electric fence">Electric fence</option>
+                                                    </select>
+                                                </div>
 
-                                        <span class="form-help">
-                                            Separate amenities with commas.
-                                        </span>
+                                                <div class="form-group">
+                                                    <label>Electricity source</label>
+                                                    <div class="checkbox-grid" style="grid-template-columns: 1fr 1fr;">
+                                                        <label class="checkbox-item">
+                                                            <input type="checkbox" id="powerZesco" value="ZESCO">
+                                                            ZESCO power
+                                                        </label>
+                                                        <label class="checkbox-item">
+                                                            <input type="checkbox" id="powerSolar" value="Solar">
+                                                            Solar
+                                                        </label>
+                                                        <label class="checkbox-item" style="grid-column: span 2;">
+                                                            <input type="checkbox" id="power24_7">
+                                                            24/7 power available
+                                                        </label>
+                                                    </div>
+                                                    <span class="form-help">
+                                                        Mark ZESCO, solar, or both. Tick 24/7 if power is continuous.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-group full-width">
@@ -1727,12 +1927,30 @@
                                             Description
                                         </label>
 
+                                        <div class="template-toolbar">
+                                            <button class="small-button" id="saveDescriptionTemplate" type="button">
+                                                Save as template
+                                            </button>
+                                            <button class="small-button" id="copyDescription" type="button">
+                                                Copy
+                                            </button>
+                                            <button class="small-button" id="pasteDescription" type="button">
+                                                Paste
+                                            </button>
+                                        </div>
+
                                         <textarea
                                             class="form-textarea"
                                             id="propertyDescription"
                                             placeholder="Describe the property, rooms, surroundings, and important information..."
                                             required
                                         ></textarea>
+
+                                        <span class="form-help">
+                                            Saved description templates stay on this device. Use Paste to fill the box, then edit.
+                                        </span>
+
+                                        <div class="template-list" id="descriptionTemplates"></div>
                                     </div>
 
                                     <div class="form-group full-width">
@@ -1740,11 +1958,29 @@
                                             House or property rules
                                         </label>
 
+                                        <div class="template-toolbar">
+                                            <button class="small-button" id="saveRulesTemplate" type="button">
+                                                Save as template
+                                            </button>
+                                            <button class="small-button" id="copyRules" type="button">
+                                                Copy
+                                            </button>
+                                            <button class="small-button" id="pasteRules" type="button">
+                                                Paste
+                                            </button>
+                                        </div>
+
                                         <textarea
                                             class="form-textarea"
                                             id="propertyRules"
                                             placeholder="Enter rules tenants should know..."
                                         ></textarea>
+
+                                        <span class="form-help">
+                                            Save common rules once, then paste and edit when adding a new property.
+                                        </span>
+
+                                        <div class="template-list" id="rulesTemplates"></div>
                                     </div>
 
                                     <div class="form-group full-width">
@@ -3535,12 +3771,41 @@
                 document.getElementById("availableUnits").value
             );
 
-            const amenities = document
-                .getElementById("propertyAmenities")
-                .value
-                .split(",")
-                .map((item) => item.trim())
-                .filter(Boolean);
+            const facilityAmenities = Array.from(
+                document.querySelectorAll('input[name="amenity"]:checked')
+            ).map((input) => input.value);
+
+            const securityType =
+                document.getElementById("securityType").value.trim();
+
+            const electricitySources = [];
+            if (document.getElementById("powerZesco").checked) {
+                electricitySources.push("ZESCO");
+            }
+            if (document.getElementById("powerSolar").checked) {
+                electricitySources.push("Solar");
+            }
+
+            const power24_7 =
+                document.getElementById("power24_7").checked;
+
+            const amenities = [...facilityAmenities];
+
+            if (securityType && securityType !== "None") {
+                amenities.push(`Security: ${securityType}`);
+            } else if (securityType === "None") {
+                amenities.push("Security: None");
+            }
+
+            if (electricitySources.length > 0) {
+                amenities.push(
+                    `Electricity: ${electricitySources.join(" + ")}`
+                );
+            }
+
+            if (power24_7) {
+                amenities.push("24/7 power");
+            }
 
             return {
                 title,
@@ -3582,6 +3847,9 @@
                 availableUnits:
                     propertyType === "apartment" ? availableUnits : null,
                 amenities,
+                securityType: securityType || null,
+                electricitySources,
+                power24_7,
                 description: document
                     .getElementById("propertyDescription")
                     .value
@@ -3597,6 +3865,13 @@
                     state.user.displayName ||
                     state.user.email,
                 caretakerId: state.user.uid,
+                contactName:
+                    state.profile?.fullName ||
+                    state.user.displayName ||
+                    state.user.email ||
+                    "Caretaker",
+                contactPhone: state.profile?.phone || "",
+                contactWhatsApp: state.profile?.phone || "",
                 updatedAt: serverTimestamp()
             };
         }
@@ -3946,6 +4221,248 @@
             .getElementById("inquiryStatusFilter")
             .addEventListener("change", renderInquiries);
 
+        const TEMPLATE_STORAGE_KEY = "masitech_caretaker_text_templates";
+
+        function getTemplateStore() {
+            try {
+                const raw = localStorage.getItem(TEMPLATE_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : null;
+                return {
+                    descriptions: Array.isArray(parsed?.descriptions)
+                        ? parsed.descriptions
+                        : [],
+                    rules: Array.isArray(parsed?.rules) ? parsed.rules : []
+                };
+            } catch (error) {
+                return { descriptions: [], rules: [] };
+            }
+        }
+
+        function setTemplateStore(store) {
+            localStorage.setItem(
+                TEMPLATE_STORAGE_KEY,
+                JSON.stringify({
+                    descriptions: store.descriptions.slice(0, 12),
+                    rules: store.rules.slice(0, 12)
+                })
+            );
+        }
+
+        function renderTemplateList(kind) {
+            const store = getTemplateStore();
+            const listId =
+                kind === "description"
+                    ? "descriptionTemplates"
+                    : "rulesTemplates";
+            const items =
+                kind === "description" ? store.descriptions : store.rules;
+            const container = document.getElementById(listId);
+
+            if (!container) return;
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <p class="template-empty">
+                        No saved ${kind} templates yet.
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = items
+                .map(
+                    (text, index) => `
+                        <div class="template-item" data-kind="${kind}" data-index="${index}">
+                            <p>${escapeHtml(text)}</p>
+                            <div class="template-item-actions">
+                                <button class="use-btn" type="button" data-template-action="use">
+                                    Use / Paste
+                                </button>
+                                <button class="use-btn" type="button" data-template-action="copy">
+                                    Copy
+                                </button>
+                                <button class="delete-btn" type="button" data-template-action="delete">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `
+                )
+                .join("");
+        }
+
+        function saveTemplate(kind) {
+            const fieldId =
+                kind === "description"
+                    ? "propertyDescription"
+                    : "propertyRules";
+            const text = document.getElementById(fieldId).value.trim();
+
+            if (text.length < 8) {
+                showToast(
+                    `Type a longer ${kind} before saving it as a template.`,
+                    true
+                );
+                return;
+            }
+
+            const store = getTemplateStore();
+            const list =
+                kind === "description" ? store.descriptions : store.rules;
+
+            if (!list.includes(text)) {
+                list.unshift(text);
+            }
+
+            setTemplateStore(store);
+            renderTemplateList(kind);
+            showToast(`${capitalize(kind)} template saved.`);
+        }
+
+        async function copyFieldText(fieldId) {
+            const text = document.getElementById(fieldId).value;
+
+            if (!text.trim()) {
+                showToast("Nothing to copy.", true);
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast("Copied to clipboard.");
+            } catch (error) {
+                showToast("Could not copy to clipboard.", true);
+            }
+        }
+
+        async function pasteFieldText(fieldId) {
+            const field = document.getElementById(fieldId);
+
+            try {
+                const text = await navigator.clipboard.readText();
+                if (!text.trim()) {
+                    showToast("Clipboard is empty.", true);
+                    return;
+                }
+                field.value = text;
+                field.focus();
+                showToast("Pasted from clipboard. Edit if needed.");
+            } catch (error) {
+                showToast(
+                    "Clipboard paste was blocked. Use a saved template instead.",
+                    true
+                );
+            }
+        }
+
+        function applyTemplate(kind, index) {
+            const store = getTemplateStore();
+            const list =
+                kind === "description" ? store.descriptions : store.rules;
+            const text = list[index];
+
+            if (!text) return;
+
+            const fieldId =
+                kind === "description"
+                    ? "propertyDescription"
+                    : "propertyRules";
+            document.getElementById(fieldId).value = text;
+            document.getElementById(fieldId).focus();
+            showToast("Template applied. Edit where necessary.");
+        }
+
+        async function copyTemplate(kind, index) {
+            const store = getTemplateStore();
+            const list =
+                kind === "description" ? store.descriptions : store.rules;
+            const text = list[index];
+
+            if (!text) return;
+
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast("Template copied to clipboard.");
+            } catch (error) {
+                showToast("Could not copy template.", true);
+            }
+        }
+
+        function deleteTemplate(kind, index) {
+            const store = getTemplateStore();
+            if (kind === "description") {
+                store.descriptions.splice(index, 1);
+            } else {
+                store.rules.splice(index, 1);
+            }
+            setTemplateStore(store);
+            renderTemplateList(kind);
+            showToast("Template deleted.");
+        }
+
+        renderTemplateList("description");
+        renderTemplateList("rules");
+
+        document
+            .getElementById("saveDescriptionTemplate")
+            .addEventListener("click", () => saveTemplate("description"));
+
+        document
+            .getElementById("saveRulesTemplate")
+            .addEventListener("click", () => saveTemplate("rules"));
+
+        document
+            .getElementById("copyDescription")
+            .addEventListener("click", () =>
+                copyFieldText("propertyDescription")
+            );
+
+        document
+            .getElementById("copyRules")
+            .addEventListener("click", () => copyFieldText("propertyRules"));
+
+        document
+            .getElementById("pasteDescription")
+            .addEventListener("click", () =>
+                pasteFieldText("propertyDescription")
+            );
+
+        document
+            .getElementById("pasteRules")
+            .addEventListener("click", () => pasteFieldText("propertyRules"));
+
+        document
+            .getElementById("descriptionTemplates")
+            .addEventListener("click", async (event) => {
+                const item = event.target.closest(".template-item");
+                const action = event.target.closest("[data-template-action]");
+                if (!item || !action) return;
+
+                const kind = item.dataset.kind;
+                const index = Number(item.dataset.index);
+                const actionName = action.dataset.templateAction;
+
+                if (actionName === "use") applyTemplate(kind, index);
+                if (actionName === "copy") await copyTemplate(kind, index);
+                if (actionName === "delete") deleteTemplate(kind, index);
+            });
+
+        document
+            .getElementById("rulesTemplates")
+            .addEventListener("click", async (event) => {
+                const item = event.target.closest(".template-item");
+                const action = event.target.closest("[data-template-action]");
+                if (!item || !action) return;
+
+                const kind = item.dataset.kind;
+                const index = Number(item.dataset.index);
+                const actionName = action.dataset.templateAction;
+
+                if (actionName === "use") applyTemplate(kind, index);
+                if (actionName === "copy") await copyTemplate(kind, index);
+                if (actionName === "delete") deleteTemplate(kind, index);
+            });
+
         document
             .getElementById("propertyImages")
             .addEventListener("change", previewSelectedImages);
@@ -3987,10 +4504,12 @@
                 );
 
                 if (action === "view") {
-                    window.open(
-                        `property-details.html?id=${encodeURIComponent(propertyId)}`,
-                        "_blank"
-                    );
+                    const type = property?.propertyType || "student";
+                    const page =
+                        type === "apartment"
+                            ? "apartment-listings.html"
+                            : "student-listings.html";
+                    window.open(page, "_blank");
                     return;
                 }
 

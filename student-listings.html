@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Dashboard | Masitech Solutions</title>
+    <title>Student Boarding Houses | Masitech Solutions</title>
 
     <style>
         :root {
@@ -21,7 +21,6 @@
             --green: #16a34a;
             --amber: #d97706;
             --red: #dc2626;
-            --sidebar-width: 260px;
             --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
         }
 
@@ -38,55 +37,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        body.auth-pending .app-layout {
-            visibility: hidden;
-            pointer-events: none;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        body.auth-ready .app-layout {
-            visibility: visible;
-            pointer-events: auto;
-        }
-
-        .auth-gate {
-            position: fixed;
-            inset: 0;
-            z-index: 5000;
-            display: grid;
-            place-items: center;
-            padding: 24px;
-            background: var(--light-grey);
-        }
-
-        body.auth-ready .auth-gate {
-            display: none;
-        }
-
-        .auth-gate-card {
-            max-width: 420px;
-            width: 100%;
-            padding: 28px;
-            text-align: center;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .auth-gate-card p {
-            color: var(--medium-grey);
-            font-size: 0.92rem;
-        }
-
-        .notification-button {
-            display: grid;
-            place-items: center;
-        }
-
-        .notification-button svg {
-            width: 18px;
-            height: 18px;
+        img {
             display: block;
+            max-width: 100%;
         }
 
         button,
@@ -95,331 +53,76 @@
             font: inherit;
         }
 
-        button {
-            cursor: pointer;
+        .container {
+            width: min(1150px, calc(100% - 40px));
+            margin: 0 auto;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .app-layout {
-            min-height: 100vh;
-            display: flex;
-        }
-
-        .sidebar {
-            position: fixed;
-            inset: 0 auto 0 0;
-            z-index: 1100;
-            width: var(--sidebar-width);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            color: #d1d5db;
-            background: var(--dark-charcoal);
-            transition: transform 0.25s ease;
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-height: 78px;
-            padding: 15px 19px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header img {
-            width: 43px;
-            height: 43px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .sidebar-brand {
-            color: var(--white);
-            font-size: 0.94rem;
-            font-weight: 700;
-            line-height: 1.25;
-        }
-
-        .sidebar-brand small {
-            display: block;
-            margin-top: 3px;
-            color: #9ca3af;
-            font-size: 0.71rem;
-            font-weight: 400;
-        }
-
-        .sidebar-navigation {
-            flex: 1;
-            padding: 20px 12px;
-        }
-
-        .nav-label {
-            margin: 16px 10px 8px;
-            color: #6b7280;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .nav-label:first-child {
-            margin-top: 0;
-        }
-
-        .nav-item {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            margin-bottom: 4px;
-            padding: 11px 12px;
-            color: #d1d5db;
-            background: transparent;
-            border: 0;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 0.87rem;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--white);
-            background: rgba(37, 99, 235, 0.78);
-        }
-
-        .nav-icon {
-            width: 20px;
-            color: #93c5fd;
-            text-align: center;
-        }
-
-        .sidebar-footer {
-            padding: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .student-identity {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 13px;
-        }
-
-        .avatar {
-            display: grid;
-            width: 36px;
-            height: 36px;
-            place-items: center;
-            color: var(--white);
-            background: var(--teal);
-            border-radius: 50%;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .identity-text {
-            min-width: 0;
-        }
-
-        .identity-text strong,
-        .identity-text small {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .identity-text strong {
-            color: var(--white);
-            font-size: 0.8rem;
-        }
-
-        .identity-text small {
-            margin-top: 2px;
-            color: #9ca3af;
-            font-size: 0.71rem;
-        }
-
-        .logout-button {
-            width: 100%;
-            min-height: 37px;
-            color: #fecaca;
-            background: rgba(220, 38, 38, 0.12);
-            border: 1px solid rgba(248, 113, 113, 0.28);
-            border-radius: 7px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .logout-button:hover {
-            background: rgba(220, 38, 38, 0.25);
-        }
-
-        .main-content {
-            width: calc(100% - var(--sidebar-width));
-            min-width: 0;
-            margin-left: var(--sidebar-width);
-        }
-
-        .topbar {
-            min-height: 78px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 0 29px;
-            background: var(--white);
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
             border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
-        .topbar-left {
+        .header-content {
+            min-height: 76px;
             display: flex;
             align-items: center;
-            gap: 14px;
-        }
-
-        .mobile-menu-button {
-            display: none;
-            padding: 7px 10px;
-            color: var(--dark-charcoal);
-            background: var(--light-grey);
-            border: 0;
-            border-radius: 7px;
-            font-size: 1.15rem;
-        }
-
-        .page-heading h1 {
-            color: var(--dark-charcoal);
-            font-size: 1.3rem;
-        }
-
-        .page-heading p {
-            margin-top: 3px;
-            color: var(--medium-grey);
-            font-size: 0.8rem;
-        }
-
-        .topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .view-site-link {
-            color: var(--teal);
-            font-size: 0.83rem;
-            font-weight: 700;
-        }
-
-        .view-site-link:hover {
-            text-decoration: underline;
-        }
-
-        .notification-button {
-            position: relative;
-            width: 38px;
-            height: 38px;
-            color: var(--charcoal);
-            background: var(--light-grey);
-            border: 0;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        .notification-count {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            display: grid;
-            width: 18px;
-            height: 18px;
-            place-items: center;
-            color: var(--white);
-            background: var(--red);
-            border: 2px solid var(--white);
-            border-radius: 50%;
-            font-size: 0.61rem;
-            font-weight: 700;
-        }
-
-        .page-container {
-            padding: 30px;
-        }
-
-        .loading-screen,
-        .access-denied {
-            min-height: 70vh;
-            display: grid;
-            place-items: center;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .access-card {
-            max-width: 510px;
-            padding: 34px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 13px;
-            box-shadow: var(--shadow);
-        }
-
-        .access-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .access-card p {
-            margin-bottom: 20px;
-            color: var(--medium-grey);
-        }
-
-        .dashboard-section {
-            display: none;
-        }
-
-        .dashboard-section.active {
-            display: block;
-        }
-
-        .section-heading {
-            display: flex;
-            align-items: flex-start;
             justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 22px;
+            gap: 22px;
         }
 
-        .section-heading h2 {
-            margin-bottom: 4px;
-            color: var(--dark-charcoal);
-            font-size: 1.45rem;
-        }
-
-        .section-heading p {
-            color: var(--medium-grey);
-            font-size: 0.87rem;
-        }
-
-        .section-actions {
+        .brand {
             display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--teal);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .button {
             display: inline-flex;
-            min-height: 41px;
+            min-height: 42px;
             align-items: center;
             justify-content: center;
-            padding: 0 15px;
+            padding: 0 16px;
             border: 1px solid transparent;
-            border-radius: 7px;
-            font-size: 0.83rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
@@ -443,187 +146,138 @@
             border-color: var(--teal);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 17px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            padding: 19px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
-        }
-
-        .stat-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .stat-label {
-            color: var(--medium-grey);
-            font-size: 0.77rem;
-            font-weight: 700;
-        }
-
-        .stat-icon {
-            display: grid;
-            width: 34px;
-            height: 34px;
-            place-items: center;
-            color: var(--teal);
-            background: #dbeafe;
-            border-radius: 8px;
-        }
-
-        .stat-value {
+        .menu-button {
+            display: none;
+            padding: 8px 10px;
             color: var(--dark-charcoal);
-            font-size: 1.7rem;
+            background: var(--light-grey);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .page-header {
+            padding: 60px 0 46px;
+            color: var(--white);
+            background:
+                linear-gradient(rgba(31, 41, 55, 0.88), rgba(31, 41, 55, 0.88)),
+                linear-gradient(135deg, #4b5563, #111827);
+        }
+
+        .page-header h1 {
+            margin-bottom: 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .page-header p {
+            max-width: 680px;
+            color: #e5e7eb;
+        }
+
+        .listing-area {
+            padding: 38px 0 80px;
+        }
+
+        .filter-card {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr auto;
+            align-items: end;
+            gap: 14px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field-group label {
+            color: var(--charcoal);
+            font-size: 0.84rem;
             font-weight: 700;
         }
 
-        .stat-note {
-            margin-top: 3px;
-            color: var(--medium-grey);
-            font-size: 0.72rem;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 20px;
-            margin-bottom: 22px;
-        }
-
-        .panel {
-            overflow: hidden;
+        .field-group input,
+        .field-group select {
+            width: 100%;
+            min-height: 43px;
+            padding: 0 11px;
+            color: var(--dark-charcoal);
             background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            outline: none;
         }
 
-        .panel-header {
+        .field-group input:focus,
+        .field-group select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .listing-summary {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 15px;
-            padding: 17px 20px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
         }
 
-        .panel-header h3 {
+        .listing-summary h2 {
             color: var(--dark-charcoal);
-            font-size: 1rem;
+            font-size: 1.35rem;
         }
 
-        .panel-header a {
-            color: var(--teal);
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .panel-body {
-            padding: 20px;
-        }
-
-        .activity-list,
-        .announcement-list {
-            display: grid;
-            gap: 14px;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 11px;
-        }
-
-        .activity-dot {
-            flex-shrink: 0;
-            width: 9px;
-            height: 9px;
-            margin-top: 6px;
-            background: var(--teal);
-            border-radius: 50%;
-        }
-
-        .activity-item p {
-            color: var(--charcoal);
-            font-size: 0.82rem;
-        }
-
-        .activity-item small {
-            display: block;
-            margin-top: 3px;
+        .listing-summary p {
             color: var(--medium-grey);
-            font-size: 0.7rem;
+            font-size: 0.9rem;
         }
 
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 17px;
-            padding: 15px;
+        .loading,
+        .empty-state,
+        .error-state {
+            padding: 45px 20px;
+            color: var(--medium-grey);
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
+            text-align: center;
         }
 
-        .toolbar-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
-        }
-
-        .search-input,
-        .filter-select {
-            min-height: 39px;
-            padding: 0 10px;
-            color: var(--dark-charcoal);
-            background: var(--white);
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            outline: none;
-            font-size: 0.8rem;
-        }
-
-        .search-input {
-            min-width: 230px;
-        }
-
-        .search-input:focus,
-        .filter-select:focus {
-            border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        .error-state {
+            color: var(--red);
         }
 
         .property-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 19px;
+            gap: 22px;
         }
 
         .property-card {
             overflow: hidden;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            box-shadow: 0 4px 13px rgba(31, 41, 55, 0.04);
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(31, 41, 55, 0.05);
+            transition: 0.2s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
         }
 
         .property-image-wrapper {
             position: relative;
-            height: 170px;
+            height: 205px;
             background: #d1d5db;
         }
 
@@ -633,62 +287,64 @@
             object-fit: cover;
         }
 
-        .property-status {
+        .status-badge {
             position: absolute;
-            top: 11px;
-            left: 11px;
-            padding: 4px 8px;
-            color: #166534;
-            background: #dcfce7;
+            top: 13px;
+            left: 13px;
+            padding: 5px 9px;
+            color: var(--white);
+            background: var(--green);
             border-radius: 5px;
-            font-size: 0.68rem;
+            font-size: 0.76rem;
             font-weight: 700;
         }
 
         .property-content {
-            padding: 16px;
+            padding: 18px;
         }
 
         .property-content h3 {
-            margin-bottom: 5px;
+            margin-bottom: 7px;
             color: var(--dark-charcoal);
-            font-size: 1rem;
+            font-size: 1.12rem;
         }
 
-        .property-location {
-            margin-bottom: 10px;
+        .location {
+            margin-bottom: 12px;
             color: var(--medium-grey);
-            font-size: 0.76rem;
+            font-size: 0.86rem;
         }
 
-        .property-location::before {
+        .location::before {
             content: "⌖ ";
             color: var(--teal);
             font-weight: 700;
         }
 
         .property-description {
-            min-height: 37px;
-            margin-bottom: 11px;
+            display: -webkit-box;
+            min-height: 43px;
+            margin-bottom: 15px;
             overflow: hidden;
             color: var(--medium-grey);
-            font-size: 0.78rem;
-            line-height: 1.5;
+            font-size: 0.88rem;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
         }
 
         .property-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
+            gap: 7px;
+            margin-bottom: 16px;
         }
 
         .meta-item {
-            padding: 4px 7px;
+            padding: 5px 8px;
             color: var(--charcoal);
             background: var(--light-grey);
-            border-radius: 4px;
-            font-size: 0.68rem;
+            border-radius: 5px;
+            font-size: 0.76rem;
         }
 
         .property-bottom {
@@ -696,279 +352,81 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            padding-top: 12px;
+            padding-top: 14px;
             border-top: 1px solid var(--border);
         }
 
-        .property-price {
+        .price {
             color: var(--teal);
-            font-size: 0.83rem;
+            font-size: 1rem;
             font-weight: 700;
         }
 
-        .property-rating {
+        .rating {
             margin-top: 3px;
             color: var(--amber);
-            font-size: 0.7rem;
+            font-size: 0.82rem;
         }
 
-        .property-card-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 5px;
-        }
-
-        .small-button {
-            min-height: 32px;
-            padding: 0 9px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            font-size: 0.7rem;
+        .view-button {
+            min-height: 38px;
+            padding: 0 12px;
+            color: var(--white);
+            background: var(--charcoal);
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.82rem;
             font-weight: 700;
         }
 
-        .small-button.view {
-            color: var(--white);
+        .view-button:hover {
             background: var(--teal);
-            border-color: var(--teal);
         }
 
-        .small-button.save {
-            color: var(--teal);
-            background: #eff6ff;
-            border-color: #93c5fd;
-        }
-
-        .small-button.remove {
-            color: var(--red);
-            background: #fef2f2;
-            border-color: #fecaca;
-        }
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            min-width: 650px;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 13px 16px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-            vertical-align: middle;
-            font-size: 0.79rem;
-        }
-
-        th {
-            color: var(--medium-grey);
-            background: #f9fafb;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        td {
-            color: var(--charcoal);
-        }
-
-        tbody tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .badge {
-            display: inline-flex;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 0.67rem;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .badge-green {
-            color: #166534;
-            background: #dcfce7;
-        }
-
-        .badge-amber {
-            color: #92400e;
-            background: #fef3c7;
-        }
-
-        .badge-blue {
-            color: #1d4ed8;
-            background: #dbeafe;
-        }
-
-        .badge-grey {
-            color: #4b5563;
-            background: #e5e7eb;
-        }
-
-        .announcement-card {
-            padding: 16px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 9px;
-        }
-
-        .announcement-card h3 {
-            margin-bottom: 5px;
-            font-size: 0.92rem;
-        }
-
-        .announcement-card p {
-            margin-bottom: 8px;
-            color: var(--medium-grey);
-            font-size: 0.8rem;
-        }
-
-        .announcement-card small {
-            color: var(--medium-grey);
-            font-size: 0.7rem;
-        }
-
-        .profile-card {
-            max-width: 700px;
-            padding: 23px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 11px;
-        }
-
-        .profile-card h3 {
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-
-        .profile-card > p {
-            margin-bottom: 20px;
-            color: var(--medium-grey);
-            font-size: 0.83rem;
-        }
-
-        .profile-form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .form-group label {
-            color: var(--charcoal);
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .form-input,
-        .form-select {
-            width: 100%;
-            min-height: 42px;
-            padding: 0 10px;
-            color: var(--dark-charcoal);
-            background: var(--white);
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            outline: none;
-            font-size: 0.82rem;
-        }
-
-        .form-input:focus,
-        .form-select:focus {
-            border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-input[readonly] {
-            color: var(--medium-grey);
-            background: #f9fafb;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            grid-column: span 2;
-            margin-top: 5px;
-        }
-
-        .message {
-            display: none;
-            margin-bottom: 16px;
-            padding: 11px 13px;
-            border-radius: 7px;
-            font-size: 0.82rem;
-        }
-
-        .message.success {
-            display: block;
-            color: #166534;
-            background: #dcfce7;
-        }
-
-        .message.error {
-            display: block;
-            color: #991b1b;
-            background: #fee2e2;
-        }
-
-        .message.warning {
-            display: block;
-            color: #92400e;
-            background: #fef3c7;
-        }
-
-        .empty-state {
-            padding: 35px 20px;
-            color: var(--medium-grey);
-            text-align: center;
-        }
-
-        .toast {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            z-index: 2000;
-            max-width: 360px;
-            display: none;
-            padding: 13px 16px;
-            color: var(--white);
+        .site-footer {
+            padding: 24px 20px;
+            color: #9ca3af;
             background: var(--dark-charcoal);
-            border-left: 4px solid var(--teal);
-            border-radius: 7px;
-            box-shadow: var(--shadow);
-            font-size: 0.81rem;
+            text-align: center;
+            font-size: 0.85rem;
         }
 
-        .toast.show {
-            display: block;
-        }
-
-        .toast.error {
-            border-left-color: var(--red);
-        }
-
-        @media (max-width: 1150px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+        @media (max-width: 980px) {
+            .main-nav {
+                position: absolute;
+                top: 76px;
+                right: 20px;
+                left: 20px;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                box-shadow: var(--shadow);
             }
 
-            .content-grid {
-                grid-template-columns: 1fr;
+            .main-nav.open {
+                display: flex;
+            }
+
+            .main-nav a {
+                padding: 10px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .filter-card {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-card .button {
+                grid-column: span 2;
             }
 
             .property-grid {
@@ -976,794 +434,220 @@
             }
         }
 
-        @media (max-width: 850px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                width: 100%;
-                margin-left: 0;
-            }
-
-            .mobile-menu-button {
-                display: block;
-            }
-
-            .topbar {
-                padding: 0 20px;
-            }
-
-            .page-container {
-                padding: 23px 20px;
-            }
-        }
-
         @media (max-width: 620px) {
-            .stats-grid,
-            .property-grid,
-            .profile-form-grid {
+            .container {
+                width: min(100% - 28px, 1150px);
+            }
+
+            .header-actions .button-outline {
+                display: none;
+            }
+
+            .filter-card,
+            .property-grid {
                 grid-template-columns: 1fr;
             }
 
-            .form-group.full-width,
-            .form-actions {
+            .filter-card .button {
                 grid-column: auto;
             }
 
-            .form-actions {
-                justify-content: stretch;
-            }
-
-            .form-actions .button {
-                width: 100%;
-            }
-
-            .section-heading {
+            .listing-summary {
+                align-items: flex-start;
                 flex-direction: column;
             }
-
-            .search-input {
-                min-width: 100%;
-            }
-
-            .toolbar-group {
-                width: 100%;
-            }
-
-            .toolbar-group > * {
-                flex: 1;
-            }
-
-            .topbar-actions .view-site-link {
-                display: none;
-            }
         }
+
+        .card-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+        .book-button {
+            min-height: 38px; padding: 0 12px; color: #166534;
+            background: #dcfce7; border: 1px solid #86efac; border-radius: 7px;
+            cursor: pointer; font-size: 0.82rem; font-weight: 700;
+        }
+        .book-button:hover { background: #bbf7d0; }
+        .book-modal-overlay {
+            position: fixed; inset: 0; z-index: 4100; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(17, 24, 39, 0.72);
+        }
+        .book-modal-overlay.open { display: flex; }
+        .book-modal {
+            width: min(480px, 100%); background: var(--white); border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.28); overflow: hidden;
+        }
+        .book-modal-header {
+            display: flex; justify-content: space-between; gap: 12px;
+            padding: 18px 20px; border-bottom: 1px solid var(--border);
+        }
+        .book-modal-body { padding: 18px 20px 22px; display: grid; gap: 14px; }
+        .contact-block {
+            padding: 14px; background: #f9fafb; border: 1px solid var(--border);
+            border-radius: 10px; display: grid; gap: 8px;
+        }
+        .contact-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .book-modal textarea {
+            width: 100%; min-height: 90px; padding: 10px; border: 1px solid #d1d5db;
+            border-radius: 7px; font: inherit; resize: vertical;
+        }
+        .modal-close-btn {
+            width: 36px; height: 36px; border: 0; border-radius: 8px;
+            background: var(--light-grey); font-size: 1.25rem; cursor: pointer;
+        }
+
     </style>
 </head>
 
-<body class="auth-pending">
-    <div class="auth-gate" id="authGate" aria-live="polite">
-        <div class="auth-gate-card">
-            <p>Checking student access...</p>
-        </div>
-    </div>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
+                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
+                <span>Masitech Solutions</span>
+            </a>
 
-    <div class="app-layout" id="appLayout" hidden>
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="logo.jpg" alt="Masitech Solutions logo">
-
-                <div class="sidebar-brand">
-                    Masitech Student
-                    <small>Student dashboard</small>
-                </div>
-            </div>
-
-            <nav class="sidebar-navigation" aria-label="Student navigation">
-                <p class="nav-label">My account</p>
-
-                <button
-                    class="nav-item active"
-                    data-section="dashboard"
-                    type="button"
-                >
-                    <span class="nav-icon">▦</span>
-                    <span>Overview</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="listings"
-                    type="button"
-                >
-                    <span class="nav-icon">⌂</span>
-                    <span>Student housing</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="saved"
-                    type="button"
-                >
-                    <span class="nav-icon">♡</span>
-                    <span>Saved properties</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="inquiries"
-                    type="button"
-                >
-                    <span class="nav-icon">✉</span>
-                    <span>My inquiries</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="reviews"
-                    type="button"
-                >
-                    <span class="nav-icon">★</span>
-                    <span>My reviews</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="announcements"
-                    type="button"
-                >
-                    <span class="nav-icon">✉</span>
-                    <span>Announcements</span>
-                </button>
-
-                <button
-                    class="nav-item"
-                    data-section="profile"
-                    type="button"
-                >
-                    <span class="nav-icon">♙</span>
-                    <span>Quick profile</span>
-                </button>
-
-                <a
-                    class="nav-item"
-                    href="profile.html"
-                    style="text-decoration:none"
-                >
-                    <span class="nav-icon">↗</span>
-                    <span>Full profile</span>
-                </a>
+            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a class="active" href="student-listings.html">Students</a>
+                <a href="apartment-listings.html">Apartments</a>
+                <a href="about.html">About Us</a>
+                <a href="faqs.html">FAQs</a>
+                <a href="contact.html">Contact</a>
             </nav>
 
-            <div class="sidebar-footer">
-                <div class="student-identity">
-                    <div class="avatar" id="sidebarAvatar">S</div>
+            <div class="header-actions">
+                <a class="button button-outline" href="login.html">Log in</a>
+                <a class="button button-primary" href="signup.html">Sign up</a>
 
-                    <div class="identity-text">
-                        <strong id="sidebarName">Student</strong>
-                        <small id="sidebarLocation">
-                            Loading location...
-                        </small>
-                    </div>
-                </div>
-
-                <button class="logout-button" id="logoutButton" type="button">
-                    Log out
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mainNav"
+                >
+                    ☰
                 </button>
             </div>
-        </aside>
+        </div>
+    </header>
 
-        <div class="main-content">
-            <header class="topbar">
-                <div class="topbar-left">
-                    <button
-                        class="mobile-menu-button"
-                        id="mobileMenuButton"
-                        type="button"
-                        aria-label="Open student navigation"
-                        aria-expanded="false"
-                    >
-                        ☰
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Student boarding houses</h1>
+                <p>
+                    Browse available student accommodation near your campus and
+                    compare rooms, prices, conditions, and facilities.
+                </p>
+            </div>
+        </section>
+
+        <section class="listing-area">
+            <div class="container">
+                <form class="filter-card" id="filterForm">
+                    <div class="field-group">
+                        <label for="searchInput">Search</label>
+                        <input
+                            id="searchInput"
+                            type="search"
+                            placeholder="Search by property name..."
+                        >
+                    </div>
+
+                    <div class="field-group">
+                        <label for="locationFilter">Location</label>
+                        <select id="locationFilter">
+                            <option value="all">All locations</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="sortFilter">Sort by</label>
+                        <select id="sortFilter">
+                            <option value="newest">Newest first</option>
+                            <option value="price-low">Price: low to high</option>
+                            <option value="price-high">Price: high to low</option>
+                            <option value="rating">Highest rated</option>
+                        </select>
+                    </div>
+
+                    <button class="button button-primary" type="submit">
+                        Apply filters
                     </button>
+                </form>
 
-                    <div class="page-heading">
-                        <h1 id="pageTitle">Student overview</h1>
-                        <p id="pageSubtitle">
-                            Find accommodation near your selected location
-                        </p>
+                <div class="listing-summary">
+                    <div>
+                        <h2>Available student accommodation</h2>
+                        <p id="resultCount">Loading listings...</p>
                     </div>
                 </div>
 
-                <div class="topbar-actions">
-                    <a
-                        class="view-site-link"
-                        href="index.html"
-                        target="_blank"
-                    >
-                        View website
-                    </a>
-
-                    <button
-                        class="notification-button"
-                        id="notificationButton"
-                        type="button"
-                        aria-label="View announcements"
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-                        <span class="notification-count" id="notificationCount">
-                            0
-                        </span>
-                    </button>
-                </div>
-            </header>
-
-            <main class="page-container">
-                <div class="loading-screen" id="loadingScreen">
-                    <p>Checking your student session...</p>
+                <div class="loading" id="loadingState">
+                    Loading student boarding houses...
                 </div>
 
-                <div class="access-denied" id="accessDenied" hidden>
-                    <div class="access-card">
-                        <h2>Access restricted</h2>
+                <div class="property-grid" id="propertyGrid"></div>
 
-                        <p id="accessMessage">
-                            This dashboard requires an active account with the
-                            student role.
-                        </p>
+                <div class="empty-state" id="emptyState" hidden>
+                    No student boarding houses match your search.
+                </div>
 
-                        <a
-                            class="button button-primary"
-                            href="login.html"
-                        >
-                            Return to login
-                        </a>
+                <div class="error-state" id="errorState" hidden>
+                    We could not load the listings. Please try again later.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+    <div class="book-modal-overlay" id="bookModal">
+        <div class="book-modal" role="dialog" aria-modal="true">
+            <div class="book-modal-header">
+                <div>
+                    <h2 id="bookModalTitle">Book / Contact</h2>
+                    <p id="bookModalProperty" style="color:#6b7280;font-size:0.85rem;margin-top:4px"></p>
+                </div>
+                <button class="modal-close-btn" id="bookModalClose" type="button">×</button>
+            </div>
+            <div class="book-modal-body">
+                <div class="contact-block">
+                    <strong id="bookContactName">Caretaker</strong>
+                    <div id="bookContactPhone">Phone not provided</div>
+                    <div class="contact-actions">
+                        <a class="button button-outline" id="bookCallLink" href="#" style="display:none">Call</a>
+                        <a class="button button-primary" id="bookWhatsAppLink" href="#" target="_blank" rel="noopener" style="display:none">WhatsApp</a>
                     </div>
                 </div>
-
-                <div id="studentApp" hidden>
-                    <section
-                        class="dashboard-section active"
-                        id="section-dashboard"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>
-                                    Welcome,
-                                    <span id="welcomeName">
-                                        student
-                                    </span>
-                                </h2>
-
-                                <p id="welcomeLocation">
-                                    Select a location to see nearby student
-                                    accommodation.
-                                </p>
-                            </div>
-
-                            <div class="section-actions">
-                                <button
-                                    class="button button-outline"
-                                    id="refreshButton"
-                                    type="button"
-                                >
-                                    Refresh
-                                </button>
-
-                                <button
-                                    class="button button-primary"
-                                    data-open-section="listings"
-                                    type="button"
-                                >
-                                    Browse housing
-                                </button>
-                            </div>
-                        </div>
-
-                        <div
-                            class="message"
-                            id="dataMessage"
-                            role="status"
-                        ></div>
-
-                        <div class="stats-grid">
-                            <article class="stat-card">
-                                <div class="stat-top">
-                                    <span class="stat-label">
-                                        Available houses
-                                    </span>
-
-                                    <span class="stat-icon">⌂</span>
-                                </div>
-
-                                <div
-                                    class="stat-value"
-                                    id="availableProperties"
-                                >
-                                    —
-                                </div>
-
-                                <div class="stat-note">
-                                    Published in your location
-                                </div>
-                            </article>
-
-                            <article class="stat-card">
-                                <div class="stat-top">
-                                    <span class="stat-label">
-                                        Saved properties
-                                    </span>
-
-                                    <span class="stat-icon">♡</span>
-                                </div>
-
-                                <div
-                                    class="stat-value"
-                                    id="savedProperties"
-                                >
-                                    —
-                                </div>
-
-                                <div class="stat-note">
-                                    Your shortlist
-                                </div>
-                            </article>
-
-                            <article class="stat-card">
-                                <div class="stat-top">
-                                    <span class="stat-label">
-                                        My inquiries
-                                    </span>
-
-                                    <span class="stat-icon">✉</span>
-                                </div>
-
-                                <div
-                                    class="stat-value"
-                                    id="inquiryCount"
-                                >
-                                    —
-                                </div>
-
-                                <div class="stat-note">
-                                    Requests sent to caretakers
-                                </div>
-                            </article>
-
-                            <article class="stat-card">
-                                <div class="stat-top">
-                                    <span class="stat-label">
-                                        My reviews
-                                    </span>
-
-                                    <span class="stat-icon">★</span>
-                                </div>
-
-                                <div
-                                    class="stat-value"
-                                    id="reviewCount"
-                                >
-                                    —
-                                </div>
-
-                                <div class="stat-note">
-                                    Reviews submitted
-                                </div>
-                            </article>
-                        </div>
-
-                        <div class="content-grid">
-                            <div class="panel">
-                                <div class="panel-header">
-                                    <h3>
-                                        Recommended student housing
-                                    </h3>
-
-                                    <a
-                                        href="#"
-                                        data-open-section="listings"
-                                    >
-                                        View all
-                                    </a>
-                                </div>
-
-                                <div class="panel-body">
-                                    <div
-                                        class="property-grid"
-                                        id="recommendedGrid"
-                                    >
-                                        <div class="empty-state">
-                                            Loading recommendations...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel">
-                                <div class="panel-header">
-                                    <h3>Recent activity</h3>
-                                </div>
-
-                                <div class="panel-body">
-                                    <div
-                                        class="activity-list"
-                                        id="recentActivity"
-                                    >
-                                        <div class="empty-state">
-                                            Loading activity...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-listings"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>Student boarding houses</h2>
-
-                                <p>
-                                    Browse published student accommodation for your
-                                    selected location.
-                                </p>
-                            </div>
-
-                            <div class="section-actions">
-                                <a
-                                    class="button button-outline"
-                                    href="student-listings.html"
-                                >
-                                    View more listings
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="toolbar">
-                            <div class="toolbar-group">
-                                <input
-                                    class="search-input"
-                                    id="propertySearch"
-                                    type="search"
-                                    placeholder="Search housing..."
-                                >
-
-                                <select
-                                    class="filter-select"
-                                    id="propertySort"
-                                >
-                                    <option value="newest">
-                                        Newest first
-                                    </option>
-
-                                    <option value="price-low">
-                                        Price: low to high
-                                    </option>
-
-                                    <option value="price-high">
-                                        Price: high to low
-                                    </option>
-
-                                    <option value="rating">
-                                        Highest rated
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div
-                            class="property-grid"
-                            id="allPropertiesGrid"
-                        >
-                            <div class="empty-state">
-                                Loading student housing...
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-saved"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>Saved properties</h2>
-
-                                <p>
-                                    Keep track of student housing you may want to visit.
-                                </p>
-                            </div>
-
-                            <div class="section-actions">
-                                <button
-                                    class="button button-outline"
-                                    data-open-section="listings"
-                                    type="button"
-                                >
-                                    Browse more
-                                </button>
-                            </div>
-                        </div>
-
-                        <div
-                            class="property-grid"
-                            id="savedPropertiesGrid"
-                        >
-                            <div class="empty-state">
-                                Loading saved properties...
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-inquiries"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>My inquiries</h2>
-
-                                <p>
-                                    Track questions and requests sent to caretakers.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="panel">
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Property</th>
-                                            <th>Message</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="inquiriesTableBody">
-                                        <tr>
-                                            <td colspan="5" class="empty-state">
-                                                Loading inquiries...
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-reviews"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>My reviews</h2>
-
-                                <p>
-                                    View reviews you submitted for properties or
-                                    caretakers.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div
-                            class="announcement-list"
-                            id="reviewsList"
-                        >
-                            <div class="empty-state">
-                                Loading reviews...
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-announcements"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>Announcements</h2>
-
-                                <p>
-                                    Read updates relevant to students and your location.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div
-                            class="announcement-list"
-                            id="announcementsList"
-                        >
-                            <div class="empty-state">
-                                Loading announcements...
-                            </div>
-                        </div>
-                    </section>
-
-                    <section
-                        class="dashboard-section"
-                        id="section-profile"
-                    >
-                        <div class="section-heading">
-                            <div>
-                                <h2>My profile</h2>
-
-                                <p>
-                                    Keep your personal information current.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="profile-card">
-                            <h3>Personal information</h3>
-
-                            <p>
-                                Assigned roles and permissions are controlled by
-                                administrators.
-                            </p>
-
-                            <div
-                                class="message"
-                                id="profileMessage"
-                                role="alert"
-                            ></div>
-
-                            <form id="profileForm">
-                                <div class="profile-form-grid">
-                                    <div class="form-group">
-                                        <label for="profileName">
-                                            Full name
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="profileName"
-                                            type="text"
-                                            required
-                                        >
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="profilePhone">
-                                            Phone number
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="profilePhone"
-                                            type="tel"
-                                        >
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="profileEmail">
-                                            Email address
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="profileEmail"
-                                            type="email"
-                                            readonly
-                                        >
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="profileRole">
-                                            Primary role
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="profileRole"
-                                            type="text"
-                                            readonly
-                                        >
-                                    </div>
-
-                                    <div class="form-group full-width">
-                                        <label for="profileLocation">
-                                            Preferred location
-                                        </label>
-
-                                        <select
-                                            class="form-select"
-                                            id="profileLocation"
-                                            required
-                                        >
-                                            <option value="">
-                                                Select location
-                                            </option>
-
-                                            <option value="campus-a">
-                                                Campus Location A
-                                            </option>
-
-                                            <option value="campus-b">
-                                                Campus Location B
-                                            </option>
-
-                                            <option value="campus-c">
-                                                Campus Location C
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-actions">
-                                        <button
-                                            class="button button-primary"
-                                            type="submit"
-                                        >
-                                            Save profile
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
+                <div>
+                    <label for="bookMessage" style="font-size:0.78rem;font-weight:700">Message on platform (login required)</label>
+                    <textarea id="bookMessage"></textarea>
                 </div>
-            </main>
+                <div id="bookMessageStatus" style="font-size:0.82rem;display:none;padding:10px;border-radius:7px"></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="button button-primary" id="bookSendInquiry" type="button">Send inquiry</button>
+                    <button class="button button-outline" id="bookModalCancel" type="button">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="toast" id="toast" role="status"></div>
+    <footer class="site-footer">
+        © <span id="currentYear"></span> Masitech Solutions. All rights reserved.
+    </footer>
 
     <script type="module">
-        /*
-         * NOTE ON THE FIX:
-         * This page previously imported `auth` and `db` from a
-         * separate `firebase-config.js` file. If that file used a
-         * different Firebase SDK version URL, a different config,
-         * or initialized the app differently than login.html did,
-         * the two pages could end up with Auth instances that do
-         * not agree on whether a user is signed in — which shows up
-         * exactly as "I log in fine, then get bounced back to
-         * login.html."
-         *
-         * To eliminate that entire class of bug, this page now
-         * initializes Firebase directly, inline, using the exact
-         * same SDK version and the exact same config object as
-         * login.html. getApps()/getApp() is used so that if some
-         * other script on the page has already initialized the
-         * default app, we reuse it instead of throwing a
-         * "Firebase App named '[DEFAULT]' already exists" error.
-         */
-        import {
-            initializeApp,
-            getApps,
-            getApp
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-
-        import {
-            getAuth,
-            onAuthStateChanged,
-            signOut,
-            updateProfile
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
         import {
             getFirestore,
             collection,
-            doc,
-            getDoc,
-            getDocs,
             query,
             where,
-            updateDoc,
-            setDoc,
+            onSnapshot,
+            getDocs,
+            addDoc,
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
@@ -1777,103 +661,57 @@
             measurementId: "G-LZQQCZTF1M"
         };
 
-        const app =
-            getApps().length > 0
-                ? getApp()
-                : initializeApp(firebaseConfig);
-
-        const auth = getAuth(app);
+        const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        const state = {
-            user: null,
-            profile: null,
-            roles: [],
-            claims: {},
-            properties: [],
-            savedProperties: [],
-            inquiries: [],
-            reviews: [],
-            announcements: []
-        };
+        const mainNav = document.getElementById("mainNav");
+        const menuButton = document.getElementById("menuButton");
+        const filterForm = document.getElementById("filterForm");
+        const searchInput = document.getElementById("searchInput");
+        const locationFilter = document.getElementById("locationFilter");
+        const sortFilter = document.getElementById("sortFilter");
+        const propertyGrid = document.getElementById("propertyGrid");
+        const loadingState = document.getElementById("loadingState");
+        const emptyState = document.getElementById("emptyState");
+        const errorState = document.getElementById("errorState");
+        const resultCount = document.getElementById("resultCount");
+        const currentYear = document.getElementById("currentYear");
 
-        const sectionTitles = {
-            dashboard: [
-                "Student overview",
-                "Find accommodation near your selected location"
-            ],
+        let allProperties = [];
+        let locationMap = {};
 
-            listings: [
-                "Student boarding houses",
-                "Browse published student accommodation"
-            ],
+        currentYear.textContent = new Date().getFullYear();
 
-            saved: [
-                "Saved properties",
-                "Review your accommodation shortlist"
-            ],
+        const urlLocation = new URLSearchParams(window.location.search).get(
+            "location"
+        );
 
-            inquiries: [
-                "My inquiries",
-                "Track questions sent to caretakers"
-            ],
+        menuButton.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
 
-            reviews: [
-                "My reviews",
-                "Review your submitted feedback"
-            ],
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
 
-            announcements: [
-                "Announcements",
-                "Read updates for students"
-            ],
+        document.addEventListener("click", (event) => {
+            if (!mainNav.classList.contains("open")) return;
 
-            profile: [
-                "My profile",
-                "Manage your student account information"
-            ]
-        };
+            const insideNav = mainNav.contains(event.target);
+            const onButton = menuButton.contains(event.target);
 
-        const loadingScreen =
-            document.getElementById("loadingScreen");
-
-        const accessDenied =
-            document.getElementById("accessDenied");
-
-        const studentApp =
-            document.getElementById("studentApp");
-
-        const sidebar =
-            document.getElementById("sidebar");
-
-        const mobileMenuButton =
-            document.getElementById("mobileMenuButton");
-
-        const toast =
-            document.getElementById("toast");
-
-        function showToast(message, isError = false) {
-            toast.textContent = message;
-            toast.className =
-                `toast show${isError ? " error" : ""}`;
-
-            window.clearTimeout(showToast.timeout);
-
-            showToast.timeout =
-                window.setTimeout(() => {
-                    toast.className = "toast";
-                }, 3500);
-        }
-
-        function showMessage(element, text, type) {
-            element.textContent = text;
-            element.className = `message ${type}`;
-        }
-
-        function hideMessage(element) {
-            element.textContent = "";
-            element.className = "message";
-        }
+            if (!insideNav && !onButton) {
+                mainNav.classList.remove("open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+            }
+        });
 
         function escapeHtml(value) {
             const div = document.createElement("div");
@@ -1881,93 +719,9 @@
             return div.innerHTML;
         }
 
-        function getInitials(name) {
-            return String(name || "Student")
-                .split(" ")
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((part) => part[0].toUpperCase())
-                .join("");
-        }
-
-        function getTimestampValue(timestamp) {
-            if (!timestamp) {
-                return 0;
-            }
-
-            if (typeof timestamp.toMillis === "function") {
-                return timestamp.toMillis();
-            }
-
-            if (typeof timestamp.toDate === "function") {
-                return timestamp.toDate().getTime();
-            }
-
-            if (timestamp.seconds) {
-                return timestamp.seconds * 1000;
-            }
-
-            return new Date(timestamp).getTime() || 0;
-        }
-
-        function formatDate(timestamp) {
-            const value = getTimestampValue(timestamp);
-
-            if (!value) {
-                return "—";
-            }
-
-            return new Date(value).toLocaleDateString(
-                undefined,
-                {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric"
-                }
-            );
-        }
-
-        function formatDateTime(timestamp) {
-            const value = getTimestampValue(timestamp);
-
-            if (!value) {
-                return "—";
-            }
-
-            return new Date(value).toLocaleString(
-                undefined,
-                {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            );
-        }
-
-        function capitalize(value) {
-            if (!value) {
-                return "—";
-            }
-
-            return String(value)
-                .replaceAll("-", " ")
-                .replace(/\b\w/g, (letter) =>
-                    letter.toUpperCase()
-                );
-        }
-
-        function getPropertyImage(property) {
-            return (
-                property.imageUrl ||
-                "https://via.placeholder.com/800x500?text=Student+Housing"
-            );
-        }
-
-        function getPropertyPrice(property) {
+        function formatPrice(property) {
             if (property.priceLabel) {
-                return property.priceLabel;
+                return escapeHtml(property.priceLabel);
             }
 
             if (typeof property.price === "number") {
@@ -1977,1585 +731,346 @@
             return "Price on inquiry";
         }
 
-        function getPropertyAvailability(property) {
+        function getImageUrl(property) {
+            if (property.imageUrl) return property.imageUrl;
+            if (Array.isArray(property.imageUrls) && property.imageUrls[0]) {
+                return property.imageUrls[0];
+            }
+
+            return "https://via.placeholder.com/800x500?text=Student+Accommodation";
+        }
+
+        function getRating(property) {
+            const rating = Number(property.rating);
+
+            if (!rating) {
+                return "No reviews yet";
+            }
+
+            return `★ ${rating.toFixed(1)} (${property.reviewCount || 0} reviews)`;
+        }
+
+        function getAvailabilityLabel(property) {
+            if (property.availableRooms !== undefined && property.availableRooms !== null) {
+                return `${property.availableRooms} available`;
+            }
+
+            if (property.availableUnits !== undefined && property.availableUnits !== null) {
+                return `${property.availableUnits} available`;
+            }
+
+            return "Availability on inquiry";
+        }
+
+        function getLocationLabel(property) {
             return (
-                property.availableRooms ??
-                property.availableUnits ??
-                property.availableSpaces ??
-                "On inquiry"
+                property.locationName ||
+                locationMap[property.locationId] ||
+                property.locationId ||
+                "Location not provided"
             );
         }
 
-        function getProfileRoles(profile) {
-            if (Array.isArray(profile.roles)) {
-                return profile.roles;
-            }
-
-            if (profile.role) {
-                return [profile.role];
-            }
-
-            return [];
-        }
-
-        function getClaimRoles(claims) {
-            if (Array.isArray(claims.roles)) {
-                return claims.roles;
-            }
-
-            if (claims.role) {
-                return [claims.role];
-            }
-
-            return [];
-        }
-
-        function getEffectiveRoles(profile, claims) {
-            return [
-                ...new Set([
-                    ...getProfileRoles(profile),
-                    ...getClaimRoles(claims)
-                ])
-            ];
-        }
-
-        function showStudentApp() {
-            document.body.classList.remove("auth-pending");
-            document.body.classList.add("auth-ready");
-
-            const layout = document.getElementById("appLayout");
-            if (layout) layout.hidden = false;
-
-            if (loadingScreen) loadingScreen.hidden = true;
-            if (accessDenied) accessDenied.hidden = true;
-            if (studentApp) studentApp.hidden = false;
-        }
-
-        function showAccessDenied(
-            text = "This dashboard requires an active account with the student role."
-        ) {
-            // Wrong role: leave dashboard instead of flashing restricted UI
-            window.location.replace("profile.html");
-        }
-
-        function showAuthenticatedDataError(error) {
-            document.body.classList.remove("auth-pending");
-            document.body.classList.add("auth-ready");
-            const layout = document.getElementById("appLayout");
-            if (layout) layout.hidden = false;
-
-            if (loadingScreen) loadingScreen.hidden = true;
-            if (accessDenied) accessDenied.hidden = true;
-            if (studentApp) studentApp.hidden = false;
-
-            state.properties = [];
-            state.savedProperties = [];
-            state.inquiries = [];
-            state.reviews = [];
-            state.announcements = [];
-
-            renderAll();
-
-            const dataMessage =
-                document.getElementById("dataMessage");
-
-            if (error?.code === "permission-denied") {
-                showMessage(
-                    dataMessage,
-                    "You are logged in, but Firestore Rules are blocking some dashboard data.",
-                    "warning"
-                );
-            } else {
-                showMessage(
-                    dataMessage,
-                    "You are logged in, but some dashboard data could not be loaded.",
-                    "warning"
-                );
-            }
-        }
-
-        async function loadCollection(
-            collectionName,
-            constraints = []
-        ) {
-            const collectionReference =
-                collection(db, collectionName);
-
-            const dataQuery =
-                constraints.length > 0
-                    ? query(
-                        collectionReference,
-                        ...constraints
-                    )
-                    : collectionReference;
-
-            const snapshot =
-                await getDocs(dataQuery);
-
-            return snapshot.docs.map((document) => ({
-                id: document.id,
-                ...document.data()
-            }));
-        }
-
-        async function loadStudentData(user) {
-            const profileReference =
-                doc(db, "users", user.uid);
-
-            let profileData = {};
-
-            try {
-                const profileSnapshot =
-                    await getDoc(profileReference);
-
-                if (profileSnapshot.exists()) {
-                    profileData =
-                        profileSnapshot.data();
-                } else {
-                    profileData = {
-                        uid: user.uid,
-                        fullName:
-                            user.displayName ||
-                            "Student",
-                        email: user.email || "",
-                        role: "student",
-                        roles: ["student"],
-                        permissions: [],
-                        accountStatus: "active",
-                        locationId: ""
-                    };
-                }
-            } catch (profileError) {
-                console.error(
-                    "Could not read student profile:",
-                    profileError
-                );
-
-                state.user = user;
-                state.profile = {
-                    uid: user.uid,
-                    fullName:
-                        user.displayName ||
-                        "Student",
-                    email: user.email || "",
-                    role: "student",
-                    roles: ["student"],
-                    permissions: [],
-                    accountStatus: "active",
-                    locationId: ""
-                };
-                state.roles = ["student"];
-
-                renderAll();
-                showAuthenticatedDataError(
-                    profileError
-                );
-                return;
-            }
-
-            let claims = {};
-
-            try {
-                const tokenResult =
-                    await user.getIdTokenResult();
-
-                claims =
-                    tokenResult.claims || {};
-            } catch (claimError) {
-                console.warn(
-                    "Could not load custom claims:",
-                    claimError
-                );
-            }
-
-            const effectiveRoles =
-                getEffectiveRoles(
-                    profileData,
-                    claims
-                );
-
-            const accountStatus =
-                profileData.accountStatus ||
-                "active";
-
-            if (!effectiveRoles.includes("student")) {
-                showAccessDenied(
-                    "This account does not have the student role. Open the dashboard assigned to your role."
-                );
-                return;
-            }
-
-            if (
-                accountStatus === "suspended" ||
-                accountStatus === "disabled"
-            ) {
-                showAccessDenied(
-                    "This student account is suspended or disabled. Please contact support."
-                );
-                return;
-            }
-
-            state.profile = {
-                ...profileData,
-                uid: user.uid,
-                roles: effectiveRoles,
-                accountStatus
-            };
-
-            state.roles =
-                effectiveRoles;
-
-            const locationId =
-                state.profile.locationId ||
-                "";
-
-            try {
-                if (locationId) {
-                    state.properties =
-                        await loadCollection(
-                            "properties",
-                            [
-                                where(
-                                    "propertyType",
-                                    "==",
-                                    "student"
-                                ),
-                                where(
-                                    "status",
-                                    "==",
-                                    "published"
-                                ),
-                                where(
-                                    "locationId",
-                                    "==",
-                                    locationId
-                                )
-                            ]
-                        );
-                } else {
-                    state.properties = [];
-                }
-            } catch (propertyError) {
-                console.warn(
-                    "Could not load properties:",
-                    propertyError
-                );
-
-                state.properties = [];
-            }
-
-            try {
-                state.savedProperties =
-                    await loadCollection(
-                        "savedProperties",
-                        [
-                            where(
-                                "userId",
-                                "==",
-                                user.uid
-                            )
-                        ]
-                    );
-            } catch (error) {
-                console.warn(
-                    "Could not load saved properties:",
-                    error
-                );
-
-                state.savedProperties = [];
-            }
-
-            try {
-                state.inquiries =
-                    await loadCollection(
-                        "inquiries",
-                        [
-                            where(
-                                "userId",
-                                "==",
-                                user.uid
-                            )
-                        ]
-                    );
-            } catch (error) {
-                console.warn(
-                    "Could not load inquiries:",
-                    error
-                );
-
-                state.inquiries = [];
-            }
-
-            try {
-                state.reviews =
-                    await loadCollection(
-                        "reviews",
-                        [
-                            where(
-                                "reviewerId",
-                                "==",
-                                user.uid
-                            )
-                        ]
-                    );
-            } catch (error) {
-                console.warn(
-                    "Could not load reviews:",
-                    error
-                );
-
-                state.reviews = [];
-            }
-
-            try {
-                const announcements =
-                    await loadCollection(
-                        "announcements"
-                    );
-
-                state.announcements =
-                    announcements.filter(
-                        (announcement) => {
-                            const status = String(
-                                announcement.status || "published"
-                            ).toLowerCase();
-
-                            if (
-                                status === "draft" ||
-                                status === "archived"
-                            ) {
-                                return false;
-                            }
-
-                            const audience = String(
-                                announcement.audienceType ||
-                                    announcement.audience ||
-                                    "everyone"
-                            ).toLowerCase();
-
-                            return (
-                                audience === "everyone" ||
-                                audience === "all" ||
-                                audience === "students" ||
-                                audience === "student" ||
-                                (locationId &&
-                                    announcement.locationId ===
-                                        locationId)
-                            );
-                        }
-                    );
-            } catch (error) {
-                console.warn(
-                    "Could not load announcements:",
-                    error
-                );
-
-                state.announcements = [];
-            }
-
-            renderAll();
-            showStudentApp();
-        }
-
-        function setIdentity() {
-            const name =
-                state.profile.fullName ||
-                state.user.displayName ||
-                "Student";
-
-            const locationName =
-                state.profile.locationName ||
-                state.profile.locationId ||
-                "No location selected";
-
-            document.getElementById(
-                "sidebarName"
-            ).textContent = name;
-
-            document.getElementById(
-                "sidebarLocation"
-            ).textContent = locationName;
-
-            document.getElementById(
-                "sidebarAvatar"
-            ).textContent = getInitials(name);
-
-            document.getElementById(
-                "welcomeName"
-            ).textContent = name.split(" ")[0];
-
-            document.getElementById(
-                "welcomeLocation"
-            ).textContent = state.profile.locationId
-                ? `Browse student accommodation in ${locationName}.`
-                : "Select a preferred location to see nearby student accommodation.";
-
-            document.getElementById(
-                "profileName"
-            ).value = name;
-
-            document.getElementById(
-                "profilePhone"
-            ).value = state.profile.phone || "";
-
-            document.getElementById(
-                "profileEmail"
-            ).value =
-                state.user.email ||
-                state.profile.email ||
-                "";
-
-            document.getElementById(
-                "profileRole"
-            ).value = capitalize(
-                state.profile.role ||
-                state.roles[0] ||
-                "student"
-            );
-
-            document.getElementById(
-                "profileLocation"
-            ).value =
-                state.profile.locationId || "";
-        }
-
-        function renderAll() {
-            setIdentity();
-            renderDashboard();
-            renderListings();
-            renderSavedProperties();
-            renderInquiries();
-            renderReviews();
-            renderAnnouncements();
-            updateNotificationCount();
-        }
-
-        function renderDashboard() {
-            document.getElementById(
-                "availableProperties"
-            ).textContent =
-                state.properties.length;
-
-            document.getElementById(
-                "savedProperties"
-            ).textContent =
-                state.savedProperties.filter(
-                    (saved) =>
-                        saved.status !== "removed"
-                ).length;
-
-            document.getElementById(
-                "inquiryCount"
-            ).textContent =
-                state.inquiries.length;
-
-            document.getElementById(
-                "reviewCount"
-            ).textContent =
-                state.reviews.length;
-
-            const recommendedProperties =
-                [...state.properties]
-                    .sort(
-                        (first, second) =>
-                            Number(second.rating || 0) -
-                            Number(first.rating || 0)
-                    )
-                    .slice(0, 3);
-
-            renderPropertyCards(
-                recommendedProperties,
-                document.getElementById(
-                    "recommendedGrid"
-                )
-            );
-
-            const activity = [
-                ...state.inquiries.map(
-                    (inquiry) => ({
-                        text:
-                            `Inquiry about ${
-                                inquiry.propertyName ||
-                                "a property"
-                            }`,
-                        date: inquiry.createdAt
-                    })
-                ),
-
-                ...state.reviews.map(
-                    (review) => ({
-                        text:
-                            `Review submitted for ${
-                                review.targetName ||
-                                "a property"
-                            }`,
-                        date: review.createdAt
-                    })
-                ),
-
-                ...state.savedProperties
-                    .filter(
-                        (saved) =>
-                            saved.status !== "removed"
-                    )
-                    .map(
-                        (saved) => ({
-                            text:
-                                "Property saved to your shortlist",
-                            date: saved.createdAt
-                        })
-                    )
-            ]
-                .sort(
-                    (first, second) =>
-                        getTimestampValue(
-                            second.date
-                        ) -
-                        getTimestampValue(
-                            first.date
-                        )
-                )
-                .slice(0, 6);
-
-            const activityList =
-                document.getElementById(
-                    "recentActivity"
-                );
-
-            if (activity.length === 0) {
-                activityList.innerHTML = `
-                    <div class="empty-state">
-                        No recent activity yet.
-                    </div>
-                `;
-            } else {
-                activityList.innerHTML =
-                    activity
-                        .map(
-                            (item) => `
-                                <div class="activity-item">
-                                    <span class="activity-dot"></span>
-
-                                    <div>
-                                        <p>
-                                            ${escapeHtml(
-                                                item.text
-                                            )}
-                                        </p>
-
-                                        <small>
-                                            ${formatDateTime(
-                                                item.date
-                                            )}
-                                        </small>
-                                    </div>
-                                </div>
-                            `
-                        )
-                        .join("");
-            }
-        }
-
-        function renderPropertyCards(
-            properties,
-            container
-        ) {
-            if (!container) {
-                return;
-            }
+        function displayProperties(properties) {
+            propertyGrid.innerHTML = "";
 
             if (properties.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        No student boarding houses are available in your location.
-                    </div>
-                `;
-
+                emptyState.hidden = false;
+                resultCount.textContent = "0 listings found";
                 return;
             }
 
-            container.innerHTML =
-                properties
-                    .map((property) => {
-                        const savedProperty =
-                            state.savedProperties.find(
-                                (saved) =>
-                                    saved.propertyId ===
-                                        property.id &&
-                                    saved.status !==
-                                        "removed"
-                            );
+            emptyState.hidden = true;
+            resultCount.textContent =
+                `${properties.length} listing${properties.length === 1 ? "" : "s"} found`;
 
-                        const isSaved =
-                            Boolean(savedProperty);
+            properties.forEach((property) => {
+                const propertyId = property.id;
+                const title = escapeHtml(
+                    property.title || "Student boarding house"
+                );
+                const location = escapeHtml(getLocationLabel(property));
+                const description = escapeHtml(
+                    property.description || "Property details will be provided soon."
+                );
+                const roomType = escapeHtml(
+                    property.roomType ||
+                    property.spaceLabel ||
+                    "Room details unavailable"
+                );
+                const condition = escapeHtml(
+                    property.condition || "Condition not provided"
+                );
+                const availableRooms = escapeHtml(
+                    getAvailabilityLabel(property)
+                );
 
-                        return `
-                            <article class="property-card">
-                                <div class="property-image-wrapper">
-                                    <img
-                                        class="property-image"
-                                        src="${getPropertyImage(property)}"
-                                        alt="${escapeHtml(
-                                            property.title ||
-                                            "Student housing"
-                                        )}"
-                                        loading="lazy"
-                                        onerror="this.src='https://via.placeholder.com/800x500?text=Student+Housing'"
-                                    >
+                const card = document.createElement("article");
+                card.className = "property-card";
 
-                                    <span class="property-status">
-                                        Available
-                                    </span>
-                                </div>
+                card.innerHTML = `
+                    <div class="property-image-wrapper">
+                        <img
+                            class="property-image"
+                            src="${getImageUrl(property)}"
+                            alt="${title}"
+                            loading="lazy"
+                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Accommodation'"
+                        >
+                        <span class="status-badge">Available</span>
+                    </div>
 
-                                <div class="property-content">
-                                    <h3>
-                                        ${escapeHtml(
-                                            property.title ||
-                                            "Student boarding house"
-                                        )}
-                                    </h3>
+                    <div class="property-content">
+                        <h3>${title}</h3>
+                        <p class="location">${location}</p>
+                        <p class="property-description">${description}</p>
 
-                                    <p class="property-location">
-                                        ${escapeHtml(
-                                            property.locationName ||
-                                            property.locationId ||
-                                            "Location unavailable"
-                                        )}
-                                    </p>
+                        <div class="property-meta">
+                            <span class="meta-item">${roomType}</span>
+                            <span class="meta-item">${condition}</span>
+                            <span class="meta-item">${availableRooms}</span>
+                        </div>
 
-                                    <p class="property-description">
-                                        ${escapeHtml(
-                                            property.description ||
-                                            "Property details will be provided soon."
-                                        )}
-                                    </p>
+                        <div class="property-bottom">
+                            <div>
+                                <div class="price">${formatPrice(property)}</div>
+                                <div class="rating">${getRating(property)}</div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="book-button" type="button" data-book-property="${propertyId}">
+                                    Book
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-                                    <div class="property-meta">
-                                        <span class="meta-item">
-                                            ${escapeHtml(
-                                                property.roomType ||
-                                                property.spaceLabel ||
-                                                "Room type on inquiry"
-                                            )}
-                                        </span>
-
-                                        <span class="meta-item">
-                                            ${escapeHtml(
-                                                `${getPropertyAvailability(
-                                                    property
-                                                )} available`
-                                            )}
-                                        </span>
-                                    </div>
-
-                                    <div class="property-bottom">
-                                        <div>
-                                            <div class="property-price">
-                                                ${escapeHtml(
-                                                    getPropertyPrice(
-                                                        property
-                                                    )
-                                                )}
-                                            </div>
-
-                                            <div class="property-rating">
-                                                ★ ${Number(
-                                                    property.rating ||
-                                                    0
-                                                ).toFixed(1)}
-                                                (${property.reviewCount || 0})
-                                            </div>
-                                        </div>
-
-                                        <div class="property-card-actions">
-                                            <a
-                                                class="small-button view"
-                                                href="property-details.html?id=${encodeURIComponent(
-                                                    property.id
-                                                )}"
-                                            >
-                                                View
-                                            </a>
-
-                                            <button
-                                                class="small-button ${
-                                                    isSaved
-                                                        ? "remove"
-                                                        : "save"
-                                                }"
-                                                data-save-action="${
-                                                    isSaved
-                                                        ? "remove"
-                                                        : "save"
-                                                }"
-                                                data-id="${property.id}"
-                                                type="button"
-                                            >
-                                                ${
-                                                    isSaved
-                                                        ? "Saved"
-                                                        : "Save"
-                                                }
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        `;
-                    })
-                    .join("");
+                propertyGrid.appendChild(card);
+            });
         }
 
-        function renderListings() {
-            const searchTerm =
-                document
-                    .getElementById(
-                        "propertySearch"
-                    )
-                    .value
-                    .trim()
+        function filterAndDisplayProperties() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedLocation = locationFilter.value;
+            const selectedSort = sortFilter.value;
+
+            let filteredProperties = allProperties.filter((property) => {
+                const searchableText = [
+                    property.title,
+                    property.locationName,
+                    property.locationId,
+                    locationMap[property.locationId],
+                    property.description,
+                    property.address,
+                    property.roomType,
+                    property.spaceLabel
+                ]
+                    .filter(Boolean)
+                    .join(" ")
                     .toLowerCase();
 
-            const sortType =
-                document.getElementById(
-                    "propertySort"
-                ).value;
+                const matchesSearch =
+                    !searchTerm || searchableText.includes(searchTerm);
 
-            let properties =
-                state.properties.filter(
-                    (property) => {
-                        const searchableText = [
-                            property.title,
-                            property.locationName,
-                            property.description,
-                            property.address,
-                            property.roomType,
-                            property.spaceLabel
-                        ]
-                            .filter(Boolean)
-                            .join(" ")
-                            .toLowerCase();
+                const matchesLocation =
+                    selectedLocation === "all" ||
+                    property.locationId === selectedLocation;
 
-                        return (
-                            !searchTerm ||
-                            searchableText.includes(
-                                searchTerm
-                            )
-                        );
-                    }
-                );
+                return matchesSearch && matchesLocation;
+            });
 
-            properties =
-                properties.sort(
-                    (first, second) => {
-                        if (
-                            sortType ===
-                            "price-low"
-                        ) {
-                            return (
-                                Number(
-                                    first.price || 0
-                                ) -
-                                Number(
-                                    second.price || 0
-                                )
-                            );
-                        }
+            filteredProperties.sort((first, second) => {
+                if (selectedSort === "price-low") {
+                    return Number(first.price || 0) - Number(second.price || 0);
+                }
 
-                        if (
-                            sortType ===
-                            "price-high"
-                        ) {
-                            return (
-                                Number(
-                                    second.price || 0
-                                ) -
-                                Number(
-                                    first.price || 0
-                                )
-                            );
-                        }
+                if (selectedSort === "price-high") {
+                    return Number(second.price || 0) - Number(first.price || 0);
+                }
 
-                        if (
-                            sortType ===
-                            "rating"
-                        ) {
-                            return (
-                                Number(
-                                    second.rating || 0
-                                ) -
-                                Number(
-                                    first.rating || 0
-                                )
-                            );
-                        }
+                if (selectedSort === "rating") {
+                    return Number(second.rating || 0) - Number(first.rating || 0);
+                }
 
-                        return (
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                        );
-                    }
-                );
+                return getDateValue(second.createdAt) -
+                    getDateValue(first.createdAt);
+            });
 
-            renderPropertyCards(
-                properties,
-                document.getElementById(
-                    "allPropertiesGrid"
-                )
-            );
+            displayProperties(filteredProperties);
         }
 
-        function renderSavedProperties() {
-            const savedPropertyIds =
-                state.savedProperties
-                    .filter(
-                        (saved) =>
-                            saved.status !== "removed"
-                    )
-                    .map(
-                        (saved) =>
-                            saved.propertyId
-                    );
-
-            const properties =
-                state.properties.filter(
-                    (property) =>
-                        savedPropertyIds.includes(
-                            property.id
-                        )
-                );
-
-            renderPropertyCards(
-                properties,
-                document.getElementById(
-                    "savedPropertiesGrid"
-                )
-            );
-        }
-
-        function renderInquiries() {
-            const tableBody =
-                document.getElementById(
-                    "inquiriesTableBody"
-                );
-
-            if (state.inquiries.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            You have not submitted any inquiries.
-                        </td>
-                    </tr>
-                `;
-
-                return;
+        function getDateValue(timestamp) {
+            if (!timestamp) {
+                return 0;
             }
 
-            tableBody.innerHTML =
-                state.inquiries
-                    .sort(
-                        (first, second) =>
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                    )
-                    .map(
-                        (inquiry) => {
-                            const status =
-                                inquiry.status ||
-                                "new";
-
-                            const statusClass =
-                                status === "resolved"
-                                    ? "badge-green"
-                                    : status ===
-                                        "closed"
-                                        ? "badge-grey"
-                                        : status ===
-                                            "in-progress"
-                                            ? "badge-blue"
-                                            : "badge-amber";
-
-                            return `
-                                <tr>
-                                    <td>
-                                        ${escapeHtml(
-                                            inquiry.propertyName ||
-                                            "Student property"
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        ${escapeHtml(
-                                            (
-                                                inquiry.message ||
-                                                "—"
-                                            ).slice(
-                                                0,
-                                                90
-                                            )
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        ${formatDate(
-                                            inquiry.createdAt
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        <span class="badge ${statusClass}">
-                                            ${escapeHtml(
-                                                status
-                                            )}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <a
-                                            class="small-button view"
-                                            href="property-details.html?id=${encodeURIComponent(
-                                                inquiry.propertyId ||
-                                                ""
-                                            )}"
-                                        >
-                                            View property
-                                        </a>
-                                    </td>
-                                </tr>
-                            `;
-                        }
-                    )
-                    .join("");
-        }
-
-        function renderReviews() {
-            const reviewList =
-                document.getElementById(
-                    "reviewsList"
-                );
-
-            if (state.reviews.length === 0) {
-                reviewList.innerHTML = `
-                    <div class="empty-state">
-                        You have not submitted any reviews.
-                    </div>
-                `;
-
-                return;
+            if (typeof timestamp.toMillis === "function") {
+                return timestamp.toMillis();
             }
 
-            reviewList.innerHTML =
-                state.reviews
-                    .sort(
-                        (first, second) =>
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                    )
-                    .map(
-                        (review) => `
-                            <article class="announcement-card">
-                                <h3>
-                                    ${escapeHtml(
-                                        review.targetName ||
-                                        review.propertyName ||
-                                        "Accommodation review"
-                                    )}
-                                </h3>
-
-                                <p>
-                                    ★ ${Number(
-                                        review.rating || 0
-                                    ).toFixed(1)}
-                                    · ${escapeHtml(
-                                        review.comment ||
-                                        "No comment"
-                                    )}
-                                </p>
-
-                                <small>
-                                    ${capitalize(
-                                        review.reviewType ||
-                                        "property"
-                                    )}
-                                    review ·
-                                    ${formatDate(
-                                        review.createdAt
-                                    )}
-                                </small>
-                            </article>
-                        `
-                    )
-                    .join("");
-        }
-
-        function renderAnnouncements() {
-            const list =
-                document.getElementById(
-                    "announcementsList"
-                );
-
-            if (state.announcements.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        No announcements are currently available.
-                    </div>
-                `;
-
-                return;
+            if (timestamp.seconds) {
+                return timestamp.seconds * 1000;
             }
 
-            list.innerHTML =
-                state.announcements
-                    .sort(
-                        (first, second) =>
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                    )
-                    .map(
-                        (announcement) => `
-                            <article class="announcement-card">
-                                <h3>
-                                    ${escapeHtml(
-                                        announcement.title ||
-                                        "Announcement"
-                                    )}
-                                </h3>
-
-                                <p>
-                                    ${escapeHtml(
-                                        announcement.message ||
-                                        ""
-                                    )}
-                                </p>
-
-                                <small>
-                                    ${formatDateTime(
-                                        announcement.createdAt
-                                    )}
-                                </small>
-                            </article>
-                        `
-                    )
-                    .join("");
+            return new Date(timestamp).getTime() || 0;
         }
 
-        function updateNotificationCount() {
-            const unreadCount =
-                state.announcements.length;
-
-            document.getElementById(
-                "notificationCount"
-            ).textContent = unreadCount;
-        }
-
-        async function saveProperty(propertyId) {
-            const property =
-                state.properties.find(
-                    (item) =>
-                        item.id === propertyId
-                );
-
-            if (!property) {
-                return;
-            }
-
-            const existingSave =
-                state.savedProperties.find(
-                    (saved) =>
-                        saved.propertyId ===
-                            propertyId &&
-                        saved.status !== "removed"
-                );
-
+        async function loadLocations() {
             try {
-                if (existingSave) {
-                    await updateDoc(
-                        doc(
-                            db,
-                            "savedProperties",
-                            existingSave.id
-                        ),
-                        {
-                            status: "removed",
-                            removedAt:
-                                serverTimestamp()
-                        }
-                    );
+                const snapshot = await getDocs(collection(db, "locations"));
+                const locations = snapshot.docs.map((docSnap) => ({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                }));
 
-                    state.savedProperties =
-                        state.savedProperties.map(
-                            (saved) =>
-                                saved.id ===
-                                    existingSave.id
-                                    ? {
-                                        ...saved,
-                                        status: "removed"
-                                    }
-                                    : saved
-                        );
+                locationMap = {};
+                locationFilter.innerHTML =
+                    `<option value="all">All locations</option>`;
 
-                    showToast(
-                        "Property removed from saved properties."
-                    );
-                } else {
-                    const saveId =
-                        `${state.user.uid}_${propertyId}`;
+                locations
+                    .sort((a, b) =>
+                        String(a.name || a.id).localeCompare(String(b.name || b.id))
+                    )
+                    .forEach((location) => {
+                        locationMap[location.id] = location.name || location.id;
 
-                    await setDoc(
-                        doc(
-                            db,
-                            "savedProperties",
-                            saveId
-                        ),
-                        {
-                            userId: state.user.uid,
-                            propertyId,
-                            propertyName:
-                                property.title || "",
-                            locationId:
-                                property.locationId || "",
-                            status: "saved",
-                            createdAt:
-                                serverTimestamp()
-                        },
-                        {
-                            merge: true
-                        }
-                    );
-
-                    state.savedProperties.push({
-                        id: saveId,
-                        userId: state.user.uid,
-                        propertyId,
-                        propertyName:
-                            property.title || "",
-                        locationId:
-                            property.locationId || "",
-                        status: "saved",
-                        createdAt: new Date()
+                        const option = document.createElement("option");
+                        option.value = location.id;
+                        option.textContent = location.name || location.id;
+                        locationFilter.appendChild(option);
                     });
 
-                    showToast("Property saved.");
+                if (urlLocation) {
+                    locationFilter.value = urlLocation;
                 }
-
-                renderAll();
             } catch (error) {
-                console.error(
-                    "Could not update saved property:",
-                    error
-                );
-
-                showToast(
-                    "The saved property could not be updated.",
-                    true
-                );
+                console.warn("Could not load locations:", error);
             }
         }
 
-        async function saveStudentProfile(event) {
+        filterForm.addEventListener("submit", (event) => {
             event.preventDefault();
-
-            const profileMessage =
-                document.getElementById(
-                    "profileMessage"
-                );
-
-            hideMessage(profileMessage);
-
-            const fullName =
-                document
-                    .getElementById(
-                        "profileName"
-                    )
-                    .value
-                    .trim();
-
-            const phone =
-                document
-                    .getElementById(
-                        "profilePhone"
-                    )
-                    .value
-                    .trim();
-
-            const locationId =
-                document.getElementById(
-                    "profileLocation"
-                ).value;
-
-            if (
-                fullName.length < 2 ||
-                !locationId
-            ) {
-                showMessage(
-                    profileMessage,
-                    "Enter your name and select a location.",
-                    "error"
-                );
-
-                return;
-            }
-
-            try {
-                await updateProfile(
-                    state.user,
-                    {
-                        displayName: fullName
-                    }
-                );
-
-                /*
-                 * Do not write role, roles, permissions,
-                 * accountStatus, or locationIds here.
-                 */
-                await setDoc(
-                    doc(db, "users", state.user.uid),
-                    {
-                        fullName,
-                        phone,
-                        locationId,
-                        updatedAt:
-                            serverTimestamp()
-                    },
-                    {
-                        merge: true
-                    }
-                );
-
-                state.profile = {
-                    ...state.profile,
-                    fullName,
-                    phone,
-                    locationId
-                };
-
-                showMessage(
-                    profileMessage,
-                    "Your profile has been updated.",
-                    "success"
-                );
-
-                await loadStudentData(
-                    state.user
-                );
-            } catch (error) {
-                console.error(
-                    "Could not update student profile:",
-                    error
-                );
-
-                showMessage(
-                    profileMessage,
-                    "Your profile could not be updated. Check your Firestore Rules.",
-                    "error"
-                );
-            }
-        }
-
-        function openSection(sectionName) {
-            const section =
-                document.getElementById(
-                    `section-${sectionName}`
-                );
-
-            if (!section) {
-                return;
-            }
-
-            document
-                .querySelectorAll(
-                    ".dashboard-section"
-                )
-                .forEach((item) => {
-                    item.classList.remove(
-                        "active"
-                    );
-                });
-
-            document
-                .querySelectorAll(
-                    ".nav-item"
-                )
-                .forEach((item) => {
-                    item.classList.remove(
-                        "active"
-                    );
-                });
-
-            section.classList.add("active");
-
-            const navItem =
-                document.querySelector(
-                    `.nav-item[data-section="${sectionName}"]`
-                );
-
-            if (navItem) {
-                navItem.classList.add("active");
-            }
-
-            const [title, subtitle] =
-                sectionTitles[sectionName] ||
-                sectionTitles.dashboard;
-
-            document.getElementById(
-                "pageTitle"
-            ).textContent = title;
-
-            document.getElementById(
-                "pageSubtitle"
-            ).textContent = subtitle;
-
-            sidebar.classList.remove("open");
-
-            mobileMenuButton.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-        }
-
-        document
-            .querySelectorAll(".nav-item")
-            .forEach((item) => {
-                item.addEventListener(
-                    "click",
-                    () => {
-                        openSection(
-                            item.dataset.section
-                        );
-                    }
-                );
-            });
-
-        document
-            .querySelectorAll("[data-open-section]")
-            .forEach((button) => {
-                button.addEventListener(
-                    "click",
-                    (event) => {
-                        event.preventDefault();
-
-                        openSection(
-                            button.dataset.openSection
-                        );
-                    }
-                );
-            });
-
-        document
-            .getElementById("recommendedGrid")
-            .addEventListener(
-                "click",
-                async (event) => {
-                    const button =
-                        event.target.closest(
-                            "[data-save-action]"
-                        );
-
-                    if (!button) {
-                        return;
-                    }
-
-                    await saveProperty(
-                        button.dataset.id
-                    );
-                }
-            );
-
-        document
-            .getElementById("allPropertiesGrid")
-            .addEventListener(
-                "click",
-                async (event) => {
-                    const button =
-                        event.target.closest(
-                            "[data-save-action]"
-                        );
-
-                    if (!button) {
-                        return;
-                    }
-
-                    await saveProperty(
-                        button.dataset.id
-                    );
-                }
-            );
-
-        document
-            .getElementById("savedPropertiesGrid")
-            .addEventListener(
-                "click",
-                async (event) => {
-                    const button =
-                        event.target.closest(
-                            "[data-save-action]"
-                        );
-
-                    if (!button) {
-                        return;
-                    }
-
-                    await saveProperty(
-                        button.dataset.id
-                    );
-                }
-            );
-
-        document
-            .getElementById("propertySearch")
-            .addEventListener(
-                "input",
-                renderListings
-            );
-
-        document
-            .getElementById("propertySort")
-            .addEventListener(
-                "change",
-                renderListings
-            );
-
-        document
-            .getElementById("profileForm")
-            .addEventListener(
-                "submit",
-                saveStudentProfile
-            );
-
-        document
-            .getElementById("refreshButton")
-            .addEventListener(
-                "click",
-                async () => {
-                    try {
-                        await loadStudentData(
-                            state.user
-                        );
-
-                        showToast(
-                            "Dashboard refreshed."
-                        );
-                    } catch (error) {
-                        console.error(
-                            "Could not refresh dashboard:",
-                            error
-                        );
-
-                        showAuthenticatedDataError(
-                            error
-                        );
-                    }
-                }
-            );
-
-        mobileMenuButton.addEventListener(
-            "click",
-            () => {
-                const isOpen =
-                    sidebar.classList.toggle(
-                        "open"
-                    );
-
-                mobileMenuButton.setAttribute(
-                    "aria-expanded",
-                    String(isOpen)
-                );
-            }
-        );
-
-        document
-            .getElementById(
-                "notificationButton"
-            )
-            .addEventListener(
-                "click",
-                () => {
-                    openSection(
-                        "announcements"
-                    );
-                }
-            );
-
-        document
-            .getElementById("logoutButton")
-            .addEventListener(
-                "click",
-                async () => {
-                    try {
-                        await signOut(auth);
-
-                        window.location.href =
-                            "login.html";
-                    } catch (error) {
-                        console.error(
-                            "Logout error:",
-                            error
-                        );
-
-                        showToast(
-                            "Could not log out.",
-                            true
-                        );
-                    }
-                }
-            );
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener("click", (event) => {
-            if (!sidebar.classList.contains("open")) return;
-
-            const insideSidebar = sidebar.contains(event.target);
-            const onMenuButton = mobileMenuButton.contains(event.target);
-
-            if (!insideSidebar && !onMenuButton) {
-                sidebar.classList.remove("open");
-                mobileMenuButton.setAttribute("aria-expanded", "false");
-            }
+            filterAndDisplayProperties();
         });
 
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-                if (!user) {
-                    window.location.replace("login.html");
-                    return;
-                }
+        searchInput.addEventListener("input", filterAndDisplayProperties);
+        locationFilter.addEventListener("change", filterAndDisplayProperties);
+        sortFilter.addEventListener("change", filterAndDisplayProperties);
 
-                state.user = user;
 
-                try {
-                    await loadStudentData(user);
-                } catch (error) {
-                    console.error(
-                        "Student dashboard data error:",
-                        error
-                    );
+        const bookModal = { el: document.getElementById("bookModal"), property: null };
+        function normalizePhone(phone) { return String(phone || "").replace(/[^0-9+]/g, ""); }
+        function whatsappLink(phone) {
+            let digits = normalizePhone(phone).replace(/^\+/, "");
+            if (!digits) return "";
+            if (digits.startsWith("0")) digits = "260" + digits.slice(1);
+            return `https://wa.me/${digits}`;
+        }
+        function openBookModal(property) {
+            if (!property) return;
+            bookModal.property = property;
+            document.getElementById("bookModalTitle").textContent = "Book / Contact caretaker";
+            document.getElementById("bookModalProperty").textContent = property.title || "Student boarding house";
+            const name = property.contactName || property.createdByName || "Caretaker / Landlord";
+            const phone = property.contactPhone || property.contactWhatsApp || property.caretakerPhone || "";
+            document.getElementById("bookContactName").textContent = name;
+            document.getElementById("bookContactPhone").textContent = phone || "Phone not provided yet";
+            const callLink = document.getElementById("bookCallLink");
+            const waLink = document.getElementById("bookWhatsAppLink");
+            if (phone) {
+                callLink.href = `tel:${normalizePhone(phone)}`;
+                callLink.style.display = "inline-flex";
+                const wa = whatsappLink(phone);
+                if (wa) { waLink.href = wa; waLink.style.display = "inline-flex"; }
+                else waLink.style.display = "none";
+            } else {
+                callLink.style.display = "none";
+                waLink.style.display = "none";
+            }
+            document.getElementById("bookMessage").value =
+                `Hi, I am interested in "${property.title || "this property"}". Please share availability and viewing details.`;
+            const status = document.getElementById("bookMessageStatus");
+            status.style.display = "none";
+            bookModal.el.classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+        function closeBookModal() {
+            bookModal.el.classList.remove("open");
+            document.body.style.overflow = "";
+            bookModal.property = null;
+        }
+        async function sendBookingInquiry() {
+            const user = auth.currentUser;
+            if (!user) { window.location.href = "login.html"; return; }
+            const property = bookModal.property;
+            if (!property) return;
+            const message = document.getElementById("bookMessage").value.trim();
+            const status = document.getElementById("bookMessageStatus");
+            if (message.length < 5) {
+                status.style.display = "block"; status.style.background = "#fee2e2"; status.style.color = "#991b1b";
+                status.textContent = "Please enter a short message."; return;
+            }
+            const sendBtn = document.getElementById("bookSendInquiry");
+            sendBtn.disabled = true; sendBtn.textContent = "Sending...";
+            try {
+                await addDoc(collection(db, "inquiries"), {
+                    userId: user.uid,
+                    tenantName: user.displayName || user.email || "Student",
+                    tenantEmail: user.email || "",
+                    propertyId: property.id,
+                    propertyName: property.title || "",
+                    locationId: property.locationId || "",
+                    caretakerId: property.caretakerId || property.createdBy || null,
+                    message, status: "new", source: "book", createdAt: serverTimestamp()
+                });
+                status.style.display = "block"; status.style.background = "#dcfce7"; status.style.color = "#166534";
+                status.textContent = "Inquiry sent to the caretaker.";
+            } catch (error) {
+                console.error(error);
+                status.style.display = "block"; status.style.background = "#fee2e2"; status.style.color = "#991b1b";
+                status.textContent = "Could not send inquiry. Login may be required.";
+            } finally {
+                sendBtn.disabled = false; sendBtn.textContent = "Send inquiry";
+            }
+        }
 
-                    /*
-                     * The user is authenticated.
-                     * Stay on the dashboard with a data warning.
-                     */
-                    showAuthenticatedDataError(
-                        error
-                    );
-                }
+        propertyGrid.addEventListener("click", (event) => {
+            const bookTarget = event.target.closest("[data-book-property]");
+            if (!bookTarget) return;
+            const property = allProperties.find((item) => item.id === bookTarget.dataset.bookProperty);
+            openBookModal(property);
+        });
+        document.getElementById("bookModalClose").addEventListener("click", closeBookModal);
+        document.getElementById("bookModalCancel").addEventListener("click", closeBookModal);
+        document.getElementById("bookSendInquiry").addEventListener("click", sendBookingInquiry);
+        bookModal.el.addEventListener("click", (e) => { if (e.target === bookModal.el) closeBookModal(); });
+
+        const propertiesQuery = query(
+            collection(db, "properties"),
+            where("propertyType", "==", "student"),
+            where("status", "==", "published")
+        );
+
+        await loadLocations();
+
+        onSnapshot(
+            propertiesQuery,
+            (snapshot) => {
+                allProperties = snapshot.docs.map((propertyDocument) => ({
+                    id: propertyDocument.id,
+                    ...propertyDocument.data()
+                }));
+
+                loadingState.style.display = "none";
+                errorState.hidden = true;
+                filterAndDisplayProperties();
+            },
+            (error) => {
+                console.error("Could not load properties:", error);
+
+                loadingState.style.display = "none";
+                errorState.hidden = false;
+                resultCount.textContent = "Listings unavailable";
             }
         );
     </script>

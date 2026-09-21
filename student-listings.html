@@ -494,6 +494,232 @@
             background: var(--light-grey); font-size: 1.25rem; cursor: pointer;
         }
 
+
+        .property-image-wrapper {
+            cursor: pointer;
+        }
+
+        .property-image-wrapper:hover .property-image {
+            opacity: 0.92;
+        }
+
+        .property-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(17, 24, 39, 0.72);
+        }
+
+        .property-modal-overlay.open {
+            display: flex;
+        }
+
+        .property-modal {
+            width: min(920px, 100%);
+            max-height: min(92vh, 900px);
+            overflow: auto;
+            background: var(--white);
+            border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .property-modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .property-modal-header h2 {
+            font-size: 1.12rem;
+            color: var(--dark-charcoal);
+        }
+
+        .property-modal-header p {
+            margin-top: 4px;
+            color: var(--medium-grey);
+            font-size: 0.82rem;
+        }
+
+        .property-modal-body {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .gallery-pane {
+            padding: 14px;
+            background: #111827;
+        }
+
+        .gallery-main {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 240px;
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .gallery-main img {
+            width: 100%;
+            max-height: 340px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--dark-charcoal);
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-nav.prev { left: 10px; }
+        .gallery-nav.next { right: 10px; }
+        .gallery-nav:disabled { opacity: 0.35; cursor: default; }
+
+        .gallery-thumbs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .gallery-thumb {
+            width: 62px;
+            height: 46px;
+            padding: 0;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #1f2937;
+            cursor: pointer;
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-thumb.active {
+            border-color: var(--teal);
+        }
+
+        .gallery-counter {
+            margin-top: 8px;
+            color: #d1d5db;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .details-pane {
+            padding: 16px 18px 20px;
+        }
+
+        .details-pane .price-line {
+            margin-bottom: 10px;
+            color: var(--teal);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .details-pane .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+        .details-pane .description {
+            margin-bottom: 12px;
+            color: var(--charcoal);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .details-pane .detail-list {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .details-pane .detail-list div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.8rem;
+        }
+
+        .details-pane .detail-list span:first-child {
+            color: var(--medium-grey);
+        }
+
+        .details-pane .detail-list span:last-child {
+            color: var(--dark-charcoal);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .amenity-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .amenity-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 780px) {
+            .property-modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-main img {
+                max-height: 240px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .property-modal {
+                max-height: 96vh;
+                border-radius: 12px;
+            }
+        }
+
     </style>
 </head>
 
@@ -602,6 +828,41 @@
     </main>
 
     
+    
+    <div class="property-modal-overlay" id="propertyModal" aria-hidden="true">
+        <div class="property-modal" role="dialog" aria-modal="true" aria-labelledby="modalPropertyTitle">
+            <div class="property-modal-header">
+                <div>
+                    <h2 id="modalPropertyTitle">Boarding house</h2>
+                    <p id="modalPropertyLocation"></p>
+                </div>
+                <button class="modal-close-btn" id="modalCloseButton" type="button" aria-label="Close">×</button>
+            </div>
+            <div class="property-modal-body">
+                <div class="gallery-pane">
+                    <div class="gallery-main">
+                        <button class="gallery-nav prev" id="galleryPrev" type="button" aria-label="Previous photo">‹</button>
+                        <img id="galleryMainImage" src="" alt="Property photo">
+                        <button class="gallery-nav next" id="galleryNext" type="button" aria-label="Next photo">›</button>
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs"></div>
+                    <div class="gallery-counter" id="galleryCounter"></div>
+                </div>
+                <div class="details-pane">
+                    <div class="price-line" id="modalPrice"></div>
+                    <div class="meta-row" id="modalMeta"></div>
+                    <div class="amenity-icons" id="modalAmenities"></div>
+                    <p class="description" id="modalDescription"></p>
+                    <div class="detail-list" id="modalDetails"></div>
+                    <div class="modal-actions">
+                        <button class="button button-primary" id="modalBookButton" type="button">Book / Contact</button>
+                        <button class="button button-outline" id="modalCloseSecondary" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="book-modal-overlay" id="bookModal">
         <div class="book-modal" role="dialog" aria-modal="true">
             <div class="book-modal-header">
@@ -751,6 +1012,10 @@
         }
 
         function getAvailabilityLabel(property) {
+            if (property.spacesAvailable !== undefined && property.spacesAvailable !== null) {
+                return `${property.spacesAvailable} spaces`;
+            }
+
             if (property.availableRooms !== undefined && property.availableRooms !== null) {
                 return `${property.availableRooms} available`;
             }
@@ -759,7 +1024,157 @@
                 return `${property.availableUnits} available`;
             }
 
-            return "Availability on inquiry";
+            return "Spaces on inquiry";
+        }
+
+        function getPropertyImages(property) {
+            const urls = [];
+            if (Array.isArray(property.imageUrls)) {
+                property.imageUrls.forEach((url) => {
+                    if (url && !urls.includes(url)) urls.push(url);
+                });
+            }
+            if (property.imageUrl && !urls.includes(property.imageUrl)) {
+                urls.unshift(property.imageUrl);
+            }
+            if (urls.length === 0) {
+                urls.push("https://via.placeholder.com/800x500?text=Student+Accommodation");
+            }
+            return urls;
+        }
+
+        function getAmenityIcons(property) {
+            const amenities = Array.isArray(property.amenities) ? property.amenities : [];
+            const map = [
+                { keys: ["wifi", "wi-fi", "internet"], label: "Wi‑Fi", icon: "📶" },
+                { keys: ["water"], label: "Water", icon: "💧" },
+                { keys: ["zesco", "solar", "electricity", "power", "24/7"], label: "Power", icon: "⚡" },
+                { keys: ["security", "guard", "cctv"], label: "Security", icon: "🛡" },
+                { keys: ["parking"], label: "Parking", icon: "🚗" },
+                { keys: ["kitchen"], label: "Kitchen", icon: "🍳" },
+                { keys: ["laundry"], label: "Laundry", icon: "🧺" },
+                { keys: ["study"], label: "Study", icon: "📚" }
+            ];
+
+            const chips = [];
+            const lower = amenities.map((a) => String(a).toLowerCase());
+
+            map.forEach((item) => {
+                if (lower.some((a) => item.keys.some((k) => a.includes(k)))) {
+                    chips.push(
+                        `<span class="amenity-chip">${item.icon} ${item.label}</span>`
+                    );
+                }
+            });
+
+            return chips;
+        }
+
+        const propertyModal = {
+            el: document.getElementById("propertyModal"),
+            property: null,
+            images: [],
+            index: 0
+        };
+
+        function openPropertyModal(property) {
+            if (!property) return;
+
+            propertyModal.property = property;
+            propertyModal.images = getPropertyImages(property);
+            propertyModal.index = 0;
+
+            document.getElementById("modalPropertyTitle").textContent =
+                property.title || "Student boarding house";
+            document.getElementById("modalPropertyLocation").textContent =
+                getLocationLabel(property);
+
+            document.getElementById("modalPrice").textContent =
+                property.priceLabel ||
+                (typeof property.price === "number"
+                    ? `K${property.price.toLocaleString()} per month`
+                    : "Price on inquiry");
+
+            const meta = document.getElementById("modalMeta");
+            meta.innerHTML = "";
+            [
+                getAvailabilityLabel(property),
+                property.peoplePerRoom
+                    ? `${property.peoplePerRoom} people/room`
+                    : null,
+                property.condition ? String(property.condition) : null
+            ]
+                .filter(Boolean)
+                .forEach((label) => {
+                    const span = document.createElement("span");
+                    span.className = "meta-item";
+                    span.textContent = label;
+                    meta.appendChild(span);
+                });
+
+            document.getElementById("modalAmenities").innerHTML =
+                getAmenityIcons(property).join("") || "";
+
+            document.getElementById("modalDescription").textContent =
+                property.description || "Property details will be provided soon.";
+
+            const details = document.getElementById("modalDetails");
+            details.innerHTML = `
+                <div><span>Rating</span><span>★ ${Number(property.rating || 0).toFixed(1)} (${property.reviewCount || 0})</span></div>
+                <div><span>Address</span><span>${escapeHtml(property.address || "On inquiry")}</span></div>
+            `;
+
+            if (Array.isArray(property.amenities) && property.amenities.length) {
+                details.innerHTML += `<div><span>Amenities</span><span>${escapeHtml(property.amenities.join(", "))}</span></div>`;
+            }
+            if (property.rules) {
+                details.innerHTML += `<div><span>Rules</span><span>${escapeHtml(property.rules)}</span></div>`;
+            }
+
+            renderGallery();
+            propertyModal.el.classList.add("open");
+            propertyModal.el.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closePropertyModal() {
+            propertyModal.el.classList.remove("open");
+            propertyModal.el.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            propertyModal.property = null;
+        }
+
+        function renderGallery() {
+            const images = propertyModal.images;
+            const index = propertyModal.index;
+            const mainImage = document.getElementById("galleryMainImage");
+            const thumbs = document.getElementById("galleryThumbs");
+            const counter = document.getElementById("galleryCounter");
+            const prev = document.getElementById("galleryPrev");
+            const next = document.getElementById("galleryNext");
+
+            mainImage.src = images[index];
+            mainImage.alt = propertyModal.property?.title || "Property photo";
+            counter.textContent = `${index + 1} / ${images.length}`;
+            prev.disabled = images.length <= 1;
+            next.disabled = images.length <= 1;
+
+            thumbs.innerHTML = images
+                .map(
+                    (url, i) => `
+                        <button class="gallery-thumb ${i === index ? "active" : ""}" type="button" data-index="${i}" aria-label="Photo ${i + 1}">
+                            <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy">
+                        </button>
+                    `
+                )
+                .join("");
+        }
+
+        function shiftGallery(delta) {
+            const total = propertyModal.images.length;
+            if (total <= 1) return;
+            propertyModal.index = (propertyModal.index + delta + total) % total;
+            renderGallery();
         }
 
         function getLocationLabel(property) {
@@ -808,8 +1223,22 @@
                 const card = document.createElement("article");
                 card.className = "property-card";
 
+                const people = escapeHtml(
+                    property.peoplePerRoom
+                        ? `${property.peoplePerRoom}/room`
+                        : roomType
+                );
+                const spaces = escapeHtml(getAvailabilityLabel(property));
+                const amenityPreview = getAmenityIcons(property).slice(0, 5).join("");
+
                 card.innerHTML = `
-                    <div class="property-image-wrapper">
+                    <div
+                        class="property-image-wrapper"
+                        data-open-property="${propertyId}"
+                        role="button"
+                        tabindex="0"
+                        aria-label="View ${title}"
+                    >
                         <img
                             class="property-image"
                             src="${getImageUrl(property)}"
@@ -826,10 +1255,11 @@
                         <p class="property-description">${description}</p>
 
                         <div class="property-meta">
-                            <span class="meta-item">${roomType}</span>
+                            <span class="meta-item">${spaces}</span>
+                            <span class="meta-item">${people}</span>
                             <span class="meta-item">${condition}</span>
-                            <span class="meta-item">${availableRooms}</span>
                         </div>
+                        ${amenityPreview ? `<div class="amenity-icons">${amenityPreview}</div>` : ""}
 
                         <div class="property-bottom">
                             <div>
@@ -1036,9 +1466,47 @@
 
         propertyGrid.addEventListener("click", (event) => {
             const bookTarget = event.target.closest("[data-book-property]");
-            if (!bookTarget) return;
-            const property = allProperties.find((item) => item.id === bookTarget.dataset.bookProperty);
-            openBookModal(property);
+            if (bookTarget) {
+                const property = allProperties.find(
+                    (item) => item.id === bookTarget.dataset.bookProperty
+                );
+                openBookModal(property);
+                return;
+            }
+
+            const openTarget = event.target.closest("[data-open-property]");
+            if (openTarget) {
+                const property = allProperties.find(
+                    (item) => item.id === openTarget.dataset.openProperty
+                );
+                openPropertyModal(property);
+            }
+        });
+
+        document.getElementById("modalCloseButton").addEventListener("click", closePropertyModal);
+        document.getElementById("modalCloseSecondary").addEventListener("click", closePropertyModal);
+        document.getElementById("galleryPrev").addEventListener("click", () => shiftGallery(-1));
+        document.getElementById("galleryNext").addEventListener("click", () => shiftGallery(1));
+        document.getElementById("galleryThumbs").addEventListener("click", (event) => {
+            const thumb = event.target.closest("[data-index]");
+            if (!thumb) return;
+            propertyModal.index = Number(thumb.dataset.index);
+            renderGallery();
+        });
+        document.getElementById("modalBookButton").addEventListener("click", () => {
+            if (propertyModal.property) {
+                closePropertyModal();
+                openBookModal(propertyModal.property);
+            }
+        });
+        propertyModal.el.addEventListener("click", (event) => {
+            if (event.target === propertyModal.el) closePropertyModal();
+        });
+        document.addEventListener("keydown", (event) => {
+            if (!propertyModal.el.classList.contains("open")) return;
+            if (event.key === "Escape") closePropertyModal();
+            else if (event.key === "ArrowLeft") shiftGallery(-1);
+            else if (event.key === "ArrowRight") shiftGallery(1);
         });
         document.getElementById("bookModalClose").addEventListener("click", closeBookModal);
         document.getElementById("bookModalCancel").addEventListener("click", closeBookModal);

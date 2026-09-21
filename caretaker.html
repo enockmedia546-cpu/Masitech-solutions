@@ -38,44 +38,15 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        body.auth-pending .app-layout {
-            visibility: hidden;
+        /* Instant open when role matches — no full-page "checking access" */
+        body.auth-pending .page-container {
+            opacity: 0.55;
             pointer-events: none;
         }
 
-        body.auth-ready .app-layout {
-            visibility: visible;
+        body.auth-ready .page-container {
+            opacity: 1;
             pointer-events: auto;
-        }
-
-        .auth-gate {
-            position: fixed;
-            inset: 0;
-            z-index: 5000;
-            display: grid;
-            place-items: center;
-            padding: 24px;
-            background: var(--light-grey);
-        }
-
-        body.auth-ready .auth-gate {
-            display: none;
-        }
-
-        .auth-gate-card {
-            max-width: 420px;
-            width: 100%;
-            padding: 28px;
-            text-align: center;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .auth-gate-card p {
-            color: var(--medium-grey);
-            font-size: 0.92rem;
         }
 
         .notification-button svg {
@@ -348,32 +319,8 @@
             padding: 30px;
         }
 
-        .loading-screen,
-        .access-denied {
-            min-height: 70vh;
-            display: grid;
-            place-items: center;
-            padding: 30px;
-            text-align: center;
-        }
+        /* full-page loading/access states removed */
 
-        .access-card {
-            max-width: 500px;
-            padding: 34px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 13px;
-            box-shadow: var(--shadow);
-        }
-
-        .access-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .access-card p {
-            margin-bottom: 20px;
-            color: var(--medium-grey);
-        }
 
         .dashboard-section {
             display: none;
@@ -1274,6 +1221,51 @@
                 display: none;
             }
         }
+
+        .field-student-only.hidden-field,
+        .field-apartment-only.hidden-field {
+            display: none !important;
+        }
+
+        .edit-banner {
+            display: none;
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            color: #1d4ed8;
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .edit-banner.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .property-actions {
+                flex-direction: column;
+            }
+
+            .property-actions .small-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: min(100%, 280px);
+            }
+        }
+
     </style>
 </head>
 
@@ -1667,7 +1659,9 @@
                                 role="alert"
                             ></div>
 
+                            <div class="edit-banner" id="editBanner">Editing existing listing. Save to update.</div>
                             <form id="propertyForm">
+                            <input type="hidden" id="editingPropertyId" value="">
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label for="propertyTitle">
@@ -1771,20 +1765,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="roomOrUnitType">
-                                            Room or unit type
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="roomOrUnitType"
-                                            type="text"
-                                            placeholder="Single room or two-bedroom apartment"
-                                            required
-                                        >
-                                    </div>
-
-                                    <div class="form-group">
                                         <label for="propertyCondition">
                                             Condition
                                         </label>
@@ -1807,11 +1787,56 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="totalUnits">
-                                            Total rooms or units
+                                    <!-- Student boarding: spaces + people per room -->
+                                    <div class="form-group field-student-only">
+                                        <label for="spacesAvailable">
+                                            Spaces available
                                         </label>
+                                        <input
+                                            class="form-input"
+                                            id="spacesAvailable"
+                                            type="number"
+                                            min="0"
+                                            step="1"
+                                            placeholder="e.g. 6"
+                                        >
+                                        <span class="form-help">
+                                            How many bed spaces are free for students
+                                        </span>
+                                    </div>
 
+                                    <div class="form-group field-student-only">
+                                        <label for="peoplePerRoom">
+                                            People per room
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            id="peoplePerRoom"
+                                            type="text"
+                                            placeholder="e.g. 2 or 4/room"
+                                        >
+                                        <span class="form-help">
+                                            Occupancy per room (not room type name)
+                                        </span>
+                                    </div>
+
+                                    <!-- Apartment: unit type + totals -->
+                                    <div class="form-group field-apartment-only hidden-field">
+                                        <label for="roomOrUnitType">
+                                            Unit type
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            id="roomOrUnitType"
+                                            type="text"
+                                            placeholder="e.g. 2-bedroom apartment"
+                                        >
+                                    </div>
+
+                                    <div class="form-group field-apartment-only hidden-field">
+                                        <label for="totalUnits">
+                                            Total units
+                                        </label>
                                         <input
                                             class="form-input"
                                             id="totalUnits"
@@ -1819,15 +1844,13 @@
                                             min="1"
                                             step="1"
                                             placeholder="0"
-                                            required
                                         >
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group field-apartment-only hidden-field">
                                         <label for="availableUnits">
-                                            Available rooms or units
+                                            Available units
                                         </label>
-
                                         <input
                                             class="form-input"
                                             id="availableUnits"
@@ -1835,7 +1858,6 @@
                                             min="0"
                                             step="1"
                                             placeholder="0"
-                                            required
                                         >
                                     </div>
 
@@ -2011,6 +2033,15 @@
                                     <div class="form-actions">
                                         <button
                                             class="button button-outline"
+                                            id="cancelEditButton"
+                                            type="button"
+                                            hidden
+                                        >
+                                            Cancel edit
+                                        </button>
+
+                                        <button
+                                            class="button button-outline"
                                             id="saveDraftButton"
                                             type="button"
                                         >
@@ -2022,7 +2053,7 @@
                                             id="submitPropertyButton"
                                             type="submit"
                                         >
-                                            Submit for approval
+                                            Publish listing
                                         </button>
                                     </div>
                                 </div>
@@ -2695,12 +2726,6 @@
         function showCaretakerApp() {
             document.body.classList.remove("auth-pending");
             document.body.classList.add("auth-ready");
-
-            const layout = document.getElementById("appLayout");
-            if (layout) layout.hidden = false;
-
-            const app = document.getElementById("caretakerApp");
-            if (app) app.hidden = false;
         }
 
         function showAccessDenied(message) {
@@ -3764,11 +3789,11 @@
             );
 
             const totalUnits = Number(
-                document.getElementById("totalUnits").value
+                document.getElementById("totalUnits").value || 0
             );
 
             const availableUnits = Number(
-                document.getElementById("availableUnits").value
+                document.getElementById("availableUnits").value || 0
             );
 
             const facilityAmenities = Array.from(
@@ -3828,20 +3853,26 @@
                     .getElementById("propertyPriceLabel")
                     .value
                     .trim(),
-                roomType:
-                    propertyType === "student"
-                        ? document.getElementById("roomOrUnitType").value.trim()
-                        : null,
+                roomType: null,
                 unitType:
                     propertyType === "apartment"
                         ? document.getElementById("roomOrUnitType").value.trim()
                         : null,
                 condition:
                     document.getElementById("propertyCondition").value,
-                totalRooms:
-                    propertyType === "student" ? totalUnits : null,
+                spacesAvailable:
+                    propertyType === "student"
+                        ? Number(document.getElementById("spacesAvailable").value || 0)
+                        : null,
+                peoplePerRoom:
+                    propertyType === "student"
+                        ? document.getElementById("peoplePerRoom").value.trim()
+                        : null,
+                totalRooms: null,
                 availableRooms:
-                    propertyType === "student" ? availableUnits : null,
+                    propertyType === "student"
+                        ? Number(document.getElementById("spacesAvailable").value || 0)
+                        : null,
                 totalUnits:
                     propertyType === "apartment" ? totalUnits : null,
                 availableUnits:
@@ -3885,12 +3916,16 @@
                 return "You can only create properties in assigned locations.";
             }
 
-            if (data.totalRooms < data.availableRooms) {
-                return "Available rooms cannot exceed total rooms.";
+            if (data.propertyType === "apartment") {
+                if (data.totalUnits < data.availableUnits) {
+                    return "Available units cannot exceed total units.";
+                }
             }
 
-            if (data.totalUnits < data.availableUnits) {
-                return "Available units cannot exceed total units.";
+            if (data.propertyType === "student") {
+                if (data.spacesAvailable === null || data.spacesAvailable < 0) {
+                    return "Enter how many spaces are available.";
+                }
             }
 
             if (data.price < 0) {
@@ -3900,13 +3935,77 @@
             return "";
         }
 
+        function syncPropertyTypeFields() {
+            const type = document.getElementById("propertyType").value;
+            document.querySelectorAll(".field-student-only").forEach((el) => {
+                el.classList.toggle("hidden-field", type === "apartment");
+            });
+            document.querySelectorAll(".field-apartment-only").forEach((el) => {
+                el.classList.toggle("hidden-field", type !== "apartment");
+            });
+        }
+
+        function resetPropertyForm() {
+            document.getElementById("propertyForm").reset();
+            document.getElementById("editingPropertyId").value = "";
+            document.getElementById("imagePreviewGrid").innerHTML = "";
+            document.getElementById("editBanner").classList.remove("show");
+            document.getElementById("cancelEditButton").hidden = true;
+            document.getElementById("submitPropertyButton").textContent =
+                "Publish listing";
+            syncPropertyTypeFields();
+        }
+
+        function fillPropertyForm(property) {
+            document.getElementById("editingPropertyId").value = property.id;
+            document.getElementById("propertyTitle").value = property.title || "";
+            document.getElementById("propertyType").value = property.propertyType || "";
+            syncPropertyTypeFields();
+            document.getElementById("propertyLocation").value = property.locationId || "";
+            document.getElementById("propertyAddress").value = property.address || "";
+            document.getElementById("propertyPrice").value = property.price ?? "";
+            document.getElementById("propertyPriceLabel").value = property.priceLabel || "";
+            document.getElementById("propertyCondition").value = property.condition || "";
+            document.getElementById("spacesAvailable").value =
+                property.spacesAvailable ?? property.availableRooms ?? "";
+            document.getElementById("peoplePerRoom").value = property.peoplePerRoom || "";
+            document.getElementById("roomOrUnitType").value = property.unitType || "";
+            document.getElementById("totalUnits").value = property.totalUnits ?? "";
+            document.getElementById("availableUnits").value = property.availableUnits ?? "";
+            document.getElementById("propertyDescription").value = property.description || "";
+            document.getElementById("propertyRules").value = property.rules || "";
+            document.getElementById("securityType").value = property.securityType || "";
+
+            document.querySelectorAll('input[name="amenity"]').forEach((input) => {
+                input.checked = Array.isArray(property.amenities) &&
+                    property.amenities.includes(input.value);
+            });
+
+            const sources = property.electricitySources || [];
+            document.getElementById("powerZesco").checked = sources.includes("ZESCO");
+            document.getElementById("powerSolar").checked = sources.includes("Solar");
+            document.getElementById("power24_7").checked = Boolean(property.power24_7);
+
+            document.getElementById("editBanner").classList.add("show");
+            document.getElementById("cancelEditButton").hidden = false;
+            document.getElementById("submitPropertyButton").textContent =
+                "Save changes";
+            document.getElementById("imagePreviewGrid").innerHTML = `
+                <p class="form-help">
+                    Existing photos stay unless you choose new images below.
+                </p>
+            `;
+        }
+
         async function saveProperty(status) {
             const propertyMessage =
                 document.getElementById("propertyMessage");
 
             hideMessage(propertyMessage);
 
-            const data = getPropertyFormData(status);
+            // Published immediately — no admin approval step
+            const finalStatus = status === "draft" ? "draft" : "published";
+            const data = getPropertyFormData(finalStatus);
             const validationError = validatePropertyData(data);
 
             if (validationError) {
@@ -3919,35 +4018,58 @@
                     ? document.getElementById("saveDraftButton")
                     : document.getElementById("submitPropertyButton");
 
+            const editingId = document.getElementById("editingPropertyId").value;
             saveButton.disabled = true;
             saveButton.textContent =
-                status === "draft" ? "Saving..." : "Submitting...";
+                status === "draft"
+                    ? "Saving..."
+                    : editingId
+                        ? "Updating..."
+                        : "Publishing...";
 
             try {
-                const uploadedImages = await uploadSelectedImages();
-
-                data.imageUrl = uploadedImages[0]?.secureUrl || null;
-                data.imageUrls = uploadedImages.map(
-                    (image) => image.secureUrl
-                );
-                data.cloudinaryPublicIds = uploadedImages.map(
-                    (image) => image.publicId
-                );
-                data.createdAt = serverTimestamp();
-
-                await addDoc(collection(db, "properties"), data);
-
-                showMessage(
-                    propertyMessage,
-                    status === "draft"
-                        ? "The property draft was saved."
-                        : "The property was submitted for administrator approval.",
-                    "success"
+                const files = Array.from(
+                    document.getElementById("propertyImages").files || []
                 );
 
-                document.getElementById("propertyForm").reset();
-                document.getElementById("imagePreviewGrid").innerHTML = "";
+                if (files.length > 0) {
+                    const uploadedImages = await uploadSelectedImages();
+                    data.imageUrl = uploadedImages[0]?.secureUrl || null;
+                    data.imageUrls = uploadedImages.map((image) => image.secureUrl);
+                    data.cloudinaryPublicIds = uploadedImages.map(
+                        (image) => image.publicId
+                    );
+                }
 
+                if (editingId) {
+                    if (!files.length) {
+                        // keep existing images — do not overwrite with null
+                        delete data.imageUrl;
+                        delete data.imageUrls;
+                        delete data.cloudinaryPublicIds;
+                    }
+                    await updateDoc(doc(db, "properties", editingId), data);
+                    showMessage(
+                        propertyMessage,
+                        "Listing updated and live.",
+                        "success"
+                    );
+                } else {
+                    if (!data.imageUrl && (!data.imageUrls || !data.imageUrls.length)) {
+                        // allow publish without image but warn
+                    }
+                    data.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "properties"), data);
+                    showMessage(
+                        propertyMessage,
+                        finalStatus === "draft"
+                            ? "Draft saved."
+                            : "Listing published. It is now visible on public pages.",
+                        "success"
+                    );
+                }
+
+                resetPropertyForm();
                 await loadCaretakerData();
                 openSection("properties");
             } catch (error) {
@@ -3964,7 +4086,9 @@
                 saveButton.textContent =
                     status === "draft"
                         ? "Save draft"
-                        : "Submit for approval";
+                        : document.getElementById("editingPropertyId").value
+                            ? "Save changes"
+                            : "Publish listing";
             }
         }
 
@@ -4402,6 +4526,7 @@
 
         renderTemplateList("description");
         renderTemplateList("rules");
+        syncPropertyTypeFields();
 
         document
             .getElementById("saveDescriptionTemplate")
@@ -4468,6 +4593,17 @@
             .addEventListener("change", previewSelectedImages);
 
         document
+            .getElementById("propertyType")
+            .addEventListener("change", syncPropertyTypeFields);
+
+        document
+            .getElementById("cancelEditButton")
+            .addEventListener("click", () => {
+                resetPropertyForm();
+                showToast("Edit cancelled.");
+            });
+
+        document
             .getElementById("saveDraftButton")
             .addEventListener("click", () => saveProperty("draft"));
 
@@ -4514,9 +4650,10 @@
                 }
 
                 if (action === "edit") {
-                    showToast(
-                        `${property?.title || "Property"} editing will be connected to the property editor next.`
-                    );
+                    if (!property) return;
+                    fillPropertyForm(property);
+                    openSection("add-property");
+                    showToast("Edit the listing and click Save changes.");
                     return;
                 }
 

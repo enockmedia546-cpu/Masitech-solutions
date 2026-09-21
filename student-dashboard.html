@@ -555,17 +555,73 @@
         }
 
         .property-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 19px;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 16px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .property-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .property-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
         }
 
         .property-card {
+            flex: 0 0 min(300px, 82vw);
+            max-width: 320px;
             overflow: hidden;
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: 10px;
             box-shadow: 0 4px 13px rgba(31, 41, 55, 0.04);
+            scroll-snap-align: start;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .star-btn {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #d1d5db;
+            font-size: 1.15rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .star-btn.active,
+        .star-btn:hover {
+            color: var(--amber);
+        }
+
+        .property-grid .empty-state {
+            flex: 1 1 100%;
+            min-width: 100%;
+        }
+
+        .rating-submit {
+            min-height: 28px;
+            padding: 0 8px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: #fffbeb;
+            color: #92400e;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
         }
 
         .property-image-wrapper {
@@ -924,8 +980,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .property-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .property-card {
+                flex-basis: min(280px, 78vw);
             }
         }
 
@@ -958,9 +1014,12 @@
 
         @media (max-width: 620px) {
             .stats-grid,
-            .property-grid,
             .profile-form-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .property-card {
+                flex-basis: min(260px, 85vw);
             }
 
             .form-group.full-width,
@@ -1280,20 +1339,20 @@
 
                 <button
                     class="nav-item active"
-                    data-section="dashboard"
-                    type="button"
-                >
-                    <span class="nav-icon">▦</span>
-                    <span>Overview</span>
-                </button>
-
-                <button
-                    class="nav-item"
                     data-section="listings"
                     type="button"
                 >
                     <span class="nav-icon">⌂</span>
                     <span>Student housing</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="dashboard"
+                    type="button"
+                >
+                    <span class="nav-icon">▦</span>
+                    <span>Overview</span>
                 </button>
 
                 <button
@@ -1383,7 +1442,7 @@
                     </button>
 
                     <div class="page-heading">
-                        <h1 id="pageTitle">Student overview</h1>
+                        <h1 id="pageTitle">Student housing</h1>
                         <p id="pageSubtitle">
                             Find accommodation near your selected location
                         </p>
@@ -1419,7 +1478,7 @@
             <main class="page-container">
                 <div id="studentApp">
                     <section
-                        class="dashboard-section active"
+                        class="dashboard-section"
                         id="section-dashboard"
                     >
                         <div class="section-heading">
@@ -1591,7 +1650,7 @@
                     </section>
 
                     <section
-                        class="dashboard-section"
+                        class="dashboard-section active"
                         id="section-listings"
                     >
                         <div class="section-heading">
@@ -1928,6 +1987,17 @@
                     <div class="meta-row" id="modalMeta"></div>
                     <p class="description" id="modalDescription"></p>
                     <div class="detail-list" id="modalDetails"></div>
+                    <div class="rating-row" id="modalRatingRow">
+                        <span style="font-size:0.78rem;font-weight:700;color:var(--charcoal)">Rate this place</span>
+                        <div id="modalRateStars" aria-label="Star rating">
+                            <button class="star-btn" type="button" data-star="1">★</button>
+                            <button class="star-btn" type="button" data-star="2">★</button>
+                            <button class="star-btn" type="button" data-star="3">★</button>
+                            <button class="star-btn" type="button" data-star="4">★</button>
+                            <button class="star-btn" type="button" data-star="5">★</button>
+                        </div>
+                        <button class="rating-submit" id="modalSubmitRating" type="button">Submit rating</button>
+                    </div>
                     <div class="modal-actions">
                         <button class="button button-primary" id="modalBookButton" type="button">Book / Contact</button>
                         <button class="button button-outline" id="modalSaveButton" type="button">Save</button>
@@ -2308,6 +2378,16 @@
 
             document.getElementById("modalFullLink").href =
                 "student-listings.html";
+
+            selectedRating = 0;
+            paintStars(document.getElementById("modalRateStars"), 0);
+            const mine = state.reviews.find(
+                (r) => r.propertyId === property.id
+            );
+            if (mine) {
+                selectedRating = Number(mine.rating || 0);
+                paintStars(document.getElementById("modalRateStars"), selectedRating);
+            }
 
             renderGallery();
             propertyModal.el.classList.add("open");
@@ -3906,6 +3986,105 @@
             }
         }
 
+
+        let selectedRating = 0;
+
+        function paintStars(container, value) {
+            if (!container) return;
+            container.querySelectorAll("[data-star]").forEach((btn) => {
+                const star = Number(btn.dataset.star);
+                btn.classList.toggle("active", star <= value);
+            });
+        }
+
+        async function submitPropertyRating(propertyId, rating) {
+            if (!state.user) {
+                window.location.href = "login.html";
+                return;
+            }
+            if (!propertyId || rating < 1 || rating > 5) {
+                showToast("Choose a rating from 1 to 5 stars.", true);
+                return;
+            }
+
+            const property = state.properties.find((p) => p.id === propertyId);
+            if (!property) return;
+
+            try {
+                const reviewId = `${state.user.uid}_${propertyId}`;
+                await setDoc(
+                    doc(db, "reviews", reviewId),
+                    {
+                        userId: state.user.uid,
+                        reviewerName:
+                            state.profile?.fullName ||
+                            state.user.displayName ||
+                            state.user.email ||
+                            "Student",
+                        propertyId,
+                        targetName: property.title || "",
+                        propertyName: property.title || "",
+                        locationId: property.locationId || "",
+                        caretakerId: property.caretakerId || property.createdBy || null,
+                        rating,
+                        comment: "",
+                        reviewType: "property",
+                        status: "published",
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    },
+                    { merge: true }
+                );
+
+                // optimistic local average update
+                const existing = state.reviews.find(
+                    (r) => r.propertyId === propertyId || r.id === reviewId
+                );
+                if (existing) {
+                    existing.rating = rating;
+                } else {
+                    state.reviews.push({
+                        id: reviewId,
+                        propertyId,
+                        rating,
+                        targetName: property.title || "",
+                        createdAt: new Date()
+                    });
+                }
+
+                const propertyReviews = state.reviews.filter(
+                    (r) => r.propertyId === propertyId
+                );
+                const avg =
+                    propertyReviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) /
+                    Math.max(propertyReviews.length, 1);
+
+                property.rating = avg;
+                property.reviewCount = propertyReviews.length;
+
+                try {
+                    await updateDoc(doc(db, "properties", propertyId), {
+                        rating: avg,
+                        reviewCount: propertyReviews.length,
+                        updatedAt: serverTimestamp()
+                    });
+                } catch (_) {
+                    /* optional aggregate write may be restricted by rules */
+                }
+
+                showToast(`Thanks! You rated this ${rating} star${rating > 1 ? "s" : ""}.`);
+                renderAll();
+            } catch (error) {
+                console.error("Rating error:", error);
+                showToast(
+                    error?.code === "permission-denied"
+                        ? "Could not save rating. Check Firestore rules for reviews."
+                        : "Could not submit rating.",
+                    true
+                );
+            }
+        }
+
         async function handlePropertyGridClick(event) {
             const openTarget = event.target.closest(
                 "[data-open-property]"
@@ -4002,6 +4181,25 @@
                 closePropertyModal();
             }
         });
+
+        selectedRating = 0;
+        const rateStars = document.getElementById("modalRateStars");
+        if (rateStars) {
+            rateStars.addEventListener("click", (event) => {
+                const btn = event.target.closest("[data-star]");
+                if (!btn) return;
+                selectedRating = Number(btn.dataset.star);
+                paintStars(rateStars, selectedRating);
+            });
+        }
+        const submitRatingBtn = document.getElementById("modalSubmitRating");
+        if (submitRatingBtn) {
+            submitRatingBtn.addEventListener("click", async () => {
+                if (!propertyModal.property) return;
+                await submitPropertyRating(propertyModal.property.id, selectedRating);
+            });
+        }
+
 
         document.addEventListener("keydown", (event) => {
             if (!propertyModal.el.classList.contains("open")) {
@@ -4141,6 +4339,7 @@
 
                 try {
                     await loadStudentData(user);
+                    openSection("listings");
                 } catch (error) {
                     console.error(
                         "Student dashboard data error:",

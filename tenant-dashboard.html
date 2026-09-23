@@ -1103,20 +1103,20 @@
 
                 <button
                     class="nav-item active"
-                    data-section="dashboard"
-                    type="button"
-                >
-                    <span class="nav-icon">▦</span>
-                    <span>Overview</span>
-                </button>
-
-                <button
-                    class="nav-item"
                     data-section="listings"
                     type="button"
                 >
                     <span class="nav-icon">⌂</span>
                     <span>Apartments</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="dashboard"
+                    type="button"
+                >
+                    <span class="nav-icon">▦</span>
+                    <span>Overview</span>
                 </button>
 
                 <button
@@ -1204,9 +1204,9 @@
                     </button>
 
                     <div class="page-heading">
-                        <h1 id="pageTitle">Tenant overview</h1>
+                        <h1 id="pageTitle">Apartments</h1>
                         <p id="pageSubtitle">
-                            Find apartments in your preferred location
+                            Browse published apartments in your location
                         </p>
                     </div>
                 </div>
@@ -1240,7 +1240,7 @@
             <main class="page-container">
                 <div id="tenantApp">
                     <section
-                        class="dashboard-section active"
+                        class="dashboard-section"
                         id="section-dashboard"
                     >
                         <div class="section-heading">
@@ -1324,7 +1324,7 @@
                                 </div>
 
                                 <div class="stat-note">
-                                    Requests sent to caretakers
+                                    Requests sent to property managers
                                 </div>
                             </article>
 
@@ -1388,7 +1388,7 @@
                     </section>
 
                     <section
-                        class="dashboard-section"
+                        class="dashboard-section active"
                         id="section-listings"
                     >
                         <div class="section-heading">
@@ -1493,7 +1493,7 @@
                             <div>
                                 <h2>My inquiries</h2>
                                 <p>
-                                    Track questions and requests sent to caretakers.
+                                    Track questions and requests sent to property managers.
                                 </p>
                             </div>
                         </div>
@@ -1656,6 +1656,20 @@
                                     </div>
 
                                     <div class="form-group full-width">
+                                        <label for="profileTenancyType">
+                                            Tenancy type
+                                        </label>
+                                        <select
+                                            class="form-select"
+                                            id="profileTenancyType"
+                                        >
+                                            <option value="">Select type</option>
+                                            <option value="permanent">Permanent renting</option>
+                                            <option value="transit">Transit renting</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="profileLocation">
                                             Preferred location
                                         </label>
@@ -1756,7 +1770,7 @@
             </div>
             <div class="book-modal-body">
                 <div class="contact-block">
-                    <strong id="bookContactName">Caretaker</strong>
+                    <strong id="bookContactName">Property manager</strong>
                     <div><span id="bookContactPhone">Phone not provided</span></div>
                     <div class="contact-actions">
                         <a class="button button-outline" id="bookCallLink" href="#" style="display:none">Call</a>
@@ -1843,7 +1857,7 @@
 
             inquiries: [
                 "My inquiries",
-                "Track questions sent to caretakers"
+                "Track questions sent to property managers"
             ],
 
             reviews: [
@@ -2322,21 +2336,36 @@
                             return false;
                         }
 
+                        // Only messages intended for tenants
                         const audience = String(
                             announcement.audienceType ||
                                 announcement.audience ||
-                                "everyone"
+                                ""
                         ).toLowerCase();
 
-                        return (
-                            audience === "everyone" ||
-                            audience === "all" ||
+                        if (
                             audience === "tenants" ||
-                            audience === "tenant" ||
-                            (locationId &&
-                                announcement.locationId ===
-                                    locationId)
-                        );
+                            audience === "tenant"
+                        ) {
+                            return true;
+                        }
+
+                        if (
+                            announcement.createdFor === user.uid
+                        ) {
+                            return true;
+                        }
+
+                        if (
+                            locationId &&
+                            announcement.locationId === locationId &&
+                            (audience === "location" ||
+                                audience === "locations")
+                        ) {
+                            return true;
+                        }
+
+                        return false;
                     }
                 );
             } catch (error) {
@@ -2350,6 +2379,7 @@
 
             renderAll();
             showTenantApp();
+            openSection("listings");
         }
 
         function setIdentity() {
@@ -2393,6 +2423,15 @@
 
             document.getElementById("profileLocation").value =
                 state.profile.locationId || "";
+
+            const tenancyEl = document.getElementById("profileTenancyType");
+            if (tenancyEl) {
+                tenancyEl.value =
+                    state.profile.tenancyType === "permanent" ||
+                    state.profile.tenancyType === "transit"
+                        ? state.profile.tenancyType
+                        : "";
+            }
         }
 
         function renderAll() {
@@ -3017,6 +3056,9 @@
             const locationId =
                 document.getElementById("profileLocation").value;
 
+            const tenancyType =
+                document.getElementById("profileTenancyType")?.value || "";
+
             if (fullName.length < 2 || !locationId) {
                 showMessage(
                     profileMessage,
@@ -3024,6 +3066,15 @@
                     "error"
                 );
 
+                return;
+            }
+
+            if (tenancyType && !["permanent", "transit"].includes(tenancyType)) {
+                showMessage(
+                    profileMessage,
+                    "Choose permanent or transit renting.",
+                    "error"
+                );
                 return;
             }
 
@@ -3042,6 +3093,7 @@
                         role: "tenant",
                         accountStatus: "active",
                         locationId,
+                        tenancyType: tenancyType || null,
                         updatedAt: serverTimestamp()
                     },
                     {
@@ -3055,6 +3107,7 @@
                     fullName,
                     phone,
                     locationId,
+                    tenancyType: tenancyType || null,
                     role: "tenant",
                     accountStatus: "active"
                 };
@@ -3074,7 +3127,7 @@
 
                 showMessage(
                     profileMessage,
-                    "Your profile could not be updated. Check your Firestore rules.",
+                    "Your profile could not be updated. Please try again.",
                     "error"
                 );
             }
@@ -3169,10 +3222,10 @@
                 return;
             }
             bookModal.property = property;
-            document.getElementById("bookModalTitle").textContent = "Book / Contact caretaker";
+            document.getElementById("bookModalTitle").textContent = "Book / Contact property manager";
             document.getElementById("bookModalProperty").textContent =
                 property.title || "Private apartment";
-            const name = property.contactName || property.createdByName || "Caretaker / Landlord";
+            const name = property.contactName || property.createdByName || "Property manager";
             const phone = property.contactPhone || property.contactWhatsApp || property.caretakerPhone || "";
             document.getElementById("bookContactName").textContent = name;
             document.getElementById("bookContactPhone").textContent = phone || "Phone not provided yet";
@@ -3238,8 +3291,8 @@
                     createdAt: serverTimestamp()
                 });
                 status.className = "message success";
-                status.textContent = "Inquiry sent. The caretaker can reply from their dashboard.";
-                showToast("Inquiry sent to the caretaker.");
+                status.textContent = "Inquiry sent. The property manager can reply from their dashboard.";
+                showToast("Inquiry sent to the property manager.");
             } catch (error) {
                 console.error("Inquiry error:", error);
                 status.className = "message error";

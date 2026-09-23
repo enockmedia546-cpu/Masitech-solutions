@@ -795,6 +795,11 @@
             background: #e5e7eb;
         }
 
+        .badge-blue {
+            color: #1d4ed8;
+            background: #dbeafe;
+        }
+
         .form-panel {
             max-width: 900px;
             padding: 23px;
@@ -1276,7 +1281,7 @@
                 <img src="logo.jpg" alt="Masitech Solutions logo">
 
                 <div class="sidebar-brand">
-                    Masitech Caretaker
+                    Masitech Property Manager
                     <small>Location workspace</small>
                 </div>
             </div>
@@ -1318,6 +1323,15 @@
                 >
                     <span class="nav-icon">✉</span>
                     <span>Inquiries</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="tenants"
+                    type="button"
+                >
+                    <span class="nav-icon">♟</span>
+                    <span>My tenants</span>
                 </button>
 
                 <button
@@ -1665,14 +1679,14 @@
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label for="propertyTitle">
-                                            Property name
+                                            Property name or room name
                                         </label>
 
                                         <input
                                             class="form-input"
                                             id="propertyTitle"
                                             type="text"
-                                            placeholder="Example: Green View House"
+                                            placeholder="Example: Green View House / Room 3"
                                             required
                                         >
                                     </div>
@@ -1737,7 +1751,7 @@
 
                                     <div class="form-group">
                                         <label for="propertyPrice">
-                                            Monthly price
+                                            Monthly price (amount only)
                                         </label>
 
                                         <input
@@ -1746,22 +1760,12 @@
                                             type="number"
                                             min="0"
                                             step="0.01"
-                                            placeholder="0"
+                                            placeholder="e.g. 850"
                                             required
                                         >
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="propertyPriceLabel">
-                                            Price display label
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="propertyPriceLabel"
-                                            type="text"
-                                            placeholder="Example: K850 per month"
-                                        >
+                                        <span class="form-help">
+                                            Type the figure only. Display will show “K… per month” automatically.
+                                        </span>
                                     </div>
 
                                     <div class="form-group">
@@ -1833,33 +1837,6 @@
                                         >
                                     </div>
 
-                                    <div class="form-group field-apartment-only hidden-field">
-                                        <label for="totalUnits">
-                                            Total units
-                                        </label>
-                                        <input
-                                            class="form-input"
-                                            id="totalUnits"
-                                            type="number"
-                                            min="1"
-                                            step="1"
-                                            placeholder="0"
-                                        >
-                                    </div>
-
-                                    <div class="form-group field-apartment-only hidden-field">
-                                        <label for="availableUnits">
-                                            Available units
-                                        </label>
-                                        <input
-                                            class="form-input"
-                                            id="availableUnits"
-                                            type="number"
-                                            min="0"
-                                            step="1"
-                                            placeholder="0"
-                                        >
-                                    </div>
 
                                     <div class="form-group full-width">
                                         <label>Amenities</label>
@@ -2117,7 +2094,7 @@
 
                     <section
                         class="dashboard-section"
-                        id="section-reviews"
+                        PLACEHOLDER_REVIEWS_ID
                     >
                         <div class="section-heading">
                             <div>
@@ -2387,7 +2364,131 @@
                         </div>
                     </section>
 
-                    <section
+                    
+                    <section class="dashboard-section" id="section-tenants">
+                        <div class="section-heading">
+                            <div>
+                                <h2>My tenants</h2>
+                                <p>
+                                    Manage permanent and transit tenants — room, due dates, balances and payments.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-panel" style="max-width:100%;margin-bottom:20px">
+                            <div class="message" id="tenantMessage" role="alert"></div>
+                            <form id="tenantForm">
+                                <input type="hidden" id="editingTenantId" value="">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="tenantFullName">Tenant full name</label>
+                                        <input class="form-input" id="tenantFullName" type="text" required placeholder="Full name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPhone">Phone / WhatsApp</label>
+                                        <input class="form-input" id="tenantPhone" type="tel" placeholder="+260...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantEmail">Email</label>
+                                        <input class="form-input" id="tenantEmail" type="email" placeholder="optional">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantTenancyType">Tenancy type</label>
+                                        <select class="form-select" id="tenantTenancyType" required>
+                                            <option value="">Select type</option>
+                                            <option value="permanent">Permanent renting</option>
+                                            <option value="transit">Transit renting</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPropertyId">Property / listing</label>
+                                        <select class="form-select" id="tenantPropertyId">
+                                            <option value="">Select property</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantRoomName">Room name / number</label>
+                                        <input class="form-input" id="tenantRoomName" type="text" placeholder="e.g. Room 2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantMonthlyRent">Monthly rent (amount)</label>
+                                        <input class="form-input" id="tenantMonthlyRent" type="number" min="0" step="0.01" placeholder="e.g. 850">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantDueDate">Next due date</label>
+                                        <input class="form-input" id="tenantDueDate" type="date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantBalance">Balance owed</label>
+                                        <input class="form-input" id="tenantBalance" type="number" step="0.01" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPaidAdvance">Paid in advance</label>
+                                        <input class="form-input" id="tenantPaidAdvance" type="number" min="0" step="0.01" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantStatus">Status</label>
+                                        <select class="form-select" id="tenantStatus">
+                                            <option value="active">Active</option>
+                                            <option value="notice">On notice</option>
+                                            <option value="left">Left</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="tenantNotes">Notes</label>
+                                        <textarea class="form-textarea" id="tenantNotes" placeholder="Payment notes, ID details, etc."></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="button button-outline" id="cancelTenantEdit" type="button" hidden>Cancel edit</button>
+                                        <button class="button button-primary" id="saveTenantButton" type="submit">Save tenant</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="toolbar">
+                            <div class="toolbar-group">
+                                <select class="filter-select" id="tenantTypeFilter">
+                                    <option value="all">All tenancy types</option>
+                                    <option value="permanent">Permanent only</option>
+                                    <option value="transit">Transit only</option>
+                                </select>
+                                <select class="filter-select" id="tenantStatusFilter">
+                                    <option value="all">All statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="notice">On notice</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tenant</th>
+                                            <th>Type</th>
+                                            <th>Room</th>
+                                            <th>Property</th>
+                                            <th>Due date</th>
+                                            <th>Balance</th>
+                                            <th>Advance</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tenantsTableBody">
+                                        <tr>
+                                            <td colspan="9" class="empty-state">No tenants recorded yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+<section
                         class="dashboard-section"
                         id="section-profile"
                     >
@@ -2562,6 +2663,7 @@
             reviews: [],
             reports: [],
             announcements: [],
+            tenants: [],
             uploadedImages: []
         };
 
@@ -2587,6 +2689,10 @@
             inquiries: [
                 "Property inquiries",
                 "Respond to prospective students and tenants"
+            ],
+            tenants: [
+                "My tenants",
+                "Track permanent and transit tenants, dues and balances"
             ],
             reviews: [
                 "Reviews and ratings",
@@ -2828,14 +2934,16 @@
                 inquiries,
                 reviews,
                 reports,
-                announcements
+                announcements,
+                tenants
             ] = await Promise.all([
                 loadCollection("locations"),
                 loadCollection("properties"),
                 loadCollection("inquiries"),
                 loadCollection("reviews"),
                 loadCollection("reports"),
-                loadCollection("announcements")
+                loadCollection("announcements"),
+                loadCollection("tenants")
             ]);
 
             state.locations = locations.filter((location) =>
@@ -2865,6 +2973,12 @@
 
             state.reports = reports.filter(
                 (report) => report.createdBy === state.user.uid
+            );
+
+            state.tenants = (tenants || []).filter(
+                (tenant) =>
+                    tenant.caretakerId === state.user.uid ||
+                    tenant.createdBy === state.user.uid
             );
 
             state.announcements = announcements.filter((announcement) => {
@@ -3788,13 +3902,10 @@
                 (item) => item.id === locationId
             );
 
-            const totalUnits = Number(
-                document.getElementById("totalUnits").value || 0
-            );
-
-            const availableUnits = Number(
-                document.getElementById("availableUnits").value || 0
-            );
+            const totalUnitsEl = document.getElementById("totalUnits");
+            const availableUnitsEl = document.getElementById("availableUnits");
+            const totalUnits = totalUnitsEl ? Number(totalUnitsEl.value || 0) : 0;
+            const availableUnits = availableUnitsEl ? Number(availableUnitsEl.value || 0) : 0;
 
             const facilityAmenities = Array.from(
                 document.querySelectorAll('input[name="amenity"]:checked')
@@ -3846,13 +3957,12 @@
                     [location?.street, location?.area, location?.address]
                         .filter(Boolean)
                         .join(", "),
-                price: Number(
-                    document.getElementById("propertyPrice").value
-                ),
-                priceLabel: document
-                    .getElementById("propertyPriceLabel")
-                    .value
-                    .trim(),
+                price: Number(document.getElementById("propertyPrice").value || 0),
+                priceLabel: (() => {
+                    const n = Number(document.getElementById("propertyPrice").value || 0);
+                    if (!Number.isFinite(n) || n < 0) return "Price on inquiry";
+                    return `K${n.toLocaleString()} per month`;
+                })(),
                 roomType: null,
                 unitType:
                     propertyType === "apartment"
@@ -3916,12 +4026,6 @@
                 return "You can only create properties in assigned locations.";
             }
 
-            if (data.propertyType === "apartment") {
-                if (data.totalUnits < data.availableUnits) {
-                    return "Available units cannot exceed total units.";
-                }
-            }
-
             if (data.propertyType === "student") {
                 if (data.spacesAvailable === null || data.spacesAvailable < 0) {
                     return "Enter how many spaces are available.";
@@ -3963,16 +4067,14 @@
             syncPropertyTypeFields();
             document.getElementById("propertyLocation").value = property.locationId || "";
             document.getElementById("propertyAddress").value = property.address || "";
-            document.getElementById("propertyPrice").value = property.price ?? "";
-            document.getElementById("propertyPriceLabel").value = property.priceLabel || "";
+            document.getElementById("propertyPrice").value =
+                Number.isFinite(Number(property.price)) ? property.price : "";
             document.getElementById("propertyCondition").value = property.condition || "";
             document.getElementById("spacesAvailable").value =
                 property.spacesAvailable ?? property.availableRooms ?? "";
             document.getElementById("peoplePerRoom").value = property.peoplePerRoom || "";
             document.getElementById("roomOrUnitType").value = property.unitType || "";
-            document.getElementById("totalUnits").value = property.totalUnits ?? "";
-            document.getElementById("availableUnits").value = property.availableUnits ?? "";
-            document.getElementById("propertyDescription").value = property.description || "";
+document.getElementById("propertyDescription").value = property.description || "";
             document.getElementById("propertyRules").value = property.rules || "";
             document.getElementById("securityType").value = property.securityType || "";
 
@@ -4274,6 +4376,212 @@
             }
         }
 
+
+        function populateTenantPropertyOptions() {
+            const select = document.getElementById("tenantPropertyId");
+            if (!select) return;
+            const current = select.value;
+            select.innerHTML =
+                `<option value="">Select property</option>` +
+                state.properties
+                    .map(
+                        (p) =>
+                            `<option value="${p.id}">${escapeHtml(p.title || "Property")}</option>`
+                    )
+                    .join("");
+            if (current) select.value = current;
+        }
+
+        function renderTenants() {
+            const body = document.getElementById("tenantsTableBody");
+            if (!body) return;
+
+            const typeFilter =
+                document.getElementById("tenantTypeFilter")?.value || "all";
+            const statusFilter =
+                document.getElementById("tenantStatusFilter")?.value || "all";
+
+            let list = state.tenants.slice();
+            if (typeFilter !== "all") {
+                list = list.filter((t) => (t.tenancyType || "") === typeFilter);
+            }
+            if (statusFilter !== "all") {
+                list = list.filter((t) => (t.status || "active") === statusFilter);
+            }
+
+            if (!list.length) {
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            No tenants match this filter. Add one above.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            body.innerHTML = list
+                .sort(
+                    (a, b) =>
+                        getTimestampValue(b.updatedAt || b.createdAt) -
+                        getTimestampValue(a.updatedAt || a.createdAt)
+                )
+                .map((tenant) => {
+                    const property = state.properties.find(
+                        (p) => p.id === tenant.propertyId
+                    );
+                    const balance = Number(tenant.balance);
+                    const advance = Number(tenant.paidAdvance);
+                    const status = tenant.status || "active";
+                    const badgeClass =
+                        status === "active"
+                            ? "badge-green"
+                            : status === "notice"
+                                ? "badge-amber"
+                                : "badge-grey";
+                    const tenancy = tenant.tenancyType || "—";
+                    const tenancyBadge =
+                        tenancy === "permanent"
+                            ? "badge-blue"
+                            : tenancy === "transit"
+                                ? "badge-amber"
+                                : "badge-grey";
+
+                    return `
+                        <tr>
+                            <td>
+                                <strong>${escapeHtml(tenant.fullName || "Tenant")}</strong>
+                                <div class="form-help">${escapeHtml(tenant.phone || "")}</div>
+                            </td>
+                            <td><span class="badge ${tenancyBadge}">${escapeHtml(tenancy)}</span></td>
+                            <td>${escapeHtml(tenant.roomName || "—")}</td>
+                            <td>${escapeHtml(property?.title || tenant.propertyName || "—")}</td>
+                            <td>${escapeHtml(tenant.dueDate || "—")}</td>
+                            <td>${Number.isFinite(balance) ? `K${balance.toLocaleString()}` : "—"}</td>
+                            <td>${Number.isFinite(advance) ? `K${advance.toLocaleString()}` : "—"}</td>
+                            <td><span class="badge ${badgeClass}">${escapeHtml(status)}</span></td>
+                            <td>
+                                <button class="small-button edit" type="button" data-tenant-action="edit" data-id="${tenant.id}">Edit</button>
+                                <button class="small-button archive" type="button" data-tenant-action="delete" data-id="${tenant.id}">Remove</button>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join("");
+        }
+
+        function resetTenantForm() {
+            const form = document.getElementById("tenantForm");
+            if (!form) return;
+            form.reset();
+            document.getElementById("editingTenantId").value = "";
+            const cancel = document.getElementById("cancelTenantEdit");
+            if (cancel) cancel.hidden = true;
+            const btn = document.getElementById("saveTenantButton");
+            if (btn) btn.textContent = "Save tenant";
+        }
+
+        function fillTenantForm(tenant) {
+            document.getElementById("editingTenantId").value = tenant.id;
+            document.getElementById("tenantFullName").value = tenant.fullName || "";
+            document.getElementById("tenantPhone").value = tenant.phone || "";
+            document.getElementById("tenantEmail").value = tenant.email || "";
+            document.getElementById("tenantTenancyType").value =
+                tenant.tenancyType || "";
+            document.getElementById("tenantPropertyId").value =
+                tenant.propertyId || "";
+            document.getElementById("tenantRoomName").value = tenant.roomName || "";
+            document.getElementById("tenantMonthlyRent").value =
+                Number.isFinite(Number(tenant.monthlyRent)) ? tenant.monthlyRent : "";
+            document.getElementById("tenantDueDate").value = tenant.dueDate || "";
+            document.getElementById("tenantBalance").value =
+                Number.isFinite(Number(tenant.balance)) ? tenant.balance : "";
+            document.getElementById("tenantPaidAdvance").value =
+                Number.isFinite(Number(tenant.paidAdvance)) ? tenant.paidAdvance : "";
+            document.getElementById("tenantStatus").value = tenant.status || "active";
+            document.getElementById("tenantNotes").value = tenant.notes || "";
+            document.getElementById("cancelTenantEdit").hidden = false;
+            document.getElementById("saveTenantButton").textContent = "Save changes";
+        }
+
+        async function saveTenant(event) {
+            event.preventDefault();
+            const msg = document.getElementById("tenantMessage");
+            if (typeof hideMessage === "function") hideMessage(msg);
+
+            const fullName = document.getElementById("tenantFullName").value.trim();
+            const tenancyType = document.getElementById("tenantTenancyType").value;
+
+            if (fullName.length < 2) {
+                showMessage(msg, "Enter the tenant full name.", "error");
+                return;
+            }
+            if (!["permanent", "transit"].includes(tenancyType)) {
+                showMessage(msg, "Select permanent or transit renting.", "error");
+                return;
+            }
+
+            const propertyId = document.getElementById("tenantPropertyId").value;
+            const property = state.properties.find((p) => p.id === propertyId);
+
+            const data = {
+                fullName,
+                phone: document.getElementById("tenantPhone").value.trim(),
+                email: document.getElementById("tenantEmail").value.trim(),
+                tenancyType,
+                propertyId: propertyId || null,
+                propertyName: property?.title || null,
+                roomName: document.getElementById("tenantRoomName").value.trim(),
+                monthlyRent: Number(document.getElementById("tenantMonthlyRent").value || 0),
+                dueDate: document.getElementById("tenantDueDate").value || null,
+                balance: Number(document.getElementById("tenantBalance").value || 0),
+                paidAdvance: Number(document.getElementById("tenantPaidAdvance").value || 0),
+                status: document.getElementById("tenantStatus").value || "active",
+                notes: document.getElementById("tenantNotes").value.trim(),
+                caretakerId: state.user.uid,
+                createdBy: state.user.uid,
+                updatedAt: serverTimestamp()
+            };
+
+            const editingId = document.getElementById("editingTenantId").value;
+            const btn = document.getElementById("saveTenantButton");
+            btn.disabled = true;
+
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, "tenants", editingId), data);
+                    showMessage(msg, "Tenant updated.", "success");
+                } else {
+                    data.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "tenants"), data);
+                    showMessage(msg, "Tenant saved.", "success");
+                }
+                resetTenantForm();
+                await loadCaretakerData();
+            } catch (error) {
+                console.error("Tenant save error:", error);
+                showMessage(msg, "Could not save tenant. Please try again.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = document.getElementById("editingTenantId").value
+                    ? "Save changes"
+                    : "Save tenant";
+            }
+        }
+
+        async function deleteTenant(tenantId) {
+            if (!tenantId || !confirm("Remove this tenant record?")) return;
+            try {
+                await deleteDoc(doc(db, "tenants", tenantId));
+                showToast("Tenant removed.");
+                await loadCaretakerData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not remove tenant.", true);
+            }
+        }
+
+
         function openSection(sectionName) {
             const targetSection = document.getElementById(
                 `section-${sectionName}`
@@ -4311,6 +4619,9 @@
 
             if (sectionName === "add-property") {
                 populateLocationOptions();
+            }
+            if (sectionName === "tenants") {
+                populateTenantPropertyOptions();
             }
 
             sidebar.classList.remove("open");
@@ -4709,6 +5020,36 @@
                 String(isOpen)
             );
         });
+
+        
+        const tenantFormEl = document.getElementById("tenantForm");
+        if (tenantFormEl) {
+            tenantFormEl.addEventListener("submit", saveTenant);
+        }
+        const cancelTenantEdit = document.getElementById("cancelTenantEdit");
+        if (cancelTenantEdit) {
+            cancelTenantEdit.addEventListener("click", () => {
+                resetTenantForm();
+                showToast("Tenant edit cancelled.");
+            });
+        }
+        const tenantsTableBody = document.getElementById("tenantsTableBody");
+        if (tenantsTableBody) {
+            tenantsTableBody.addEventListener("click", async (event) => {
+                const btn = event.target.closest("[data-tenant-action]");
+                if (!btn) return;
+                const tenant = state.tenants.find((t) => t.id === btn.dataset.id);
+                if (btn.dataset.tenantAction === "edit" && tenant) {
+                    fillTenantForm(tenant);
+                    openSection("tenants");
+                }
+                if (btn.dataset.tenantAction === "delete") {
+                    await deleteTenant(btn.dataset.id);
+                }
+            });
+        }
+        document.getElementById("tenantTypeFilter")?.addEventListener("change", renderTenants);
+        document.getElementById("tenantStatusFilter")?.addEventListener("change", renderTenants);
 
         document
             .getElementById("logoutButton")

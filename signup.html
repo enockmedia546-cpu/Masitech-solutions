@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Masitech Accommodation</title>
+    <title>Sign Up | Masitech Solutions</title>
     <style>
         :root {
             --charcoal: #374151;
             --dark-charcoal: #1f2937;
-            --teal: #0f766e;
-            --dark-teal: #0b625c;
+            --teal: #2563eb;
+            --dark-teal: #1d4ed8;
             --light-grey: #f3f4f6;
             --medium-grey: #6b7280;
             --white: #ffffff;
@@ -118,7 +119,7 @@
         .form-group input:focus,
         .form-group select:focus {
             border-color: var(--teal);
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
         .phone-row {
             display: grid;
@@ -315,9 +316,9 @@
 <body>
     <header class="site-header">
         <div class="header-content">
-            <a class="brand" href="index.html" aria-label="Masitech Accommodation home">
-                <img src="logo.jpg" alt="Masitech Accommodation logo" onerror="this.src='assets/logo.jpg'">
-                <span>Masitech Accommodation</span>
+            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
+                <img src="logo.jpg" alt="Masitech Solutions logo" onerror="this.src='assets/logo.jpg'">
+                <span>Masitech Solutions</span>
             </a>
             <a class="back-link" href="index.html">Back to home</a>
         </div>
@@ -327,7 +328,7 @@
         <section class="signup-card" aria-labelledby="signupTitle">
             <div class="signup-heading">
                 <h1 id="signupTitle">Create your account</h1>
-                <p>Join Masitech Accommodation and find your next place.</p>
+                <p>Join Masitech Solutions and find your next place.</p>
             </div>
 
             <div class="message" id="message" role="alert"></div>
@@ -368,7 +369,16 @@
                             <option value="student">Student</option>
                             <option value="tenant">Non-student tenant</option>
                         </select>
-                        <span class="help-text">Extra roles can later be assigned by an administrator.</span>
+                    </div>
+
+                    <div class="form-group" id="tenancyTypeGroup" hidden>
+                        <label for="tenancyType">Tenancy type</label>
+                        <select id="tenancyType" name="tenancyType">
+                            <option value="">Select tenancy type</option>
+                            <option value="permanent">Permanent renting</option>
+                            <option value="transit">Transit renting</option>
+                        </select>
+                        <span class="help-text">Permanent is long-term stay. Transit is short-term or temporary.</span>
                     </div>
 
                     <div class="form-group">
@@ -432,7 +442,7 @@
 
     <footer class="site-footer">
         © <span id="currentYear"></span>
-        Masitech Accommodation. All rights reserved.
+        Masitech Solutions. All rights reserved.
     </footer>
 
     <script type="module">
@@ -512,13 +522,29 @@
             return "profile.html";
         }
 
+        const tenancyTypeGroup = document.getElementById("tenancyTypeGroup");
+        const tenancyTypeSelect = document.getElementById("tenancyType");
+
         function fillLocations(type) {
             locationSelect.innerHTML = "";
             if (!type) {
                 locationSelect.disabled = true;
                 locationSelect.innerHTML = `<option value="">Select account type first</option>`;
+                if (tenancyTypeGroup) {
+                    tenancyTypeGroup.hidden = true;
+                    tenancyTypeSelect.value = "";
+                    tenancyTypeSelect.required = false;
+                }
                 return;
             }
+
+            if (tenancyTypeGroup) {
+                const isTenant = type === "tenant";
+                tenancyTypeGroup.hidden = !isTenant;
+                tenancyTypeSelect.required = isTenant;
+                if (!isTenant) tenancyTypeSelect.value = "";
+            }
+
             const list = type === "student" ? STUDENT_LOCATIONS : TENANT_LOCATIONS;
             locationSelect.disabled = false;
             locationSelect.innerHTML = `<option value="">Select location</option>`;
@@ -644,6 +670,11 @@
                 showMessage("Please select Student or Non-student tenant.", "error");
                 return;
             }
+            const tenancyType = tenancyTypeSelect ? tenancyTypeSelect.value : "";
+            if (selectedType === "tenant" && !["permanent", "transit"].includes(tenancyType)) {
+                showMessage("Please choose permanent or transit renting.", "error");
+                return;
+            }
             if (!location) {
                 showMessage("Please select a preferred location.", "error");
                 return;
@@ -683,6 +714,7 @@
                     permissions: [],
                     locationId: location,
                     locationIds: [location],
+                    tenancyType: selectedType === "tenant" ? tenancyType : null,
                     accountStatus: "active",
                     profileComplete: true,
                     authProvider: "password",
@@ -700,17 +732,24 @@
             } catch (error) {
                 console.error("Signup error:", error);
                 let errorMessage = "We could not create your account. Please try again.";
-                if (error.code === "auth/email-already-in-use") errorMessage = "An account with this email already exists.";
-                else if (error.code === "auth/invalid-email") errorMessage = "Please enter a valid email address.";
-                else if (error.code === "auth/weak-password") errorMessage = "Please choose a stronger password.";
-                else if (error.code === "auth/network-request-failed") errorMessage = "Network error. Check your internet connection.";
-                else if (error.code === "permission-denied" || error.code === "firestore/permission-denied") {
-                    errorMessage = "Your account was created, but the profile could not be saved. Check Firestore Rules.";
+                if (error.code === "auth/email-already-in-use") {
+                    errorMessage = "An account with this email already exists. Try logging in.";
+                } else if (error.code === "auth/invalid-email") {
+                    errorMessage = "Please enter a valid email address.";
+                } else if (error.code === "auth/weak-password") {
+                    errorMessage = "Please choose a stronger password (at least 6 characters).";
+                } else if (error.code === "auth/network-request-failed") {
+                    errorMessage = "Network error. Check your internet connection and try again.";
+                } else if (error.code === "auth/too-many-requests") {
+                    errorMessage = "Too many attempts. Please wait a moment and try again.";
                 }
 
                 if (userCreated) {
-                    showMessage("Your account was created, but its profile could not be saved. You can log in while Firestore Rules are corrected.", "error");
-                    setTimeout(() => { window.location.href = "profile.html"; }, 1800);
+                    showMessage(
+                        "Your account was created. Continue to your profile to finish setup.",
+                        "success"
+                    );
+                    setTimeout(() => { window.location.href = "profile.html"; }, 1200);
                 } else {
                     showMessage(errorMessage, "error");
                     signupButton.disabled = false;
@@ -741,10 +780,14 @@
             } catch (error) {
                 console.error("Google signup error:", error);
                 let errorMessage = "Google sign-in did not complete. Please try again.";
-                if (error.code === "auth/popup-closed-by-user") errorMessage = "The Google sign-in window was closed.";
-                else if (error.code === "auth/popup-blocked") errorMessage = "Your browser blocked the Google sign-in popup.";
-                else if (error.code === "auth/account-exists-with-different-credential") {
+                if (error.code === "auth/popup-closed-by-user") {
+                    errorMessage = "The sign-in window was closed before finishing.";
+                } else if (error.code === "auth/popup-blocked") {
+                    errorMessage = "Your browser blocked the sign-in window. Allow pop-ups and try again.";
+                } else if (error.code === "auth/account-exists-with-different-credential") {
                     errorMessage = "An account already exists with this email using another sign-in method. Log in with email instead.";
+                } else if (error.code === "auth/network-request-failed") {
+                    errorMessage = "Network error. Check your internet connection and try again.";
                 }
                 showMessage(errorMessage, "error");
             } finally {

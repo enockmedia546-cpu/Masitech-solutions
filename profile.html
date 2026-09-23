@@ -788,19 +788,21 @@
                                             <option value="">
                                                 Select location
                                             </option>
-
-                                            <option value="campus-a">
-                                                Campus Location A
-                                            </option>
-
-                                            <option value="campus-b">
-                                                Campus Location B
-                                            </option>
-
-                                            <option value="campus-c">
-                                                Campus Location C
-                                            </option>
                                         </select>
+                                    </div>
+
+                                    <div class="form-group" id="tenancyTypeGroup" hidden>
+                                        <label for="tenancyType">
+                                            Tenancy type
+                                        </label>
+                                        <select id="tenancyType">
+                                            <option value="">Select tenancy type</option>
+                                            <option value="permanent">Permanent renting</option>
+                                            <option value="transit">Transit renting</option>
+                                        </select>
+                                        <span class="help-text">
+                                            Permanent is long-term. Transit is short-term or temporary.
+                                        </span>
                                     </div>
 
                                     <div class="form-group">
@@ -1554,6 +1556,21 @@
             document.getElementById("preferredLocation").value =
                 locationId;
 
+            const roles = getProfileRoles(profile, currentClaims);
+            const isTenant =
+                roles.includes("tenant") ||
+                profile.role === "tenant";
+            const tenancyGroup = document.getElementById("tenancyTypeGroup");
+            const tenancySelect = document.getElementById("tenancyType");
+            if (tenancyGroup && tenancySelect) {
+                tenancyGroup.hidden = !isTenant;
+                tenancySelect.value =
+                    profile.tenancyType === "permanent" ||
+                    profile.tenancyType === "transit"
+                        ? profile.tenancyType
+                        : "";
+            }
+
             document.getElementById("accountCreated").value =
                 formatDate(
                     profile.createdAt ||
@@ -1693,6 +1710,11 @@
                     "preferredLocation"
                 ).value;
 
+            const tenancySelect = document.getElementById("tenancyType");
+            const tenancyType = tenancySelect && !document.getElementById("tenancyTypeGroup").hidden
+                ? tenancySelect.value
+                : originalProfile.tenancyType || null;
+
             if (fullName.length < 2) {
                 showMessage(
                     profileMessage,
@@ -1700,6 +1722,20 @@
                     "error"
                 );
 
+                return;
+            }
+
+            const rolesCheck = getProfileRoles(originalProfile, currentClaims);
+            if (
+                (rolesCheck.includes("tenant") || originalProfile.role === "tenant") &&
+                tenancyType &&
+                !["permanent", "transit"].includes(tenancyType)
+            ) {
+                showMessage(
+                    profileMessage,
+                    "Please choose permanent or transit renting.",
+                    "error"
+                );
                 return;
             }
 
@@ -1714,19 +1750,27 @@
 
                 /*
                  * Only personal fields are written here.
-                 * Roles, permissions, locations assigned to
-                 * caretakers, and account status are preserved.
+                 * Roles, permissions, and account status are preserved.
                  */
+                const payload = {
+                    uid: currentUser.uid,
+                    fullName,
+                    email: currentUser.email || "",
+                    phone,
+                    locationId: preferredLocation,
+                    updatedAt: serverTimestamp()
+                };
+
+                if (
+                    rolesCheck.includes("tenant") ||
+                    originalProfile.role === "tenant"
+                ) {
+                    payload.tenancyType = tenancyType || null;
+                }
+
                 await setDoc(
                     doc(db, "users", currentUser.uid),
-                    {
-                        uid: currentUser.uid,
-                        fullName,
-                        email: currentUser.email || "",
-                        phone,
-                        locationId: preferredLocation,
-                        updatedAt: serverTimestamp()
-                    },
+                    payload,
                     {
                         merge: true
                     }
@@ -1736,7 +1780,12 @@
                     ...originalProfile,
                     fullName,
                     phone,
-                    locationId: preferredLocation
+                    locationId: preferredLocation,
+                    tenancyType:
+                        rolesCheck.includes("tenant") ||
+                        originalProfile.role === "tenant"
+                            ? tenancyType || null
+                            : originalProfile.tenancyType || null
                 };
 
                 populateForm(originalProfile);
@@ -1754,7 +1803,7 @@
 
                 showMessage(
                     profileMessage,
-                    "We could not update your profile. Check your Firestore Rules.",
+                    "We could not update your profile. Please try again.",
                     "error"
                 );
             } finally {

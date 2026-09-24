@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,6 +73,66 @@
             justify-content: space-between;
             gap: 22px;
         }
+
+        
+        .header-content {
+            min-height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .brand img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+        .brand-name { font-size: 1rem; font-weight: 700; }
+        .brand-sub { font-size: 0.72rem; font-weight: 600; color: var(--medium-grey); }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.86rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .main-nav a:hover,
+        .main-nav a.active { color: var(--teal); }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .menu-button { display: none !important; }
 
         .brand {
             display: flex;
@@ -295,33 +356,9 @@
         }
 
         @media (max-width: 900px) {
-            .main-nav {
-                position: absolute;
-                top: 76px;
-                right: 20px;
-                left: 20px;
-                display: none;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                padding: 12px;
-                background: var(--white);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                box-shadow: var(--shadow);
-            }
-
-            .main-nav.open {
-                display: flex;
-            }
-
-            .main-nav a {
-                padding: 10px;
-            }
-
-            .menu-button {
-                display: block;
-            }
+            .main-nav a { font-size: 0.8rem; }
+            .header-actions .button { min-height: 36px; padding: 0 10px; font-size: 0.78rem; }
+            .menu-button { display: none !important; }
 
             .terms-layout {
                 grid-template-columns: 1fr;
@@ -353,33 +390,21 @@
         <div class="container header-content">
             <a class="brand" href="index.html" aria-label="Masitech Solutions home">
                 <img src="logo.jpg" alt="Masitech Solutions logo">
-                <span>Masitech Solutions</span>
+                <span class="brand-text">
+                    <span class="brand-name">Masitech</span>
+                    <span class="brand-sub">Solutions</span>
+                </span>
             </a>
-
-            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-                <a href="index.html">Home</a>
-                <a href="student-listings.html">Students</a>
-                <a href="apartment-listings.html">Apartments</a>
-                <a href="about.html">About Us</a>
-                <a href="privacy.html">Privacy</a>
-                <a class="active" href="terms.html">Terms</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-
-            <div class="header-actions">
-                <a class="button button-outline" href="login.html">Log in</a>
-                <a class="button button-primary" href="signup.html">Sign up</a>
-
-                <button
-                    class="menu-button"
-                    id="menuButton"
-                    type="button"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false"
-                    aria-controls="mainNav"
-                >
-                    ☰
-                </button>
+            <div class="header-right">
+                <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="terms.html" class="active">Terms</a>
+                    <a href="login.html">Sign In</a>
+                </nav>
+                <div class="header-actions">
+                    <a class="button button-primary" href="signup.html">Create Account</a>
+                </div>
             </div>
         </div>
     </header>
@@ -407,25 +432,16 @@
                     <a href="#acceptable-use">Acceptable use</a>
                     <a href="#content">User content</a>
                     <a href="#intellectual-property">Intellectual property</a>
-                    <a href="#third-party">Third-party services</a>
-                    <a href="#disclaimer">Disclaimers</a>
+                                        <a href="#disclaimer">Disclaimers</a>
                     <a href="#suspension">Suspension</a>
                     <a href="#changes">Changes</a>
-                    <a href="#law">Governing law</a>
-                    <a href="#contact">Contact</a>
+                                        <a href="#contact">Contact</a>
                 </aside>
 
                 <article class="terms-document">
                     <div class="last-updated">
                         <strong>Last updated:</strong>
                         <span id="cmsLastUpdated">14 September 2026</span>
-                    </div>
-
-                    <div class="important-notice" id="cmsImportantNotice">
-                        <strong>Important:</strong>
-                        <span id="cmsImportantNoticeText">These Terms and Conditions are a general starting draft.
-                        The owner should have them reviewed and customized by a
-                        qualified lawyer before the platform goes live.</span>
                     </div>
 
                     <section id="acceptance" data-cms-section="1">
@@ -454,7 +470,7 @@
                             Masitech Solutions provides an online platform where
                             students and other tenants can discover accommodation
                             listings, view property information, make inquiries, and
-                            interact with relevant caretakers or property representatives.
+                            interact with relevant property managers or property representatives.
                         </p>
 
                         <p>
@@ -468,7 +484,7 @@
                             Unless expressly stated otherwise, Masitech Solutions
                             is a platform operator and is not automatically a party to
                             any rental, lease, booking, payment, or other agreement
-                            between a tenant and a property owner or caretaker.
+                            between a tenant and a property owner or property manager.
                         </p>
                     </section>
 
@@ -494,13 +510,13 @@
                         <h3>Account types</h3>
                         <p>
                             The platform may support students, non-student tenants,
-                            caretakers, administrators, and other account types.
+                            property managers, administrators, and other account types.
                             Access to features depends on the role assigned to an
                             account.
                         </p>
 
                         <p>
-                            Caretaker and administrator accounts may require approval,
+                            Property manager and administrator accounts may require approval,
                             verification, or creation by an authorized administrator.
                             Users must not misrepresent their identity, position,
                             property ownership, or authority.
@@ -511,7 +527,7 @@
                         <h2>4. Property listings</h2>
                         <p>
                             Property listings may be submitted and managed by
-                            caretakers, administrators, owners, or other authorized
+                            property managers, administrators, owners, or other authorized
                             representatives.
                         </p>
 
@@ -530,7 +546,7 @@
                         <p>
                             Availability, prices, images, conditions, and other details
                             may change. Users should confirm important information
-                            directly with the relevant caretaker or authorized property
+                            directly with the relevant property manager or authorized property
                             representative before making a decision.
                         </p>
 
@@ -545,7 +561,7 @@
                     <section id="inquiries" data-cms-section="5">
                         <h2>5. Inquiries, applications, and agreements</h2>
                         <p>
-                            The platform may allow users to contact caretakers or submit
+                            The platform may allow users to contact property managers or submit
                             inquiries about properties. Sending an inquiry does not
                             guarantee availability, approval, booking, tenancy, or a
                             rental agreement.
@@ -576,7 +592,7 @@
                         <h2>6. Reviews and ratings</h2>
                         <p>
                             Registered users may be allowed to submit reviews or ratings
-                            for properties and, where enabled, caretakers.
+                            for properties and, where enabled, property managers.
                         </p>
 
                         <p>
@@ -592,13 +608,13 @@
                             <li>Reveal another person’s private or sensitive information.</li>
                             <li>Contain malicious software, spam, advertising, or unrelated material.</li>
                             <li>Be submitted in exchange for payment or another improper benefit.</li>
-                            <li>Attempt to manipulate the rating of a property or caretaker.</li>
+                            <li>Attempt to manipulate the rating of a property or property manager.</li>
                             <li>Impersonate another person or organization.</li>
                             <li>Make unlawful accusations or include content that violates another person’s rights.</li>
                         </ul>
 
                         <p>
-                            Caretakers and property representatives must not edit a
+                            Property managers and property representatives must not edit a
                             tenant’s review. They may be allowed to respond through the
                             platform, subject to moderation rules.
                         </p>
@@ -684,22 +700,6 @@
                         </p>
                     </section>
 
-                    <section id="third-party" data-cms-section="10">
-                        <h2>10. Third-party services</h2>
-                        <p>
-                            The platform may rely on third-party services such as
-                            Firebase for authentication, database, hosting, or analytics,
-                            and Cloudinary for image storage and delivery.
-                        </p>
-
-                        <p>
-                            Third-party services may have their own terms, privacy
-                            policies, availability limits, and technical requirements.
-                            We are not responsible for independent third-party services
-                            outside our reasonable control.
-                        </p>
-                    </section>
-
                     <section id="disclaimer" data-cms-section="11">
                         <h2>11. Disclaimers and limitation of responsibility</h2>
                         <p>
@@ -722,7 +722,7 @@
                             To the maximum extent permitted by applicable law,
                             Masitech Solutions is not responsible for loss,
                             damage, fraud, injury, dispute, delay, or other harm arising
-                            from a user’s interaction with a property owner, caretaker,
+                            from a user’s interaction with a property owner, property manager,
                             tenant, or other third party.
                         </p>
 
@@ -775,24 +775,6 @@
                         </p>
                     </section>
 
-                    <section id="law" data-cms-section="14">
-                        <h2>14. Governing law and disputes</h2>
-                        <p>
-                            These Terms and any dispute arising from the platform or
-                            services will be governed by the laws of:
-                        </p>
-
-                        <p>
-                            <strong id="cmsGoverningLaw">[Insert the applicable country and jurisdiction]</strong>
-                        </p>
-
-                        <p>
-                            Any dispute-resolution process, court jurisdiction,
-                            mediation requirement, or arbitration provision should be
-                            added here after legal review.
-                        </p>
-                    </section>
-
                     <section id="contact" data-cms-section="15">
                         <h2>15. Contact us</h2>
                         <p>
@@ -800,15 +782,12 @@
                         </p>
 
                         <ul id="cmsTermsContactList">
-                            <li>Email: <a id="cmsTermsEmail" href="mailto:legal@example.com">legal@example.com</a></li>
-                            <li>Phone: <span id="cmsTermsPhone">+000 000 000 000</span></li>
-                            <li>Address: <span id="cmsTermsAddress">Add the registered business address here</span></li>
+                            <li>Email: <a id="cmsTermsEmail" href="mailto:info@masitechsolutions.com">info@masitechsolutions.com</a></li>
+                            <li>Phone: <span id="cmsTermsPhone">+260 967 717 445</span></li>
+                            <li>Address: <span id="cmsTermsAddress">Lusaka, Zambia</span></li>
                         </ul>
 
-                        <p>
-                            Replace the placeholder details above with the client’s
-                            official business contact information.
-                        </p>
+
                     </section>
                 </article>
             </div>
@@ -864,7 +843,7 @@
         document.getElementById("currentYear").textContent =
             new Date().getFullYear();
 
-        menuButton.addEventListener("click", () => {
+        menuButton?.addEventListener("click", () => {
             const isOpen = mainNav.classList.toggle("open");
             menuButton.setAttribute("aria-expanded", String(isOpen));
             menuButton.setAttribute(
@@ -979,7 +958,7 @@
             }
 
             if (sectionNumber === 15) {
-                const email = fields.contactEmail || "legal@example.com";
+                const email = fields.contactEmail || "info@masitechsolutions.com";
                 const phone = fields.contactPhone || "";
                 const address = fields.contactAddress || "";
 

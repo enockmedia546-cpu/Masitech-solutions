@@ -69,6 +69,66 @@
             gap: 22px;
         }
 
+        
+        .header-content {
+            min-height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .brand img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+        .brand-name { font-size: 1rem; font-weight: 700; }
+        .brand-sub { font-size: 0.72rem; font-weight: 600; color: var(--medium-grey); }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.86rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .main-nav a:hover,
+        .main-nav a.active { color: var(--teal); }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .menu-button { display: none !important; }
+
         .brand {
             display: flex;
             align-items: center;
@@ -342,33 +402,9 @@
         }
 
         @media (max-width: 950px) {
-            .main-nav {
-                position: absolute;
-                top: 76px;
-                right: 20px;
-                left: 20px;
-                display: none;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                padding: 12px;
-                background: var(--white);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                box-shadow: var(--shadow);
-            }
-
-            .main-nav.open {
-                display: flex;
-            }
-
-            .main-nav a {
-                padding: 10px;
-            }
-
-            .menu-button {
-                display: block;
-            }
+            .main-nav a { font-size: 0.8rem; }
+            .header-actions .button { min-height: 36px; padding: 0 10px; font-size: 0.78rem; }
+            .menu-button { display: none !important; }
 
             .values-grid,
             .audience-list {
@@ -403,31 +439,21 @@
         <div class="container header-content">
             <a class="brand" href="index.html" aria-label="Masitech Solutions home">
                 <img src="logo.jpg" alt="Masitech Solutions logo">
-                <span>Masitech Solutions</span>
+                <span class="brand-text">
+                    <span class="brand-name">Masitech</span>
+                    <span class="brand-sub">Solutions</span>
+                </span>
             </a>
-
-            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-                <a href="index.html">Home</a>
-                <a href="student-listings.html">Students</a>
-                <a href="apartment-listings.html">Apartments</a>
-                <a class="active" href="about.html">About Us</a>
-                <a href="faqs.html">FAQs</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-
-            <div class="header-actions">
-                <a class="button button-outline" href="login.html">Log in</a>
-                <a class="button button-primary" href="signup.html">Sign up</a>
-                <button
-                    class="menu-button"
-                    id="menuButton"
-                    type="button"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false"
-                    aria-controls="mainNav"
-                >
-                    ☰
-                </button>
+            <div class="header-right">
+                <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html" class="active">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Sign In</a>
+                </nav>
+                <div class="header-actions">
+                    <a class="button button-primary" href="signup.html">Create Account</a>
+                </div>
             </div>
         </div>
     </header>
@@ -452,7 +478,7 @@
                         Masitech Solutions brings student boarding houses and
                         private apartments into one clear platform so people can
                         compare options, understand key details, and contact the
-                        right caretaker more easily.
+                        right property manager more easily.
                     </p>
                 </article>
 
@@ -462,7 +488,7 @@
                         We provide an online space where accommodation listings are
                         organised by location and type. Visitors can explore student
                         housing and apartments, review property information, and make
-                        inquiries. Caretakers manage assigned properties, while
+                        inquiries. Property managers manage assigned properties, while
                         administrators oversee the platform, approvals, and quality
                         of information.
                     </p>
@@ -475,7 +501,7 @@
                             <h3 id="cmsAudience1Title">Students</h3>
                             <p id="cmsAudience1Text">
                                 Browse boarding houses near campus, compare rooms and
-                                availability, and contact caretakers about options that
+                                availability, and contact property managers about options that
                                 fit your needs.
                             </p>
                         </div>
@@ -487,20 +513,13 @@
                             </p>
                         </div>
                         <div class="audience-item">
-                            <h3 id="cmsAudience3Title">Caretakers</h3>
+                            <h3 id="cmsAudience3Title">Property managers</h3>
                             <p id="cmsAudience3Text">
                                 Manage assigned properties, keep listing details current,
                                 and respond to inquiries from interested students and tenants.
                             </p>
                         </div>
-                        <div class="audience-item">
-                            <h3 id="cmsAudience4Title">Administrators</h3>
-                            <p id="cmsAudience4Text">
-                                Oversee users, locations, property approvals, reviews, and
-                                platform content so the service stays organised and reliable.
-                            </p>
                         </div>
-                    </div>
                 </article>
 
                 <article class="section-card">
@@ -516,7 +535,7 @@
                         <div class="value-card">
                             <h3 id="cmsValue2Title">Local connection</h3>
                             <p id="cmsValue2Text">
-                                Accommodation is managed through local caretakers who
+                                Accommodation is managed through local property managers who
                                 understand the properties and can respond to practical questions.
                             </p>
                         </div>
@@ -536,7 +555,7 @@
                         Masitech Solutions is a discovery and inquiry platform.
                         Rental terms, deposits, viewing arrangements, and final acceptance
                         are confirmed directly with the relevant property representative
-                        or caretaker. Always verify important details before making a
+                        or property manager. Always verify important details before making a
                         commitment.
                     </p>
                 </article>
@@ -616,7 +635,7 @@
         document.getElementById("currentYear").textContent =
             new Date().getFullYear();
 
-        menuButton.addEventListener("click", () => {
+        menuButton?.addEventListener("click", () => {
             const isOpen = mainNav.classList.toggle("open");
             menuButton.setAttribute("aria-expanded", String(isOpen));
             menuButton.setAttribute(

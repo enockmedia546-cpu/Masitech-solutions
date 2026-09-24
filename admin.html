@@ -897,6 +897,42 @@
             display: none !important;
         }
 
+        .month-group {
+            margin-bottom: 12px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .month-group > summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #f9fafb;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--dark-charcoal);
+        }
+        .month-group > summary::-webkit-details-marker { display: none; }
+        .month-group > summary::after {
+            content: "▼";
+            color: var(--teal);
+            font-size: 0.7rem;
+        }
+        .month-group[open] > summary::after { content: "▲"; }
+        .month-group-body { padding: 0; }
+        .month-group-body .table-wrapper { border: 0; }
+        .month-group .announcement-card {
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+
+
         @media (max-width: 1180px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -983,10 +1019,8 @@
 </head>
 
 <body class="auth-pending">
-    <div class="auth-gate" id="authGate" aria-live="polite">
-        <div class="auth-gate-card" id="authGateCard">
-            <p id="authGateMessage">Checking administrator access...</p>
-        </div>
+    <div class="auth-gate" id="authGate" aria-live="polite" style="display:none">
+        <div class="auth-gate-card" id="authGateCard"></div>
     </div>
 
     <div class="admin-layout" id="adminLayout" hidden>
@@ -1031,7 +1065,7 @@
                     type="button"
                 >
                     <span class="nav-icon">♙</span>
-                    <span>Caretakers</span>
+                    <span>Property managers</span>
                 </button>
 
                 <button
@@ -1074,6 +1108,16 @@
                 >
                     <span class="nav-icon">✉</span>
                     <span>Announcements</span>
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="contact-messages"
+                    data-permission="announcements.view"
+                    type="button"
+                >
+                    <span class="nav-icon">✉</span>
+                    <span>Contact messages</span>
                 </button>
 
                 <button
@@ -1126,6 +1170,17 @@
                 >
                     <span class="nav-icon">⚙</span>
                     <span>System Settings</span>
+                </button>
+
+                <p class="nav-section-title">Account</p>
+
+                <button
+                    class="nav-item"
+                    data-section="profile"
+                    type="button"
+                >
+                    <span class="nav-icon">♙</span>
+                    <span>My profile</span>
                 </button>
             </nav>
 
@@ -1202,7 +1257,7 @@
                             <div>
                                 <h2>Dashboard overview</h2>
                                 <p>
-                                    Monitor accommodation, users, caretakers, and
+                                    Monitor accommodation, users, property managers, and
                                     platform activity.
                                 </p>
                             </div>
@@ -1357,7 +1412,7 @@
                                         </div>
 
                                         <div class="status-row">
-                                            <span>Active caretakers</span>
+                                            <span>Active property managers</span>
 
                                             <span
                                                 class="status-number"
@@ -1401,7 +1456,7 @@
                                     <option value="all">All roles</option>
                                     <option value="student">Students</option>
                                     <option value="tenant">Tenants</option>
-                                    <option value="caretaker">Caretakers</option>
+                                    <option value="caretaker">Property managers</option>
                                     <option value="admin">Administrators</option>
                                 </select>
 
@@ -1445,6 +1500,39 @@
                                 </table>
                             </div>
                         </div>
+
+                        <div class="form-panel hidden" id="userEditPanel" style="margin-top:18px">
+                            <h3 style="margin-bottom:12px">Edit user details</h3>
+                            <div class="message" id="userEditMessage" role="alert"></div>
+                            <form id="userEditForm">
+                                <input type="hidden" id="editUserId" value="">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="editUserName">Full name</label>
+                                        <input class="form-input" id="editUserName" type="text" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserPhone">Phone</label>
+                                        <input class="form-input" id="editUserPhone" type="tel">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserEmail">Email</label>
+                                        <input class="form-input" id="editUserEmail" type="email" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserStatus">Status</label>
+                                        <select class="form-select" id="editUserStatus">
+                                            <option value="active">Active</option>
+                                            <option value="suspended">Suspended</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="button button-outline" type="button" id="cancelUserEdit">Cancel</button>
+                                        <button class="button button-primary" type="submit">Save user</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </section>
 
                     <section
@@ -1453,7 +1541,7 @@
                     >
                         <div class="section-heading">
                             <div>
-                                <h2>Caretaker management</h2>
+                                <h2>Property manager management</h2>
                                 <p>
                                     Monitor caretaker accounts, locations, and properties.
                                 </p>
@@ -1476,7 +1564,7 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Caretaker</th>
+                                            <th>Property manager</th>
                                             <th>Email</th>
                                             <th>Roles</th>
                                             <th>Locations</th>
@@ -1489,7 +1577,7 @@
                                     <tbody id="caretakersTableBody">
                                         <tr>
                                             <td colspan="7" class="empty-state">
-                                                Loading caretakers...
+                                                Loading property managers...
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1644,7 +1732,7 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label for="locationDescription">Description</label>
-                                        <textarea class="form-textarea" id="locationDescription" placeholder="Optional notes for admins and caretakers..."></textarea>
+                                        <textarea class="form-textarea" id="locationDescription" placeholder="Optional notes for admins and property managers..."></textarea>
                                     </div>
                                     <div class="form-actions">
                                         <button class="button button-outline" type="button" id="cancelLocationButton">Cancel</button>
@@ -1765,7 +1853,7 @@
                                             <option value="everyone">Everyone</option>
                                             <option value="students">Students</option>
                                             <option value="tenants">Tenants</option>
-                                            <option value="caretakers">Caretakers</option>
+                                            <option value="caretakers">Property managers</option>
                                         </select>
                                     </div>
                                     <div class="form-actions">
@@ -1788,6 +1876,39 @@
 
                     <section
                         class="dashboard-section"
+                        
+                    <section class="dashboard-section" id="section-contact-messages">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Contact messages</h2>
+                                <p>Messages submitted from the public Contact page.</p>
+                            </div>
+                            <div class="section-actions">
+                                <button class="button button-outline" type="button" id="refreshContactMessagesButton">Refresh</button>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email / phone</th>
+                                            <th>Subject</th>
+                                            <th>Location</th>
+                                            <th>Message</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="contactMessagesTableBody">
+                                        <tr><td colspan="7" class="empty-state">Loading messages...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
                         id="section-pages"
                     >
                         <div class="section-heading">
@@ -2207,7 +2328,7 @@
 
                                         <div class="form-group full-width">
                                             <label>Who we serve</label>
-                                            <span class="form-help">Four audience cards on the About page.</span>
+                                            <span class="form-help">Three audience cards: students, tenants, property managers.</span>
                                         </div>
                                         <div class="form-group full-width">
                                             <label for="aboutWhoTitle">Section heading</label>
@@ -2230,20 +2351,12 @@
                                             <textarea class="form-textarea" id="aboutAudience2Text" rows="2"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="aboutAudience3Title">Card 3 title (Caretakers)</label>
-                                            <input class="form-input" id="aboutAudience3Title" type="text" placeholder="Caretakers">
+                                            <label for="aboutAudience3Title">Card 3 title (Property managers)</label>
+                                            <input class="form-input" id="aboutAudience3Title" type="text" placeholder="Property managers">
                                         </div>
                                         <div class="form-group full-width">
                                             <label for="aboutAudience3Text">Card 3 text</label>
                                             <textarea class="form-textarea" id="aboutAudience3Text" rows="2"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="aboutAudience4Title">Card 4 title (Administrators)</label>
-                                            <input class="form-input" id="aboutAudience4Title" type="text" placeholder="Administrators">
-                                        </div>
-                                        <div class="form-group full-width">
-                                            <label for="aboutAudience4Text">Card 4 text</label>
-                                            <textarea class="form-textarea" id="aboutAudience4Text" rows="2"></textarea>
                                         </div>
 
                                         <div class="form-group full-width">
@@ -2718,7 +2831,7 @@
                                                     value="caretakers.view"
                                                     data-permission-input
                                                 >
-                                                View caretakers
+                                                View property managers
                                             </label>
 
                                             <label class="checkbox-label">
@@ -2727,7 +2840,7 @@
                                                     value="caretakers.manage"
                                                     data-permission-input
                                                 >
-                                                Manage caretakers
+                                                Manage property managers
                                             </label>
 
                                             <label class="checkbox-label">
@@ -2976,6 +3089,41 @@
                         </div>
                     </section>
 
+                    <section class="dashboard-section" id="section-profile">
+                        <div class="section-heading">
+                            <div>
+                                <h2>My profile</h2>
+                                <p>Update your administrator account details.</p>
+                            </div>
+                        </div>
+                        <div class="form-panel">
+                            <div class="message" id="adminProfileMessage" role="alert"></div>
+                            <form id="adminProfileForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="adminProfileName">Full name</label>
+                                        <input class="form-input" id="adminProfileName" type="text" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adminProfilePhone">Phone</label>
+                                        <input class="form-input" id="adminProfilePhone" type="tel">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adminProfileEmail">Email</label>
+                                        <input class="form-input" id="adminProfileEmail" type="email" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adminProfileRoles">Roles</label>
+                                        <input class="form-input" id="adminProfileRoles" type="text" readonly>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="button button-primary" type="submit">Save profile</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
                     <section
                         class="dashboard-section"
                         id="section-settings"
@@ -3121,6 +3269,7 @@
             updateDoc,
             setDoc,
             addDoc,
+            deleteDoc,
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
@@ -3245,6 +3394,7 @@
             reviews: [],
             platformReviews: [],
             announcements: [],
+            contactMessages: [],
             pages: [],
             auditLogs: []
         };
@@ -3305,6 +3455,10 @@
                 "Review important platform actions"
             ],
 
+            profile: [
+                "My profile",
+                "Your administrator account"
+            ],
             settings: [
                 "System Settings",
                 "Control platform-wide behavior"
@@ -3484,6 +3638,33 @@
             );
         }
 
+
+        function isSuperAdmin() {
+            return (state.roles || []).includes("super-admin");
+        }
+
+        function getMonthKey(timestamp) {
+            const value = getTimestampValue(timestamp);
+            if (!value) return "Unknown date";
+            const d = new Date(value);
+            return d.toLocaleString("en-GB", { month: "long", year: "numeric" });
+        }
+
+        function groupByMonth(items, dateField = "createdAt") {
+            const groups = new Map();
+            items.forEach((item) => {
+                const key = getMonthKey(item[dateField]);
+                if (!groups.has(key)) groups.set(key, []);
+                groups.get(key).push(item);
+            });
+            // Sort months by most recent item
+            return [...groups.entries()].sort((a, b) => {
+                const ta = Math.max(...a[1].map((i) => getTimestampValue(i[dateField]) || 0));
+                const tb = Math.max(...b[1].map((i) => getTimestampValue(i[dateField]) || 0));
+                return tb - ta;
+            });
+        }
+
         function hasAdminRole() {
             return state.roles.some((role) =>
                 ADMIN_ROLES.includes(role)
@@ -3517,6 +3698,10 @@
             }));
         }
 
+        function redirectToLogin() {
+            window.location.replace("login.html");
+        }
+
         function showAuthChecking() {
             document.body.classList.add("auth-pending");
             document.body.classList.remove("auth-ready");
@@ -3530,7 +3715,7 @@
             if (card) {
                 card.className = "auth-gate-card";
                 card.innerHTML =
-                    "<p id=\"authGateMessage\">Checking administrator access...</p>";
+                    "<p id=\"authGateMessage\">...</p>";
             }
         }
 
@@ -3545,28 +3730,8 @@
         }
 
         function showAccessDenied(message) {
-            document.body.classList.add("auth-pending");
-            document.body.classList.remove("auth-ready");
-
-            const layout = document.getElementById("adminLayout");
-            if (layout) {
-                layout.hidden = true;
-            }
-
-            const gate = document.getElementById("authGate");
-            if (gate) {
-                gate.style.display = "grid";
-            }
-
-            const card = document.getElementById("authGateCard");
-            if (card) {
-                card.className = "auth-gate-card denied";
-                card.innerHTML = `
-                    <h2>Access restricted</h2>
-                    <p>${message || "You do not have administrator permissions for this control center."}</p>
-                    <a class="button button-primary" href="login.html">Return to login</a>
-                `;
-            }
+            // No access-denied UI — go straight to login
+            redirectToLogin();
         }
 
         async function loadAdministrator(user) {
@@ -3578,9 +3743,7 @@
                 );
 
             if (!profileSnapshot.exists()) {
-                showAccessDenied(
-                    "Your user profile was not found. Contact a system administrator."
-                );
+                redirectToLogin();
                 return;
             }
 
@@ -3617,16 +3780,50 @@
 
             // Allow any user who has an admin role (super, main, sub, content, etc.)
             if (!hasAdminRole()) {
-                showAccessDenied(
-                    "Your account is signed in, but it does not have an administrator role for this control center."
-                );
+                redirectToLogin();
                 return;
             }
 
             setAdministratorIdentity();
+            fillAdminProfileForm();
             applyPermissionVisibility();
             showAdminReady();
             await loadAdminData();
+        }
+
+
+        function fillAdminProfileForm() {
+            const nameEl = document.getElementById("adminProfileName");
+            if (!nameEl) return;
+            nameEl.value = state.profile?.fullName || state.user?.displayName || "";
+            document.getElementById("adminProfilePhone").value = state.profile?.phone || "";
+            document.getElementById("adminProfileEmail").value = state.user?.email || state.profile?.email || "";
+            document.getElementById("adminProfileRoles").value = (state.roles || []).join(", ");
+        }
+
+        async function saveAdminProfile(event) {
+            event.preventDefault();
+            const msg = document.getElementById("adminProfileMessage");
+            if (msg) { msg.className = "message"; msg.textContent = ""; }
+            const fullName = document.getElementById("adminProfileName").value.trim();
+            const phone = document.getElementById("adminProfilePhone").value.trim();
+            if (fullName.length < 2) {
+                if (msg) { msg.textContent = "Enter a valid name."; msg.className = "message error"; }
+                return;
+            }
+            try {
+                await updateDoc(doc(db, "users", state.user.uid), {
+                    fullName,
+                    phone,
+                    updatedAt: serverTimestamp()
+                });
+                state.profile = { ...state.profile, fullName, phone };
+                setAdministratorIdentity();
+                if (msg) { msg.textContent = "Profile updated."; msg.className = "message success"; }
+            } catch (error) {
+                console.error(error);
+                if (msg) { msg.textContent = "Could not update profile."; msg.className = "message error"; }
+            }
         }
 
         function setAdministratorIdentity() {
@@ -3672,12 +3869,20 @@
                     loadCollection("auditLogs")
                 ]);
 
+                let contactMessages = [];
+                try {
+                    contactMessages = await loadCollection("contactMessages");
+                } catch (e) {
+                    console.warn("Could not load contactMessages:", e);
+                }
+
                 state.users = users;
                 state.properties = properties;
                 state.locations = locations;
                 state.reviews = reviews;
                 state.platformReviews = platformReviews;
                 state.announcements = announcements;
+                state.contactMessages = contactMessages || [];
                 state.pages = pages;
                 state.auditLogs = auditLogs;
 
@@ -3706,6 +3911,7 @@
             renderReviews();
             renderPlatformReviews();
             renderAnnouncements();
+            renderContactMessages();
             renderPages();
             renderAnalytics();
             renderRoleUserOptions();
@@ -3979,15 +4185,8 @@
 
                                 <td>
                                     <div class="table-actions">
-                                        <button
-                                            class="small-button edit"
-                                            data-user-action="edit-roles"
-                                            data-id="${user.id}"
-                                            type="button"
-                                        >
-                                            Roles
-                                        </button>
-
+                                        <button class="small-button edit" data-user-action="edit" data-id="${user.id}" type="button">Edit</button>
+                                        <button class="small-button edit" data-user-action="edit-roles" data-id="${user.id}" type="button">Roles</button>
                                         <button
                                             class="small-button ${
                                                 status === "suspended"
@@ -4004,6 +4203,7 @@
                                                     : "Suspend"
                                             }
                                         </button>
+                                        <button class="small-button reject" data-user-action="delete" data-id="${user.id}" type="button">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -4559,75 +4759,94 @@
         }
 
 
+        
         function renderPlatformReviews() {
             const tableBody = document.getElementById("platformReviewsTableBody");
             if (!tableBody) return;
+
+            // Replace parent structure with month groups
+            const panelBody = tableBody.closest(".panel-body") || tableBody.parentElement;
+            const container = document.getElementById("platformReviewsByMonth") || (() => {
+                const el = document.createElement("div");
+                el.id = "platformReviewsByMonth";
+                if (panelBody) {
+                    const wrapper = tableBody.closest(".table-wrapper");
+                    if (wrapper) wrapper.style.display = "none";
+                    panelBody.appendChild(el);
+                }
+                return el;
+            })();
 
             const reviews = [...(state.platformReviews || [])].sort(
                 (a, b) => getTimestampValue(b.createdAt) - getTimestampValue(a.createdAt)
             );
 
             if (reviews.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="empty-state">
-                            No platform reviews yet. Reviews submitted from the landing page will appear here.
-                        </td>
-                    </tr>
-                `;
+                container.innerHTML = `<div class="empty-state">No platform reviews yet.</div>`;
                 return;
             }
 
-            tableBody.innerHTML = reviews
-                .map((review) => {
-                    const status = review.status || "pending";
-                    const statusClass =
-                        status === "approved"
-                            ? "badge-green"
-                            : status === "rejected"
-                                ? "badge-red"
-                                : "badge-amber";
-                    const onLanding = review.showOnLanding === true;
-                    const experience = String(review.experience || review.comment || "").slice(0, 80);
-                    const feedback = String(review.feedback || "").slice(0, 80);
+            const groups = groupByMonth(reviews);
+            const currentMonth = getMonthKey(Date.now());
 
+            container.innerHTML = groups
+                .map(([month, items], index) => {
+                    const open = month === currentMonth || index === 0 ? "open" : "";
+                    const rows = items
+                        .map((review) => {
+                            const status = review.status || "pending";
+                            const statusClass =
+                                status === "approved"
+                                    ? "badge-green"
+                                    : status === "rejected"
+                                        ? "badge-red"
+                                        : "badge-amber";
+                            const experience = String(review.experience || review.comment || "").slice(0, 100);
+                            return `
+                                <tr>
+                                    <td>
+                                        ${escapeHtml(review.name || "Anonymous")}<br>
+                                        <small>${escapeHtml(review.email || "")}</small>
+                                    </td>
+                                    <td>${escapeHtml(review.universityLabel || review.university || "—")}</td>
+                                    <td>★ ${Number(review.rating || 0).toFixed(1)}</td>
+                                    <td>${escapeHtml(experience)}</td>
+                                    <td><span class="badge ${statusClass}">${escapeHtml(status)}</span></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            ${
+                                                status !== "approved"
+                                                    ? `<button class="small-button approve" type="button" data-platform-review-action="approve" data-id="${review.id}">Approve</button>`
+                                                    : `<span class="badge badge-green">On landing</span>`
+                                            }
+                                            <button class="small-button reject" type="button" data-platform-review-action="delete" data-id="${review.id}">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        })
+                        .join("");
                     return `
-                        <tr>
-                            <td>
-                                ${escapeHtml(review.name || "Anonymous")}
-                                <br><small>${escapeHtml(review.email || "")}</small>
-                            </td>
-                            <td>${escapeHtml(review.universityLabel || review.university || "—")}</td>
-                            <td>★ ${Number(review.rating || 0).toFixed(1)}</td>
-                            <td>${escapeHtml(experience)}</td>
-                            <td>${escapeHtml(feedback)}</td>
-                            <td><span class="badge ${statusClass}">${escapeHtml(status)}</span></td>
-                            <td>${onLanding ? "Yes" : "No"}</td>
-                            <td>
-                                <div class="table-actions">
-                                    ${
-                                        status !== "approved"
-                                            ? `<button class="small-button approve" type="button" data-platform-review-action="approve" data-id="${review.id}">Approve</button>`
-                                            : ""
-                                    }
-                                    ${
-                                        status !== "rejected"
-                                            ? `<button class="small-button reject" type="button" data-platform-review-action="reject" data-id="${review.id}">Reject</button>`
-                                            : ""
-                                    }
-                                    ${
-                                        status === "approved" && !onLanding
-                                            ? `<button class="small-button view" type="button" data-platform-review-action="show" data-id="${review.id}">Show on landing</button>`
-                                            : ""
-                                    }
-                                    ${
-                                        onLanding
-                                            ? `<button class="small-button edit" type="button" data-platform-review-action="hide" data-id="${review.id}">Hide from landing</button>`
-                                            : ""
-                                    }
+                        <details class="month-group" ${open}>
+                            <summary>${escapeHtml(month)} <span style="font-weight:500;color:var(--medium-grey)">(${items.length})</span></summary>
+                            <div class="month-group-body">
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Location</th>
+                                                <th>Rating</th>
+                                                <th>Experience</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${rows}</tbody>
+                                    </table>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </details>
                     `;
                 })
                 .join("");
@@ -4662,66 +4881,166 @@
             }
         }
 
-        function renderAnnouncements() {
-            const list =
-                document.getElementById(
-                    "announcementsList"
-                );
-
-            if (state.announcements.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        No announcements found.
-                    </div>
+        
+        function renderContactMessages() {
+            const body = document.getElementById("contactMessagesTableBody");
+            if (!body) return;
+            const rows = (state.contactMessages || [])
+                .slice()
+                .sort((a, b) => {
+                    const ta = a.createdAt?.toMillis?.() || a.createdAt?.seconds || 0;
+                    const tb = b.createdAt?.toMillis?.() || b.createdAt?.seconds || 0;
+                    return tb - ta;
+                });
+            if (!rows.length) {
+                body.innerHTML = `<tr><td colspan="7" class="empty-state">No contact messages yet.</td></tr>`;
+                return;
+            }
+            body.innerHTML = rows.map((msg) => {
+                const status = msg.status || "new";
+                const badge =
+                    status === "new" ? "badge-amber" :
+                    status === "resolved" ? "badge-green" : "badge-grey";
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(msg.fullName || "—")}</strong></td>
+                        <td>
+                            ${escapeHtml(msg.email || "—")}<br>
+                            <small>${escapeHtml(msg.phone || "")}</small>
+                        </td>
+                        <td>${escapeHtml(msg.subject || "—")}</td>
+                        <td>${escapeHtml(msg.location || "—")}</td>
+                        <td style="max-width:220px">${escapeHtml((msg.message || "").slice(0, 120))}${(msg.message || "").length > 120 ? "…" : ""}</td>
+                        <td><span class="badge ${badge}">${escapeHtml(status)}</span></td>
+                        <td class="table-actions">
+                            <button class="small-button view" type="button" data-contact-action="read" data-id="${msg.id}">Mark read</button>
+                            <button class="small-button approve" type="button" data-contact-action="resolve" data-id="${msg.id}">Resolve</button>
+                        </td>
+                    </tr>
                 `;
+            }).join("");
+        }
 
+        async function updateContactMessageStatus(id, status) {
+            try {
+                await updateDoc(doc(db, "contactMessages", id), {
+                    status,
+                    updatedAt: serverTimestamp()
+                });
+                showToast("Message updated.");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not update message.", true);
+            }
+        }
+
+
+        function isCaretakerPostedAnnouncement(announcement) {
+            // Manager-posted tenant notices (from caretaker dashboard)
+            if (announcement.caretakerId) return true;
+            if (String(announcement.audienceType || announcement.audience || "").toLowerCase() === "tenants"
+                && announcement.caretakerId) return true;
+            // If poster has only caretaker role in users list
+            const posterId = announcement.createdBy;
+            if (posterId) {
+                const poster = (state.users || []).find((u) => u.id === posterId);
+                if (poster) {
+                    const roles = getProfileRoles(poster);
+                    if (roles.includes("caretaker") && !roles.some((r) => ADMIN_ROLES.includes(r))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function renderAnnouncements() {
+            const list = document.getElementById("announcementsList");
+            if (!list) return;
+
+            const announcements = (state.announcements || [])
+                .filter((a) => !isCaretakerPostedAnnouncement(a))
+                .sort((a, b) => getTimestampValue(b.createdAt) - getTimestampValue(a.createdAt));
+
+            if (announcements.length === 0) {
+                list.innerHTML = `<div class="empty-state">No admin announcements yet.</div>`;
                 return;
             }
 
-            list.innerHTML =
-                state.announcements
-                    .sort(
-                        (first, second) =>
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                    )
-                    .map(
-                        (announcement) => `
-                            <article class="announcement-card">
-                                <h3>
-                                    ${escapeHtml(
-                                        announcement.title ||
-                                        "Untitled announcement"
-                                    )}
-                                </h3>
+            const groups = groupByMonth(announcements);
+            const currentMonth = getMonthKey(Date.now());
 
-                                <p>
-                                    ${escapeHtml(
-                                        announcement.message ||
-                                        ""
-                                    )}
-                                </p>
-
-                                <small>
-                                    Audience:
-                                    ${escapeHtml(
-                                        announcement.audienceType ||
-                                        "Everyone"
-                                    )}
-                                    ·
-                                    ${formatDate(
-                                        announcement.createdAt
-                                    )}
-                                </small>
-                            </article>
-                        `
-                    )
-                    .join("");
+            list.innerHTML = groups
+                .map(([month, items], index) => {
+                    const open = month === currentMonth || index === 0 ? "open" : "";
+                    const cards = items
+                        .map(
+                            (announcement) => `
+                        <article class="announcement-card" data-announcement-id="${announcement.id}">
+                            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+                                <h3 style="margin:0">${escapeHtml(announcement.title || "Untitled announcement")}</h3>
+                                <div class="table-actions">
+                                    <button class="small-button edit" type="button" data-announcement-action="edit" data-id="${announcement.id}">Edit</button>
+                                    <button class="small-button reject" type="button" data-announcement-action="delete" data-id="${announcement.id}">Delete</button>
+                                </div>
+                            </div>
+                            <p>${escapeHtml(announcement.message || announcement.body || "")}</p>
+                            <small>
+                                Posted by ${escapeHtml(announcement.createdByName || "Admin")}
+                                · Audience: ${escapeHtml(announcement.audienceType || "Everyone")}
+                                · ${formatDate(announcement.createdAt)}
+                            </small>
+                        </article>
+                    `
+                        )
+                        .join("");
+                    return `
+                        <details class="month-group" ${open}>
+                            <summary>${escapeHtml(month)} <span style="font-weight:500;color:var(--medium-grey)">(${items.length})</span></summary>
+                            <div class="month-group-body">${cards}</div>
+                        </details>
+                    `;
+                })
+                .join("");
         }
+
+        function fillAnnouncementEdit(id) {
+            const item = (state.announcements || []).find((a) => a.id === id);
+            if (!item) return;
+            togglePanel("announcementCreatePanel", true);
+            document.getElementById("announcementTitle").value = item.title || "";
+            document.getElementById("announcementMessageText").value = item.message || item.body || "";
+            if (document.getElementById("announcementAudience")) {
+                document.getElementById("announcementAudience").value = item.audienceType || "everyone";
+            }
+            let hidden = document.getElementById("editingAnnouncementId");
+            if (!hidden) {
+                hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.id = "editingAnnouncementId";
+                document.getElementById("announcementForm")?.appendChild(hidden);
+            }
+            hidden.value = id;
+            const btn = document.querySelector("#announcementForm button[type='submit']");
+            if (btn) btn.textContent = "Save changes";
+            openSection("announcements");
+        }
+
+        async function deleteAnnouncement(id) {
+            if (!id || !confirm("Delete this announcement?")) return;
+            try {
+                await deleteDoc(doc(db, "announcements", id));
+                await writeAuditLog("Announcement deleted", { id, name: "Announcement" });
+                showToast("Announcement deleted.");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete announcement.", true);
+            }
+        }
+
+
 
         const FIXED_PAGES = {
             index: {
@@ -4738,7 +5057,7 @@
                         "Find student boarding houses and apartments in convenient campus locations.",
                     typesHeading: "Accommodation for different needs",
                     typesIntro:
-                        "Whether you are a student or a working tenant, find suitable accommodation managed by local caretakers.",
+                        "Whether you are a student or a working tenant, find suitable accommodation managed by local property managers.",
                     studentTitle: "Student boarding houses",
                     studentText:
                         "Explore rooms and beds near your campus with availability, prices, amenities, and property details.",
@@ -4796,7 +5115,7 @@
                     value1Title: "Clarity",
                     value1Text: "Listings should show useful details such as location, availability, pricing, and amenities in a straightforward way.",
                     value2Title: "Local connection",
-                    value2Text: "Accommodation is managed through local caretakers who understand the properties and can respond to practical questions.",
+                    value2Text: "Accommodation is managed through local property managers who understand the properties and can respond to practical questions.",
                     value3Title: "Responsible platform use",
                     value3Text: "We encourage accurate information, respectful communication, and careful decisions before any tenancy or payment agreement.",
                     noteTitle: "A note about agreements",
@@ -4818,11 +5137,11 @@
                     metaDescription:
                         "Read the Masitech Solutions Privacy Policy.",
                     sec1:
-                        "Masitech Solutions operates a platform that helps students and non-student tenants discover accommodation such as boarding houses and apartments.\n\nThis Privacy Policy explains how we handle personal information when you visit our website, create an account, browse listings, contact a caretaker, submit an inquiry, or use another platform feature.\n\nIn this policy, “we,” “us,” and “our” refer to Masitech Solutions. “You” refers to a visitor, student, tenant, caretaker, administrator, or other person using the platform.",
+                        "Masitech Solutions operates a platform that helps students and non-student tenants discover accommodation such as boarding houses and apartments.\n\nThis Privacy Policy explains how we handle personal information when you visit our website, create an account, browse listings, contact a property manager, submit an inquiry, or use another platform feature.\n\nIn this policy, “we,” “us,” and “our” refer to Masitech Solutions. “You” refers to a visitor, student, tenant, caretaker, administrator, or other person using the platform.",
                     sec2:
                         "Information you provide\nDepending on how you use the platform, we may collect:\n- Full name.\n- Email address.\n- Phone number.\n- Password-related account information handled by Firebase Authentication.\n- Account type, such as student or non-student tenant.\n- Preferred location or campus area.\n- Property inquiries and messages.\n- Ratings, reviews, and reports.\n- Information submitted when you contact us.\n\nInformation collected automatically\nWe may collect technical information such as browser type, device information, approximate location derived from technical data, IP address, pages visited, and interaction information. Some of this information may be collected by authentication, security, or analytics services.\n\nProperty information\nCaretakers and administrators may submit property details, room information, availability, prices, conditions, photos, amenities, and location information. Some of this information is intended to be publicly displayed on the platform.",
                     sec3:
-                        "We may use personal information to:\n- Create and manage user accounts.\n- Authenticate users and protect accounts.\n- Display accommodation listings according to selected locations.\n- Connect prospective tenants with relevant caretakers.\n- Process inquiries, applications, and support requests.\n- Display and manage ratings and reviews.\n- Send important account, service, or platform announcements.\n- Improve the website and understand its usage.\n- Detect fraud, misuse, security threats, and policy violations.\n- Maintain records required for administration and legal compliance.\n\nWe will aim to collect and use only information that is reasonably necessary for these purposes.",
+                        "We may use personal information to:\n- Create and manage user accounts.\n- Authenticate users and protect accounts.\n- Display accommodation listings according to selected locations.\n- Connect prospective tenants with relevant property managers.\n- Process inquiries, applications, and support requests.\n- Display and manage ratings and reviews.\n- Send important account, service, or platform announcements.\n- Improve the website and understand its usage.\n- Detect fraud, misuse, security threats, and policy violations.\n- Maintain records required for administration and legal compliance.\n\nWe will aim to collect and use only information that is reasonably necessary for these purposes.",
                     sec4:
                         "We may share information when necessary to operate the platform, including with:\n- Authorized caretakers handling properties in their assigned locations.\n- Masitech Solutions administrators.\n- Service providers that support authentication, hosting, storage, analytics, or communications.\n- Professional advisers or authorities where required by law.\n\nWe do not intend to sell personal information. Public reviews, display names, and property-related information may be visible to other platform users depending on the feature and the choices made by administrators.\n\nUsers should avoid posting sensitive personal information in public reviews, property descriptions, or inquiry messages.",
                     sec5:
@@ -4856,11 +5175,11 @@
                     metaDescription: "Read the Terms and Conditions for using Masitech Solutions.",
                     importantNotice: "These Terms and Conditions are a general starting draft. The owner should have them reviewed and customized by a qualified lawyer before the platform goes live.",
                     sec1: "These Terms and Conditions govern your access to and use of the Masitech Solutions website and related services.\n\nBy accessing the platform, creating an account, submitting information, or using any platform feature, you agree to follow these Terms and Conditions and the Privacy Policy.\n\nIf you do not agree with these terms, you should not use the platform.",
-                    sec2: "Masitech Solutions provides an online platform where students and other tenants can discover accommodation listings, view property information, make inquiries, and interact with relevant caretakers or property representatives.\n\nThe platform may contain student boarding houses, apartments, rooms, beds, property photos, prices, availability details, amenities, conditions, reviews, announcements, and related information.\n\nUnless expressly stated otherwise, Masitech Solutions is a platform operator and is not automatically a party to any rental, lease, booking, payment, or other agreement between a tenant and a property owner or caretaker.",
-                    sec3: "Some platform features require an account. When creating an account, you agree to provide information that is accurate, current, and complete.\n\nYou are responsible for maintaining the confidentiality of your login details and for activity carried out through your account. Do not share your password with another person.\n\nYou must notify us promptly if you believe that your account has been accessed without permission.\n\nAccount types\nThe platform may support students, non-student tenants, caretakers, administrators, and other account types. Access to features depends on the role assigned to an account.\n\nCaretaker and administrator accounts may require approval, verification, or creation by an authorized administrator. Users must not misrepresent their identity, position, property ownership, or authority.",
-                    sec4: "Property listings may be submitted and managed by caretakers, administrators, owners, or other authorized representatives.\n\nListing information may include availability, price, location, property condition, room type, amenities, images, house rules, and contact information.\n\nProperty representatives are responsible for ensuring that the information they submit is accurate, lawful, current, and not misleading.\n\nAvailability, prices, images, conditions, and other details may change. Users should confirm important information directly with the relevant caretaker or authorized property representative before making a decision.\n\nWe may review, edit, reject, suspend, archive, or remove a listing where we believe it is inaccurate, outdated, misleading, unlawful, unsafe, or inconsistent with these Terms.",
+                    sec2: "Masitech Solutions provides an online platform where students and other tenants can discover accommodation listings, view property information, make inquiries, and interact with relevant property managers or property representatives.\n\nThe platform may contain student boarding houses, apartments, rooms, beds, property photos, prices, availability details, amenities, conditions, reviews, announcements, and related information.\n\nUnless expressly stated otherwise, Masitech Solutions is a platform operator and is not automatically a party to any rental, lease, booking, payment, or other agreement between a tenant and a property owner or caretaker.",
+                    sec3: "Some platform features require an account. When creating an account, you agree to provide information that is accurate, current, and complete.\n\nYou are responsible for maintaining the confidentiality of your login details and for activity carried out through your account. Do not share your password with another person.\n\nYou must notify us promptly if you believe that your account has been accessed without permission.\n\nAccount types\nThe platform may support students, non-student tenants, property managers, administrators, and other account types. Access to features depends on the role assigned to an account.\n\nProperty manager and administrator accounts may require approval, verification, or creation by an authorized administrator. Users must not misrepresent their identity, position, property ownership, or authority.",
+                    sec4: "Property listings may be submitted and managed by property managers, administrators, owners, or other authorized representatives.\n\nListing information may include availability, price, location, property condition, room type, amenities, images, house rules, and contact information.\n\nProperty representatives are responsible for ensuring that the information they submit is accurate, lawful, current, and not misleading.\n\nAvailability, prices, images, conditions, and other details may change. Users should confirm important information directly with the relevant property manager or authorized property representative before making a decision.\n\nWe may review, edit, reject, suspend, archive, or remove a listing where we believe it is inaccurate, outdated, misleading, unlawful, unsafe, or inconsistent with these Terms.",
                     sec5: "The platform may allow users to contact caretakers or submit inquiries about properties. Sending an inquiry does not guarantee availability, approval, booking, tenancy, or a rental agreement.\n\nAny lease, tenancy, payment, deposit, viewing arrangement, move-in arrangement, or other agreement must be confirmed directly with the relevant property owner or authorized representative.\n\nUsers should independently verify the identity of the person they are dealing with and should use appropriate caution before sending money, sharing sensitive information, or entering into a rental agreement.\n\nUnless expressly agreed in writing, Masitech Solutions does not guarantee that a property will remain available or that a prospective tenant will be accepted.",
-                    sec6: "Registered users may be allowed to submit reviews or ratings for properties and, where enabled, caretakers.\n\nReviews must be based on the user’s genuine experience and must be fair, relevant, and written in good faith.\n\nReviews must not:\n- Contain false, fabricated, or deliberately misleading information.\n- Include threats, harassment, hate speech, or abusive language.\n- Reveal another person’s private or sensitive information.\n- Contain malicious software, spam, advertising, or unrelated material.\n- Be submitted in exchange for payment or another improper benefit.\n- Attempt to manipulate the rating of a property or caretaker.\n- Impersonate another person or organization.\n- Make unlawful accusations or include content that violates another person’s rights.\n\nCaretakers and property representatives must not edit a tenant’s review. They may be allowed to respond through the platform, subject to moderation rules.\n\nWe may moderate, hide, remove, or restrict access to reviews that violate these Terms or applicable law.",
+                    sec6: "Registered users may be allowed to submit reviews or ratings for properties and, where enabled, caretakers.\n\nReviews must be based on the user’s genuine experience and must be fair, relevant, and written in good faith.\n\nReviews must not:\n- Contain false, fabricated, or deliberately misleading information.\n- Include threats, harassment, hate speech, or abusive language.\n- Reveal another person’s private or sensitive information.\n- Contain malicious software, spam, advertising, or unrelated material.\n- Be submitted in exchange for payment or another improper benefit.\n- Attempt to manipulate the rating of a property or caretaker.\n- Impersonate another person or organization.\n- Make unlawful accusations or include content that violates another person’s rights.\n\nProperty managers and property representatives must not edit a tenant’s review. They may be allowed to respond through the platform, subject to moderation rules.\n\nWe may moderate, hide, remove, or restrict access to reviews that violate these Terms or applicable law.",
                     sec7: "You agree to use the platform lawfully, respectfully, and only for its intended accommodation-related purposes.\n\nYou must not:\n- Use the platform for fraud, impersonation, harassment, or illegal activity.\n- Submit false property, identity, availability, or contact information.\n- Attempt to access another user’s account or private information.\n- Interfere with the operation, security, or availability of the platform.\n- Use automated tools to scrape, copy, overload, or monitor the platform without permission.\n- Upload viruses, malicious code, or harmful files.\n- Use the platform to discriminate unlawfully against another person.\n- Use platform information to send unauthorized marketing or spam.",
                     sec8: "You retain ownership of content that you lawfully submit, including reviews, comments, messages, images, and property information, subject to the rights granted below.\n\nBy submitting content to the platform, you grant Masitech Solutions a non-exclusive, worldwide, royalty-free license to host, store, reproduce, display, format, moderate, and distribute that content as reasonably necessary to operate, improve, promote, and secure the platform.\n\nYou confirm that you have the necessary rights and permissions to submit the content and that its publication will not violate another person’s rights or applicable law.\n\nWe may remove or restrict content that violates these Terms, the Privacy Policy, applicable law, or the safety and integrity of the platform.",
                     sec9: "Unless otherwise stated, the platform’s design, branding, logo, text, graphics, software, layout, and other original materials belong to Masitech Solutions or its licensors.\n\nYou may use the platform and its content for personal, lawful, accommodation-related purposes. You must not copy, reproduce, modify, distribute, sell, reverse engineer, or commercially exploit platform materials without written permission.\n\nProperty names, logos, photographs, and other materials submitted by users or property representatives may belong to their respective owners.",
@@ -4925,20 +5244,20 @@ Listings and properties | How do I find a student boarding house? | Select the s
 Listings and properties | How do I find an apartment? | Open the apartments page, select your preferred location, and compare available apartments using the search and sorting controls.
 Listings and properties | What information is shown on a listing? | A listing may show photos, property name, location, price, room or unit type, condition, amenities, availability, ratings, reviews, and caretaker contact information.
 Listings and properties | Why can a listing disappear? | A listing may be hidden because it is occupied, reserved, under maintenance, outdated, awaiting approval, or removed by an authorized administrator.
-Listings and properties | Can I trust every detail in a listing? | Users should confirm important details directly with the relevant caretaker or property representative. Prices, condition, availability, and amenities may change.
+Listings and properties | Can I trust every detail in a listing? | Users should confirm important details directly with the relevant property manager or property representative. Prices, condition, availability, and amenities may change.
 Accounts and login | Do I need an account to browse listings? | Public listings may be browsed without an account. An account may be required to submit inquiries, save properties, submit reviews, or access dashboard features.
-Accounts and login | What account types can I create? | Public registration is available for students and non-student tenants. Caretaker and administrator accounts should be created or approved by authorized administrators.
+Accounts and login | What account types can I create? | Public registration is available for students and non-student tenants. Property manager and administrator accounts should be created or approved by authorized administrators.
 Accounts and login | What if I forget my password? | Use the Forgot Password page and enter the email address connected to your account.
 Accounts and login | Why do I need to select a location? | Location selection helps organize listings and show accommodation information relevant to the campus or area where you want to live.
-Inquiries and tenancy | How do I contact a caretaker? | Open the property details page and use the available inquiry or contact option. You may need to log in before submitting an inquiry.
+Inquiries and tenancy | How do I contact a property manager? | Open the property details page and use the available inquiry or contact option. You may need to log in before submitting an inquiry.
 Inquiries and tenancy | Does submitting an inquiry reserve a room? | No. An inquiry is a request for information or communication. It does not automatically reserve a room, apartment, or bed.
-Inquiries and tenancy | Where do I confirm rent and availability? | Confirm current rent, availability, deposits, viewing times, house rules, and tenancy requirements with the relevant caretaker or authorized property representative.
+Inquiries and tenancy | Where do I confirm rent and availability? | Confirm current rent, availability, deposits, viewing times, house rules, and tenancy requirements with the relevant property manager or authorized property representative.
 Inquiries and tenancy | Does the platform process rental payments? | Payment functionality depends on the features enabled by the owner. Unless the platform clearly states otherwise, do not assume that the platform processes rent, deposits, or booking payments.
 Reviews and ratings | Who can submit a review? | Registered users may submit reviews where the feature is enabled. The platform may later require evidence of an inquiry, application, or tenancy before accepting a review.
-Reviews and ratings | Can a caretaker edit my review? | No. Caretakers should not edit tenant reviews. They may be allowed to respond, while administrators may moderate content that violates platform rules.
+Reviews and ratings | Can a property manager edit my review? | No. Caretakers should not edit tenant reviews. They may be allowed to respond, while administrators may moderate content that violates platform rules.
 Reviews and ratings | What should I include in a review? | Reviews should be honest, relevant, respectful, and based on your genuine experience. Do not publish private information, threats, spam, or deliberately false claims.
-Caretaker questions | What does a caretaker do? | A caretaker may manage assigned properties, update availability, maintain listing details, respond to inquiries, and report operational issues to administrators.
-Caretaker questions | Can a caretaker manage every location? | No. Caretaker access should be limited to the locations and properties assigned to that caretaker by an authorized administrator.
+Caretaker questions | What does a property manager do? | A caretaker may manage assigned properties, update availability, maintain listing details, respond to inquiries, and report operational issues to administrators.
+Caretaker questions | Can a property manager manage every location? | No. Caretaker access should be limited to the locations and properties assigned to that caretaker by an authorized administrator.
 Caretaker questions | Can caretakers edit tenant reviews? | No. Caretakers should not edit or delete tenant reviews. Review moderation should be controlled by authorized administrators.
 Privacy and security | How is my information used? | Information may be used to manage your account, show relevant listings, process inquiries, provide support, improve the platform, and protect against misuse. Read the Privacy Policy for more information.
 Privacy and security | How can I request help with my information? | Contact the platform using the details on the Contact page and describe your request.
@@ -5783,109 +6102,113 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
         }
 
         
+        
         function renderAuditLogs() {
             const searchTerm =
-                document.getElementById(
-                    "auditSearch"
-                )?.value
-                    ?.trim()
-                    .toLowerCase() || "";
+                document.getElementById("auditSearch")?.value?.trim().toLowerCase() || "";
 
-            const logs =
-                state.auditLogs.filter((log) => {
-                    const searchableText = [
-                        log.actorName,
-                        log.actorRole,
-                        log.action,
-                        log.targetName,
-                        log.locationId,
-                        log.details
-                    ]
-                        .filter(Boolean)
-                        .join(" ")
-                        .toLowerCase();
+            const logs = state.auditLogs.filter((log) => {
+                const searchableText = [
+                    log.actorName,
+                    log.actorRole,
+                    log.action,
+                    log.targetName,
+                    log.locationId,
+                    log.details
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+                return !searchTerm || searchableText.includes(searchTerm);
+            });
 
-                    return (
-                        !searchTerm ||
-                        searchableText.includes(
-                            searchTerm
-                        )
-                    );
-                });
+            const tableBody = document.getElementById("auditTableBody");
+            if (!tableBody) return;
 
-            const tableBody =
-                document.getElementById(
-                    "auditTableBody"
-                );
+            const panelBody = tableBody.closest(".panel-body") || tableBody.parentElement;
+            let container = document.getElementById("auditLogsByMonth");
+            if (!container && panelBody) {
+                container = document.createElement("div");
+                container.id = "auditLogsByMonth";
+                const wrapper = tableBody.closest(".table-wrapper");
+                if (wrapper) wrapper.style.display = "none";
+                panelBody.appendChild(container);
+            }
+            if (!container) return;
 
             if (logs.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="empty-state">
-                            No audit logs found.
-                        </td>
-                    </tr>
-                `;
-
+                container.innerHTML = `<div class="empty-state">No audit logs found.</div>`;
                 return;
             }
 
-            tableBody.innerHTML =
-                logs
-                    .sort(
-                        (first, second) =>
-                            getTimestampValue(
-                                second.createdAt
-                            ) -
-                            getTimestampValue(
-                                first.createdAt
-                            )
-                    )
-                    .map(
-                        (log) => `
+            const groups = groupByMonth(logs);
+            const currentMonth = getMonthKey(Date.now());
+            const canDelete = isSuperAdmin();
+
+            container.innerHTML = groups
+                .map(([month, items], index) => {
+                    const open = month === currentMonth || index === 0 ? "open" : "";
+                    const rows = items
+                        .sort((a, b) => getTimestampValue(b.createdAt) - getTimestampValue(a.createdAt))
+                        .map(
+                            (log) => `
                             <tr>
+                                <td>${formatDateTime(log.createdAt)}</td>
+                                <td>${escapeHtml(log.actorName || "—")}</td>
+                                <td>${escapeHtml(log.action || "—")}</td>
+                                <td>${escapeHtml(log.targetName || "—")}</td>
+                                <td>${escapeHtml(log.details || "—")}</td>
                                 <td>
-                                    ${formatDateTime(
-                                        log.createdAt
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                                        log.actorName || "—"
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                                        log.action || "—"
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                                        log.targetName ||
-                                        log.targetId ||
-                                        "—"
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                                        log.locationId ||
-                                        "All locations"
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                                        log.details || "—"
-                                    )}
+                                    ${
+                                        canDelete
+                                            ? `<button class="small-button reject" type="button" data-audit-action="delete" data-id="${log.id}">Delete</button>`
+                                            : "—"
+                                    }
                                 </td>
                             </tr>
                         `
-                    )
-                    .join("");
+                        )
+                        .join("");
+                    return `
+                        <details class="month-group" ${open}>
+                            <summary>${escapeHtml(month)} <span style="font-weight:500;color:var(--medium-grey)">(${items.length})</span></summary>
+                            <div class="month-group-body">
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>When</th>
+                                                <th>Actor</th>
+                                                <th>Action</th>
+                                                <th>Target</th>
+                                                <th>Details</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${rows}</tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </details>
+                    `;
+                })
+                .join("");
+        }
+
+        async function deleteAuditLog(id) {
+            if (!isSuperAdmin()) {
+                showToast("Only a super administrator can delete audit logs.", true);
+                return;
+            }
+            if (!id || !confirm("Delete this audit log entry?")) return;
+            try {
+                await deleteDoc(doc(db, "auditLogs", id));
+                showToast("Audit log deleted.");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete audit log.", true);
+            }
         }
 
         function updateNotificationCount() {
@@ -6068,6 +6391,72 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 );
             }
         }
+
+
+        function openUserEdit(userId) {
+            const user = state.users.find((u) => u.id === userId);
+            if (!user) return;
+            document.getElementById("editUserId").value = user.id;
+            document.getElementById("editUserName").value = user.fullName || "";
+            document.getElementById("editUserPhone").value = user.phone || "";
+            document.getElementById("editUserEmail").value = user.email || "";
+            document.getElementById("editUserStatus").value = user.accountStatus || "active";
+            const panel = document.getElementById("userEditPanel");
+            if (panel) panel.classList.remove("hidden");
+            openSection("users");
+            panel?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        async function saveUserEdit(event) {
+            event.preventDefault();
+            const msg = document.getElementById("userEditMessage");
+            if (msg) { msg.className = "message"; msg.textContent = ""; }
+            const userId = document.getElementById("editUserId").value;
+            if (!userId) return;
+            const fullName = document.getElementById("editUserName").value.trim();
+            const phone = document.getElementById("editUserPhone").value.trim();
+            const accountStatus = document.getElementById("editUserStatus").value;
+            try {
+                await updateDoc(doc(db, "users", userId), {
+                    fullName,
+                    phone,
+                    accountStatus,
+                    updatedAt: serverTimestamp()
+                });
+                await writeAuditLog("User details updated", { id: userId, name: fullName });
+                if (msg) {
+                    msg.textContent = "User updated.";
+                    msg.className = "message success";
+                }
+                document.getElementById("userEditPanel")?.classList.add("hidden");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                if (msg) {
+                    msg.textContent = "Could not update user.";
+                    msg.className = "message error";
+                }
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!userId) return;
+            if (userId === state.user.uid) {
+                showToast("You cannot delete your own account from here.", true);
+                return;
+            }
+            if (!confirm("Delete this user profile from the database? This cannot be undone.")) return;
+            try {
+                await deleteDoc(doc(db, "users", userId));
+                await writeAuditLog("User deleted", { id: userId, name: "User profile removed" });
+                showToast("User deleted.");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete user. Check Firestore rules.", true);
+            }
+        }
+
 
         async function toggleUserStatus(
             userId
@@ -6520,6 +6909,10 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 "pageSubtitle"
             ).textContent = subtitle;
 
+            if (sectionName === "profile") {
+                fillAdminProfileForm();
+            }
+
             sidebar.classList.remove("open");
 
             mobileMenuButton.setAttribute(
@@ -6711,20 +7104,43 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 return;
             }
             try {
-                const docRef = await addDoc(collection(db, "announcements"), {
-                    title,
-                    message,
-                    audienceType,
-                    createdBy: state.user.uid,
-                    createdByName: state.profile.fullName || state.user.displayName || state.user.email,
-                    createdAt: serverTimestamp()
-                });
-                await writeAuditLog("Announcement published", {
-                    id: docRef.id,
-                    name: title,
-                    details: `Audience: ${audienceType}`
-                });
-                showMessage(msgEl, "Announcement published.", "success");
+                const editingId = document.getElementById("editingAnnouncementId")?.value || "";
+                let docRefId = editingId;
+                if (editingId) {
+                    await updateDoc(doc(db, "announcements", editingId), {
+                        title,
+                        message,
+                        audienceType,
+                        updatedAt: serverTimestamp(),
+                        updatedBy: state.user.uid
+                    });
+                    await writeAuditLog("Announcement updated", {
+                        id: editingId,
+                        name: title,
+                        details: `Audience: ${audienceType}`
+                    });
+                    showMessage(msgEl, "Announcement updated.", "success");
+                } else {
+                    const docRef = await addDoc(collection(db, "announcements"), {
+                        title,
+                        message,
+                        audienceType,
+                        createdBy: state.user.uid,
+                        createdByName: state.profile.fullName || state.user.displayName || state.user.email,
+                        createdAt: serverTimestamp()
+                    });
+                    docRefId = docRef.id;
+                    await writeAuditLog("Announcement published", {
+                        id: docRef.id,
+                        name: title,
+                        details: `Audience: ${audienceType}`
+                    });
+                    showMessage(msgEl, "Announcement published.", "success");
+                }
+                const editHidden = document.getElementById("editingAnnouncementId");
+                if (editHidden) editHidden.value = "";
+                const submitBtn = document.querySelector("#announcementForm button[type='submit']");
+                if (submitBtn) submitBtn.textContent = "Publish announcement";
                 document.getElementById("announcementForm").reset();
                 togglePanel("announcementCreatePanel", false);
                 await loadAdminData();
@@ -7039,6 +7455,18 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 renderAuditLogs
             );
 
+        document.getElementById("auditLogsByMonth")?.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-audit-action]");
+            if (btn?.dataset.auditAction === "delete") {
+                await deleteAuditLog(btn.dataset.id);
+            }
+        });
+        // Also listen on document for dynamically created month groups
+        document.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-audit-action='delete']");
+            if (btn) await deleteAuditLog(btn.dataset.id);
+        });
+
         document
             .getElementById("usersTableBody")
             .addEventListener(
@@ -7056,22 +7484,55 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     const userId =
                         button.dataset.id;
 
-                    if (
-                        button.dataset.userAction ===
-                        "toggle-status"
-                    ) {
+                    if (button.dataset.userAction === "toggle-status") {
                         toggleUserStatus(userId);
                     }
-
-                    if (
-                        button.dataset.userAction ===
-                        "edit-roles"
-                    ) {
+                    if (button.dataset.userAction === "edit-roles") {
                         openSection("roles");
                         setSelectedRoleUser(userId);
                     }
+                    if (button.dataset.userAction === "edit") {
+                        openUserEdit(userId);
+                    }
+                    if (button.dataset.userAction === "delete") {
+                        deleteUser(userId);
+                    }
                 }
             );
+
+        document.getElementById("userEditForm")?.addEventListener("submit", saveUserEdit);
+        document.getElementById("cancelUserEdit")?.addEventListener("click", () => {
+            document.getElementById("userEditPanel")?.classList.add("hidden");
+        });
+
+        document.getElementById("locationsTableBody")?.addEventListener("click", (event) => {
+            const button = event.target.closest("[data-location-action]");
+            if (!button || button.dataset.locationAction !== "edit") return;
+            const locationId = button.dataset.id;
+            const base = PLATFORM_LOCATIONS.find((item) => item.id === locationId);
+            const saved = (state.locations || []).find((item) => item.id === locationId);
+            togglePanel("locationCreatePanel", true);
+            openSection("locations");
+            const keyEl = document.getElementById("locationKey");
+            if (keyEl) {
+                keyEl.value = locationId;
+                keyEl.dispatchEvent(new Event("change"));
+            }
+            if (saved) {
+                document.getElementById("locationArea").value = saved.area || "";
+                document.getElementById("locationStreet").value = saved.street || "";
+                document.getElementById("locationDescription").value = saved.description || "";
+                document.getElementById("locationStatus").value = saved.status || "active";
+            } else if (base) {
+                document.getElementById("locationArea").value = "";
+                document.getElementById("locationStreet").value = "";
+                document.getElementById("locationDescription").value = "";
+                document.getElementById("locationStatus").value = "active";
+            }
+            document.getElementById("locationArea")?.focus();
+            showToast("Edit the location details and save.");
+        });
+
 
         document
             .getElementById("caretakersTableBody")
@@ -7138,12 +7599,12 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         button.dataset.propertyAction ===
                         "view"
                     ) {
-                        window.open(
-                            `property-details.html?id=${encodeURIComponent(
-                                propertyId
-                            )}`,
-                            "_blank"
-                        );
+                        const property = state.properties.find((item) => item.id === propertyId);
+                        const page =
+                            property?.propertyType === "apartment"
+                                ? "apartment-listings.html"
+                                : "student-listings.html";
+                        window.open(page, "_blank");
                     }
                 }
             );
@@ -7220,20 +7681,17 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         status: "approved",
                         showOnLanding: true
                     });
-                } else if (action === "reject") {
-                    await updatePlatformReview(reviewId, {
-                        status: "rejected",
-                        showOnLanding: false
-                    });
-                } else if (action === "show") {
-                    await updatePlatformReview(reviewId, {
-                        status: "approved",
-                        showOnLanding: true
-                    });
-                } else if (action === "hide") {
-                    await updatePlatformReview(reviewId, {
-                        showOnLanding: false
-                    });
+                } else if (action === "delete") {
+                    if (!confirm("Delete this review permanently?")) return;
+                    try {
+                        await deleteDoc(doc(db, "platformReviews", reviewId));
+                        await writeAuditLog("Platform review deleted", { id: reviewId, name: "Review" });
+                        showToast("Review deleted.");
+                        await loadAdminData();
+                    } catch (error) {
+                        console.error(error);
+                        showToast("Could not delete review.", true);
+                    }
                 }
             });
 
@@ -7296,6 +7754,23 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             }
         });
 
+        
+        document.getElementById("contactMessagesTableBody")?.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-contact-action]");
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (btn.dataset.contactAction === "read") {
+                await updateContactMessageStatus(id, "read");
+            }
+            if (btn.dataset.contactAction === "resolve") {
+                await updateContactMessageStatus(id, "resolved");
+            }
+        });
+        document.getElementById("refreshContactMessagesButton")?.addEventListener("click", async () => {
+            await loadAdminData();
+            showToast("Contact messages refreshed.");
+        });
+
         document
             .getElementById(
                 "notificationButton"
@@ -7332,32 +7807,19 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 }
             );
 
-        // Gate: never show the admin shell until a logged-in admin is confirmed
-        showAuthChecking();
-
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-                if (!user) {
-                    // Not logged in — leave immediately, do not render admin UI
-                    window.location.replace("login.html");
-                    return;
-                }
-
-                try {
-                    await loadAdministrator(user);
-                } catch (error) {
-                    console.error(
-                        "Administrator dashboard error:",
-                        error
-                    );
-
-                    showAccessDenied(
-                        "Could not verify administrator access. Please try again or contact support."
-                    );
-                }
+        // No "checking access" flash — redirect immediately if not an admin
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                redirectToLogin();
+                return;
             }
-        );
+            try {
+                await loadAdministrator(user);
+            } catch (error) {
+                console.error("Administrator dashboard error:", error);
+                redirectToLogin();
+            }
+        });
     </script>
 </body>
 </html>

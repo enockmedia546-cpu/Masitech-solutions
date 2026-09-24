@@ -424,10 +424,10 @@
 
         import {
             getAuth,
-            onAuthStateChanged,
             signInWithEmailAndPassword,
             GoogleAuthProvider,
-            signInWithPopup
+            signInWithPopup,
+            signOut
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
         import {
@@ -453,6 +453,7 @@
         const db = getFirestore(app);
         const googleProvider = new GoogleAuthProvider();
 
+        // Higher priority roles win only when that role is actually on the account
         const ROLE_PRIORITY = [
             "super-admin",
             "main-admin",
@@ -467,19 +468,12 @@
             "tenant"
         ];
 
-        const loginForm =
-            document.getElementById("loginForm");
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
+        const message = document.getElementById("message");
+        const googleLoginButton = document.getElementById("googleLoginButton");
 
-        const loginButton =
-            document.getElementById("loginButton");
-
-        const message =
-            document.getElementById("message");
-
-        const currentYear =
-            document.getElementById("currentYear");
-
-        currentYear.textContent =
+        document.getElementById("currentYear").textContent =
             new Date().getFullYear();
 
         function showMessage(text, type) {
@@ -487,50 +481,44 @@
             message.className = `message ${type}`;
         }
 
+        function hideMessage() {
+            message.textContent = "";
+            message.className = "message";
+        }
+
         function getRolesFromProfile(profile) {
-            if (Array.isArray(profile.roles)) {
-                return profile.roles;
+            if (Array.isArray(profile.roles) && profile.roles.length) {
+                return profile.roles.map(String);
             }
-
             if (profile.role) {
-                return [profile.role];
+                return [String(profile.role)];
             }
-
             return [];
         }
 
         function getRolesFromClaims(claims) {
-            if (Array.isArray(claims.roles)) {
-                return claims.roles;
+            if (Array.isArray(claims.roles) && claims.roles.length) {
+                return claims.roles.map(String);
             }
-
             if (claims.role) {
-                return [claims.role];
+                return [String(claims.role)];
             }
-
             return [];
         }
 
         function getEffectiveRoles(profile, claims) {
-            const profileRoles =
-                getRolesFromProfile(profile);
-
-            const claimRoles =
-                getRolesFromClaims(claims);
-
             return [
                 ...new Set([
-                    ...profileRoles,
-                    ...claimRoles
+                    ...getRolesFromProfile(profile),
+                    ...getRolesFromClaims(claims)
                 ])
             ];
         }
 
         function getDashboardForRoles(roles) {
-            const selectedRole =
-                ROLE_PRIORITY.find((role) =>
-                    roles.includes(role)
-                );
+            const selectedRole = ROLE_PRIORITY.find((role) =>
+                roles.includes(role)
+            );
 
             switch (selectedRole) {
                 case "super-admin":
@@ -542,67 +530,92 @@
                 case "analytics-admin":
                 case "location-admin":
                     return "admin.html";
-
                 case "caretaker":
                     return "caretaker.html";
-
                 case "student":
                     return "student-dashboard.html";
-
                 case "tenant":
                     return "tenant-dashboard.html";
-
                 default:
                     return "profile.html";
             }
         }
 
-        async function redirectAuthenticatedUser(user) {
-            const profileSnapshot = await getDoc(
-                doc(db, "users", user.uid)
-            );
+        function friendlyAuthError(error) {
+            const code = error?.code || "";
+            if (
+                code === "auth/invalid-credential" ||
+                code === "auth/user-not-found" ||
+                code === "auth/wrong-password"
+            ) {
+                return "The email or password is incorrect.";
+            }
+            if (code === "auth/invalid-email") {
+                return "Please enter a valid email address.";
+            }
+            if (code === "auth/too-many-requests") {
+                return "Too many failed attempts. Please wait and try again later.";
+            }
+            if (code === "auth/network-request-failed") {
+                return "Network error. Please check your internet connection.";
+            }
+            if (code === "auth/user-disabled") {
+                return "This account has been disabled. Please contact support.";
+            }
+            if (code === "auth/popup-closed-by-user") {
+                return "The sign-in window was closed before finishing.";
+            }
+            if (code === "auth/popup-blocked") {
+                return "Your browser blocked the sign-in window. Allow pop-ups and try again.";
+            }
+            if (code === "auth/account-exists-with-different-credential") {
+                return "An account already exists with this email using another sign-in method.";
+            }
+            return "We could not log you in. Please check your details and try again.";
+        }
 
+        async function resolveDestination(user) {
+            const profileSnapshot = await getDoc(doc(db, "users", user.uid));
             const profile = profileSnapshot.exists()
                 ? profileSnapshot.data()
                 : {};
 
             let claims = {};
-
             try {
-                const tokenResult =
-                    await user.getIdTokenResult(true);
-
+                const tokenResult = await user.getIdTokenResult(true);
                 claims = tokenResult.claims || {};
             } catch (claimError) {
-                console.warn(
-                    "Could not load custom claims:",
-                    claimError
-                );
+                console.warn("Could not load custom claims:", claimError);
             }
 
-            const roles =
-                getEffectiveRoles(profile, claims);
+            const roles = getEffectiveRoles(profile, claims);
 
-            const destination =
-                getDashboardForRoles(roles);
-
+            // Incomplete profile → finish setup
             if (
                 profile.profileComplete === false ||
-                (!profile.fullName && roles.length === 0)
+                (!String(profile.fullName || "").trim() && roles.length === 0)
             ) {
-                window.location.href = "profile.html?complete=1";
-                return;
+                return "profile.html?complete=1";
             }
 
-            if (
-                destination === "profile.html" &&
-                roles.length === 0
-            ) {
-                window.location.href = "profile.html";
-                return;
-            }
+            return getDashboardForRoles(roles);
+        }
 
-            window.location.href = destination;
+        async function redirectAfterLogin(user) {
+            try {
+                const destination = await resolveDestination(user);
+                window.location.replace(destination);
+            } catch (error) {
+                console.error("Redirect error:", error);
+                // Auth succeeded but profile read failed — send to profile, not admin
+                showMessage(
+                    "You are signed in. Opening your profile to finish setup.",
+                    "success"
+                );
+                setTimeout(() => {
+                    window.location.replace("profile.html");
+                }, 800);
+            }
         }
 
         async function ensureGoogleProfile(user) {
@@ -634,153 +647,139 @@
             return profile;
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                return;
-            }
-
+        /*
+         * Do NOT auto-redirect when the page loads.
+         * A previous browser session must not skip the login form
+         * or send someone to the wrong dashboard.
+         * User must enter credentials (or use Google) each time they
+         * intentionally open this page — unless they choose "Continue".
+         */
+        async function showExistingSessionBanner() {
             try {
-                await redirectAuthenticatedUser(user);
+                await auth.authStateReady();
+                const user = auth.currentUser;
+                if (!user) return;
+
+                const email = user.email || "your account";
+                const banner = document.createElement("div");
+                banner.className = "message success";
+                banner.style.display = "block";
+                banner.id = "sessionBanner";
+                banner.innerHTML = `
+                    You are already signed in as <strong>${email}</strong>.
+                    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
+                        <button type="button" id="continueSessionBtn" class="submit-button" style="width:auto;min-height:38px;padding:0 14px;font-size:0.85rem;">
+                            Continue to my dashboard
+                        </button>
+                        <button type="button" id="signOutSessionBtn" class="google-button" style="width:auto;min-height:38px;padding:0 14px;font-size:0.85rem;">
+                            Sign out and use another account
+                        </button>
+                    </div>
+                `;
+                message.parentNode.insertBefore(banner, message);
+
+                document
+                    .getElementById("continueSessionBtn")
+                    .addEventListener("click", async () => {
+                        showMessage("Opening your dashboard...", "success");
+                        await redirectAfterLogin(user);
+                    });
+
+                document
+                    .getElementById("signOutSessionBtn")
+                    .addEventListener("click", async () => {
+                        try {
+                            await signOut(auth);
+                            banner.remove();
+                            hideMessage();
+                            showMessage(
+                                "Signed out. Enter your credentials to continue.",
+                                "success"
+                            );
+                        } catch (error) {
+                            showMessage(
+                                "Could not sign out. Please try again.",
+                                "error"
+                            );
+                        }
+                    });
             } catch (error) {
-                console.error(
-                    "Could not redirect authenticated user:",
-                    error
-                );
+                console.warn("Session check failed:", error);
             }
-        });
+        }
+
+        showExistingSessionBanner();
 
         loginForm.addEventListener("submit", async (event) => {
             event.preventDefault();
+            hideMessage();
 
             const email = document
                 .getElementById("email")
                 .value
                 .trim();
+            const password = document.getElementById("password").value;
 
-            const password =
-                document.getElementById("password").value;
+            if (!email || !password) {
+                showMessage("Please enter your email and password.", "error");
+                return;
+            }
 
             loginButton.disabled = true;
             loginButton.textContent = "Logging in...";
-            message.className = "message";
-            message.textContent = "";
 
             try {
-                const credentials =
-                    await signInWithEmailAndPassword(
-                        auth,
-                        email,
-                        password
-                    );
+                // Always sign in with the credentials typed in the form
+                // so a previous session cannot override the account.
+                if (auth.currentUser) {
+                    try {
+                        await signOut(auth);
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                }
 
-                await redirectAuthenticatedUser(
-                    credentials.user
+                const credentials = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
                 );
+
+                showMessage("Login successful. Redirecting...", "success");
+                await redirectAfterLogin(credentials.user);
             } catch (error) {
-                console.error(
-                    "Login error:",
-                    error
-                );
-
-                let errorMessage =
-                    "We could not log you in. Please check your details and try again.";
-
-                if (
-                    error.code ===
-                        "auth/invalid-credential" ||
-                    error.code ===
-                        "auth/user-not-found" ||
-                    error.code ===
-                        "auth/wrong-password"
-                ) {
-                    errorMessage =
-                        "The email or password is incorrect.";
-                } else if (
-                    error.code === "auth/invalid-email"
-                ) {
-                    errorMessage =
-                        "Please enter a valid email address.";
-                } else if (
-                    error.code ===
-                    "auth/too-many-requests"
-                ) {
-                    errorMessage =
-                        "Too many failed attempts. Please wait and try again later.";
-                } else if (
-                    error.code ===
-                    "auth/network-request-failed"
-                ) {
-                    errorMessage =
-                        "Network error. Please check your internet connection.";
-                } else if (
-                    error.code ===
-                        "auth/operation-not-allowed" ||
-                    error.code ===
-                        "auth/configuration-not-found"
-                ) {
-                    errorMessage =
-                        "Email and password sign-in is not enabled in Firebase Authentication.";
-                } else if (
-                    error.code === "auth/user-disabled"
-                ) {
-                    errorMessage =
-                        "This account has been disabled. Please contact support.";
-                } else if (
-                    error.code === "auth/invalid-api-key" ||
-                    error.code === "auth/api-key-not-valid"
-                ) {
-                    errorMessage =
-                        "The Firebase configuration is invalid. Check the project API key.";
-                } else if (
-                    error.code ===
-                    "permission-denied" ||
-                    error.code === "firestore/permission-denied"
-                ) {
-                    errorMessage =
-                        "Your account is authenticated, but your profile cannot be read. Check Firestore Rules.";
-                }
-
-                if (error.code) {
-                    errorMessage += ` (Firebase error: ${error.code})`;
-                }
-
-                showMessage(errorMessage, "error");
-
+                console.error("Login error:", error);
+                showMessage(friendlyAuthError(error), "error");
                 loginButton.disabled = false;
                 loginButton.textContent = "Log in";
             }
         });
 
-        document
-            .getElementById("googleLoginButton")
-            .addEventListener("click", async () => {
-                const button = document.getElementById("googleLoginButton");
-                message.className = "message";
-                message.textContent = "";
-                button.disabled = true;
+        googleLoginButton.addEventListener("click", async () => {
+            hideMessage();
+            googleLoginButton.disabled = true;
 
-                try {
-                    const result = await signInWithPopup(auth, googleProvider);
-                    await ensureGoogleProfile(result.user);
-                    await redirectAuthenticatedUser(result.user);
-                } catch (error) {
-                    console.error("Google login error:", error);
-
-                    let errorMessage =
-                        "Google sign-in did not complete. Please try again.";
-
-                    if (error.code === "auth/popup-closed-by-user") {
-                        errorMessage = "The Google sign-in window was closed.";
-                    } else if (error.code === "auth/popup-blocked") {
-                        errorMessage =
-                            "Your browser blocked the Google sign-in popup.";
+            try {
+                if (auth.currentUser) {
+                    try {
+                        await signOut(auth);
+                    } catch (e) {
+                        console.warn(e);
                     }
-
-                    showMessage(errorMessage, "error");
-                } finally {
-                    button.disabled = false;
                 }
-            });
+
+                const result = await signInWithPopup(auth, googleProvider);
+                await ensureGoogleProfile(result.user);
+                showMessage("Login successful. Redirecting...", "success");
+                await redirectAfterLogin(result.user);
+            } catch (error) {
+                console.error("Google login error:", error);
+                showMessage(friendlyAuthError(error), "error");
+            } finally {
+                googleLoginButton.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
+

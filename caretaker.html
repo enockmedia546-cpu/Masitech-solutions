@@ -795,11 +795,6 @@
             background: #e5e7eb;
         }
 
-        .badge-blue {
-            color: #1d4ed8;
-            background: #dbeafe;
-        }
-
         .form-panel {
             max-width: 900px;
             padding: 23px;
@@ -1248,6 +1243,61 @@
             display: block;
         }
 
+        .room-builder {
+            display: grid;
+            gap: 12px;
+            padding: 14px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .room-builder-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .room-builder-header h4 {
+            font-size: 0.85rem;
+            color: var(--dark-charcoal);
+        }
+
+        .room-item {
+            padding: 12px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .room-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .room-item-top strong {
+            font-size: 0.82rem;
+        }
+
+        .room-item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 620px) {
+            .room-item-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
         @media (max-width: 480px) {
             .checkbox-grid {
                 grid-template-columns: 1fr;
@@ -1506,22 +1556,22 @@
 
                             <article class="stat-card">
                                 <div class="stat-top">
-                                    <span class="stat-label">Available units</span>
+                                    <span class="stat-label">Spaces available</span>
                                     <span class="stat-icon">✓</span>
                                 </div>
 
-                                <div class="stat-value" id="availableUnits">
+                                <div class="stat-value" id="availableSpacesStat">
                                     —
                                 </div>
 
                                 <div class="stat-note">
-                                    Rooms or apartment units
+                                    Open spaces across your listings
                                 </div>
                             </article>
 
                             <article class="stat-card">
                                 <div class="stat-top">
-                                    <span class="stat-label">Pending approval</span>
+                                    <span class="stat-label">Drafts</span>
                                     <span class="stat-icon">!</span>
                                 </div>
 
@@ -1811,17 +1861,34 @@
 
                                     <div class="form-group field-student-only">
                                         <label for="peoplePerRoom">
-                                            People per room
+                                            People per room (default)
                                         </label>
                                         <input
                                             class="form-input"
                                             id="peoplePerRoom"
                                             type="text"
-                                            placeholder="e.g. 2 or 4/room"
+                                            placeholder="e.g. 1 person per room"
                                         >
                                         <span class="form-help">
-                                            Occupancy per room (not room type name)
+                                            Default occupancy. You can override per room below.
                                         </span>
+                                    </div>
+
+                                    <div class="form-group full-width field-student-only">
+                                        <div class="room-builder">
+                                            <div class="room-builder-header">
+                                                <div>
+                                                    <h4>Rooms / bed spaces</h4>
+                                                    <p class="form-help">
+                                                        Add each room (e.g. P1-1, P1-2). Students will switch between them in the gallery.
+                                                    </p>
+                                                </div>
+                                                <button class="button button-outline" type="button" id="addRoomButton" style="min-height:36px;font-size:0.78rem;">
+                                                    + Add room
+                                                </button>
+                                            </div>
+                                            <div id="roomsList"></div>
+                                        </div>
                                     </div>
 
                                     <!-- Apartment: unit type + totals -->
@@ -2071,7 +2138,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Tenant</th>
+                                            <th>Inquirer</th>
+                                            <th>Contact</th>
                                             <th>Property</th>
                                             <th>Message</th>
                                             <th>Date</th>
@@ -2082,7 +2150,7 @@
 
                                     <tbody id="inquiriesTableBody">
                                         <tr>
-                                            <td colspan="6" class="empty-state">
+                                            <td colspan="7" class="empty-state">
                                                 Loading inquiries...
                                             </td>
                                         </tr>
@@ -2092,9 +2160,112 @@
                         </div>
                     </section>
 
+
                     <section
                         class="dashboard-section"
-                        PLACEHOLDER_REVIEWS_ID
+                        id="section-tenants"
+                    >
+                        <div class="section-heading">
+                            <div>
+                                <h2>My tenants</h2>
+                                <p>
+                                    Record room names, due dates, balances and advance payments.
+                                    You can also add someone from an inquiry.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-panel" style="max-width:100%;margin-bottom:20px">
+                            <div class="message" id="tenantMessage" role="alert"></div>
+                            <form id="tenantForm">
+                                <input type="hidden" id="editingTenantId" value="">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="tenantFullName">Tenant full name</label>
+                                        <input class="form-input" id="tenantFullName" type="text" required placeholder="Full name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPhone">Phone / WhatsApp</label>
+                                        <input class="form-input" id="tenantPhone" type="tel" placeholder="+260...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantEmail">Email</label>
+                                        <input class="form-input" id="tenantEmail" type="email" placeholder="optional">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPropertyId">Property / listing</label>
+                                        <select class="form-select" id="tenantPropertyId">
+                                            <option value="">Select property</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantRoomName">Room name / number</label>
+                                        <input class="form-input" id="tenantRoomName" type="text" placeholder="e.g. Room 2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantMonthlyRent">Monthly rent (amount)</label>
+                                        <input class="form-input" id="tenantMonthlyRent" type="number" min="0" step="0.01" placeholder="e.g. 850">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantDueDate">Next due date</label>
+                                        <input class="form-input" id="tenantDueDate" type="date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantBalance">Balance owed</label>
+                                        <input class="form-input" id="tenantBalance" type="number" step="0.01" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantPaidAdvance">Paid in advance</label>
+                                        <input class="form-input" id="tenantPaidAdvance" type="number" min="0" step="0.01" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tenantStatus">Status</label>
+                                        <select class="form-select" id="tenantStatus">
+                                            <option value="active">Active</option>
+                                            <option value="notice">On notice</option>
+                                            <option value="left">Left</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="tenantNotes">Notes</label>
+                                        <textarea class="form-textarea" id="tenantNotes" placeholder="Payment notes, ID details, etc."></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="button button-outline" id="cancelTenantEdit" type="button" hidden>Cancel edit</button>
+                                        <button class="button button-primary" id="saveTenantButton" type="submit">Save tenant</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="panel">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tenant</th>
+                                            <th>Room</th>
+                                            <th>Property</th>
+                                            <th>Due date</th>
+                                            <th>Balance</th>
+                                            <th>Advance</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tenantsTableBody">
+                                        <tr>
+                                            <td colspan="8" class="empty-state">No tenants recorded yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        class="dashboard-section"
+                        id="section-reviews"
                     >
                         <div class="section-heading">
                             <div>
@@ -2344,7 +2515,7 @@
                         </div>
                     </section>
 
-                    <section
+                                        <section
                         class="dashboard-section"
                         id="section-announcements"
                     >
@@ -2352,143 +2523,45 @@
                             <div>
                                 <h2>Announcements</h2>
                                 <p>
-                                    Read messages sent by administrators to caretakers.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="review-list" id="announcementList">
-                            <div class="empty-state">
-                                Loading announcements...
-                            </div>
-                        </div>
-                    </section>
-
-                    
-                    <section class="dashboard-section" id="section-tenants">
-                        <div class="section-heading">
-                            <div>
-                                <h2>My tenants</h2>
-                                <p>
-                                    Manage permanent and transit tenants — room, due dates, balances and payments.
+                                    Send notices to your tenants. You can edit or delete them later.
                                 </p>
                             </div>
                         </div>
 
                         <div class="form-panel" style="max-width:100%;margin-bottom:20px">
-                            <div class="message" id="tenantMessage" role="alert"></div>
-                            <form id="tenantForm">
-                                <input type="hidden" id="editingTenantId" value="">
+                            <div class="message" id="announcementMessage" role="alert"></div>
+                            <form id="announcementForm">
+                                <input type="hidden" id="editingAnnouncementId" value="">
                                 <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="tenantFullName">Tenant full name</label>
-                                        <input class="form-input" id="tenantFullName" type="text" required placeholder="Full name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantPhone">Phone / WhatsApp</label>
-                                        <input class="form-input" id="tenantPhone" type="tel" placeholder="+260...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantEmail">Email</label>
-                                        <input class="form-input" id="tenantEmail" type="email" placeholder="optional">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantTenancyType">Tenancy type</label>
-                                        <select class="form-select" id="tenantTenancyType" required>
-                                            <option value="">Select type</option>
-                                            <option value="permanent">Permanent renting</option>
-                                            <option value="transit">Transit renting</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantPropertyId">Property / listing</label>
-                                        <select class="form-select" id="tenantPropertyId">
-                                            <option value="">Select property</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantRoomName">Room name / number</label>
-                                        <input class="form-input" id="tenantRoomName" type="text" placeholder="e.g. Room 2">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantMonthlyRent">Monthly rent (amount)</label>
-                                        <input class="form-input" id="tenantMonthlyRent" type="number" min="0" step="0.01" placeholder="e.g. 850">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantDueDate">Next due date</label>
-                                        <input class="form-input" id="tenantDueDate" type="date">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantBalance">Balance owed</label>
-                                        <input class="form-input" id="tenantBalance" type="number" step="0.01" placeholder="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantPaidAdvance">Paid in advance</label>
-                                        <input class="form-input" id="tenantPaidAdvance" type="number" min="0" step="0.01" placeholder="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tenantStatus">Status</label>
-                                        <select class="form-select" id="tenantStatus">
-                                            <option value="active">Active</option>
-                                            <option value="notice">On notice</option>
-                                            <option value="left">Left</option>
-                                        </select>
+                                    <div class="form-group full-width">
+                                        <label for="announcementTitle">Title</label>
+                                        <input class="form-input" id="announcementTitle" type="text" required placeholder="e.g. Rent due reminder">
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="tenantNotes">Notes</label>
-                                        <textarea class="form-textarea" id="tenantNotes" placeholder="Payment notes, ID details, etc."></textarea>
+                                        <label for="announcementBody">Message</label>
+                                        <textarea class="form-textarea" id="announcementBody" required placeholder="Write the announcement for your tenants"></textarea>
                                     </div>
                                     <div class="form-actions">
-                                        <button class="button button-outline" id="cancelTenantEdit" type="button" hidden>Cancel edit</button>
-                                        <button class="button button-primary" id="saveTenantButton" type="submit">Save tenant</button>
+                                        <button class="button button-outline" id="cancelAnnouncementEdit" type="button" hidden>Cancel edit</button>
+                                        <button class="button button-primary" id="saveAnnouncementButton" type="submit">Post announcement</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
 
-                        <div class="toolbar">
-                            <div class="toolbar-group">
-                                <select class="filter-select" id="tenantTypeFilter">
-                                    <option value="all">All tenancy types</option>
-                                    <option value="permanent">Permanent only</option>
-                                    <option value="transit">Transit only</option>
-                                </select>
-                                <select class="filter-select" id="tenantStatusFilter">
-                                    <option value="all">All statuses</option>
-                                    <option value="active">Active</option>
-                                    <option value="notice">On notice</option>
-                                    <option value="left">Left</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="panel">
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Tenant</th>
-                                            <th>Type</th>
-                                            <th>Room</th>
-                                            <th>Property</th>
-                                            <th>Due date</th>
-                                            <th>Balance</th>
-                                            <th>Advance</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tenantsTableBody">
-                                        <tr>
-                                            <td colspan="9" class="empty-state">No tenants recorded yet.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="panel-header">
+                                <h3>Your announcements</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="review-list" id="announcementsList">
+                                    <div class="empty-state">No announcements yet.</div>
+                                </div>
                             </div>
                         </div>
                     </section>
 
-<section
+                    <section
                         class="dashboard-section"
                         id="section-profile"
                     >
@@ -2634,6 +2707,7 @@
             getDocs,
             addDoc,
             updateDoc,
+            deleteDoc,
             query,
             where,
             serverTimestamp
@@ -2664,7 +2738,8 @@
             reports: [],
             announcements: [],
             tenants: [],
-            uploadedImages: []
+            uploadedImages: [],
+            editingImageUrls: []
         };
 
         const caretakerApp = document.getElementById("caretakerApp");
@@ -2688,11 +2763,11 @@
             ],
             inquiries: [
                 "Property inquiries",
-                "Respond to prospective students and tenants"
+                "View contact details and messages from signed-in users"
             ],
             tenants: [
                 "My tenants",
-                "Track permanent and transit tenants, dues and balances"
+                "Track room names, due dates, balances and payments"
             ],
             reviews: [
                 "Reviews and ratings",
@@ -2708,7 +2783,7 @@
             ],
             announcements: [
                 "Announcements",
-                "Read messages from administrators"
+                "Send messages to your tenants and manage past announcements"
             ],
             profile: [
                 "My profile",
@@ -2934,17 +3009,23 @@
                 inquiries,
                 reviews,
                 reports,
-                announcements,
-                tenants
+                announcements
             ] = await Promise.all([
                 loadCollection("locations"),
                 loadCollection("properties"),
                 loadCollection("inquiries"),
                 loadCollection("reviews"),
                 loadCollection("reports"),
-                loadCollection("announcements"),
-                loadCollection("tenants")
+                loadCollection("announcements")
             ]);
+
+            let tenants = [];
+            try {
+                tenants = await loadCollection("tenants");
+            } catch (tenantLoadError) {
+                console.warn("Could not load tenants collection:", tenantLoadError);
+                tenants = [];
+            }
 
             state.locations = locations.filter((location) =>
                 state.locationIds.includes(location.id)
@@ -2975,33 +3056,25 @@
                 (report) => report.createdBy === state.user.uid
             );
 
-            state.tenants = (tenants || []).filter(
-                (tenant) =>
-                    tenant.caretakerId === state.user.uid ||
-                    tenant.createdBy === state.user.uid
-            );
+            // Keep tenants belonging to this manager (or created by them)
+            state.tenants = (tenants || []).filter((tenant) => {
+                const owner =
+                    tenant.caretakerId ||
+                    tenant.createdBy ||
+                    tenant.managerId ||
+                    "";
+                return owner === state.user.uid;
+            });
 
-            state.announcements = announcements.filter((announcement) => {
-                const status = (announcement.status || "published").toLowerCase();
-                if (status === "draft" || status === "archived") {
-                    return false;
+            // Manager sees announcements they posted to their tenants
+            state.announcements = (announcements || []).filter((announcement) => {
+                if (announcement.caretakerId === state.user.uid) {
+                    return true;
                 }
-
-                const audience = String(
-                    announcement.audienceType ||
-                        announcement.audience ||
-                        "everyone"
-                ).toLowerCase();
-
-                return (
-                    audience === "everyone" ||
-                    audience === "all" ||
-                    audience === "caretakers" ||
-                    audience === "caretaker" ||
-                    announcement.createdFor === state.user.uid ||
-                    (announcement.locationId &&
-                        state.locationIds.includes(announcement.locationId))
-                );
+                if (announcement.createdBy === state.user.uid) {
+                    return true;
+                }
+                return false;
             });
 
             setIdentity();
@@ -3015,6 +3088,8 @@
             renderDashboard();
             renderProperties();
             renderInquiries();
+            renderTenants();
+            populateTenantPropertyOptions();
             renderReviews();
             renderReports();
             renderAnalytics();
@@ -3111,19 +3186,20 @@
 
         function renderDashboard() {
             const properties = state.properties;
-            const availableUnits = properties.reduce(
-                (total, property) =>
-                    total +
-                    Number(
-                        property.availableRooms ??
-                        property.availableUnits ??
-                        0
-                    ),
-                0
-            );
+            const availableUnits = properties.reduce((total, property) => {
+                const raw =
+                    property.spacesAvailable ??
+                    property.availableRooms ??
+                    property.availableUnits ??
+                    0;
+                const n = Number(raw);
+                return total + (Number.isFinite(n) ? n : 0);
+            }, 0);
 
             const pendingCount = properties.filter(
-                (property) => property.status === "pending"
+                (property) =>
+                    property.status === "pending" ||
+                    property.status === "draft"
             ).length;
 
             const ratings = state.reviews
@@ -3141,7 +3217,7 @@
             document.getElementById("totalProperties").textContent =
                 properties.length;
 
-            document.getElementById("availableUnits").textContent =
+            document.getElementById("availableSpacesStat").textContent =
                 availableUnits;
 
             document.getElementById("pendingProperties").textContent =
@@ -3361,7 +3437,7 @@
                                             ? `
                                                 <button
                                                     class="small-button archive"
-                                                    data-property-action="archive"
+                                                    data-property-action="delete"
                                                     data-id="${property.id}"
                                                     type="button"
                                                 >
@@ -3395,7 +3471,7 @@
             if (inquiries.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="empty-state">
+                        <td colspan="7" class="empty-state">
                             No inquiries found.
                         </td>
                     </tr>
@@ -3424,11 +3500,46 @@
                                     ? "badge-grey"
                                     : "badge-amber";
 
+                    const name = escapeHtml(
+                        inquiry.tenantName ||
+                        inquiry.userName ||
+                        inquiry.guestName ||
+                        "Inquirer"
+                    );
+                    const phone = inquiry.tenantPhone || inquiry.phone || inquiry.guestPhone || "";
+                    const email = inquiry.tenantEmail || inquiry.email || inquiry.guestEmail || "";
+                    const contactBits = [];
+                    if (phone) {
+                        contactBits.push(
+                            `<a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a>`
+                        );
+                        const wa = String(phone).replace(/\D/g, "");
+                        if (wa) {
+                            contactBits.push(
+                                `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`
+                            );
+                        }
+                    }
+                    if (email) {
+                        contactBits.push(
+                            `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`
+                        );
+                    }
+                    if (inquiry.userId) {
+                        contactBits.push(
+                            `<span class="form-help">Signed-in user</span>`
+                        );
+                    }
+
                     return `
                         <tr>
-                            <td>${escapeHtml(inquiry.tenantName || inquiry.userId || "Tenant")}</td>
+                            <td>
+                                <strong>${name}</strong>
+                                ${inquiry.userId ? `<div class="form-help">ID: ${escapeHtml(String(inquiry.userId).slice(0, 8))}…</div>` : `<div class="form-help">Guest / WhatsApp contact</div>`}
+                            </td>
+                            <td>${contactBits.join("<br>") || "—"}</td>
                             <td>${escapeHtml(property?.title || inquiry.propertyName || "Property")}</td>
-                            <td>${escapeHtml((inquiry.message || "—").slice(0, 75))}</td>
+                            <td>${escapeHtml((inquiry.message || "—").slice(0, 90))}</td>
                             <td>${formatDate(inquiry.createdAt)}</td>
                             <td>
                                 <span class="badge ${badgeClass}">
@@ -3442,7 +3553,16 @@
                                     data-id="${inquiry.id}"
                                     type="button"
                                 >
-                                    Update
+                                    Update status
+                                </button>
+                                <button
+                                    class="small-button view"
+                                    data-inquiry-action="add-tenant"
+                                    data-id="${inquiry.id}"
+                                    type="button"
+                                    title="Add this person as a tenant"
+                                >
+                                    Add as tenant
                                 </button>
                             </td>
                         </tr>
@@ -3637,22 +3757,24 @@
         }
 
         function renderAnnouncements() {
-            const list = document.getElementById("announcementList");
+            const list = document.getElementById("announcementsList");
+            if (!list) return;
 
-            if (state.announcements.length === 0) {
+            if (!state.announcements.length) {
                 list.innerHTML = `
                     <div class="empty-state">
-                        No announcements are currently available.
+                        No announcements yet. Post one above for your tenants.
                     </div>
                 `;
                 return;
             }
 
             list.innerHTML = state.announcements
+                .slice()
                 .sort(
-                    (first, second) =>
-                        getTimestampValue(second.createdAt) -
-                        getTimestampValue(first.createdAt)
+                    (a, b) =>
+                        getTimestampValue(b.createdAt) -
+                        getTimestampValue(a.createdAt)
                 )
                 .map(
                     (announcement) => `
@@ -3660,24 +3782,105 @@
                             <div class="review-card-header">
                                 <div>
                                     <h3>${escapeHtml(announcement.title || "Announcement")}</h3>
-                                    <small>${formatDateTime(announcement.createdAt)}</small>
+                                    <small>
+                                        To tenants · ${formatDateTime(announcement.createdAt)}
+                                    </small>
                                 </div>
-
-                                <span class="badge badge-green">
-                                    ${escapeHtml(announcement.audienceType || "Everyone")}
-                                </span>
+                                <div style="display:flex;gap:6px;">
+                                    <button class="small-button edit" type="button" data-announcement-action="edit" data-id="${announcement.id}">Edit</button>
+                                    <button class="small-button archive" type="button" data-announcement-action="delete" data-id="${announcement.id}">Delete</button>
+                                </div>
                             </div>
-
-                            <p>${escapeHtml(announcement.message || "")}</p>
+                            <p>${escapeHtml(announcement.message || announcement.body || "")}</p>
                         </article>
                     `
                 )
                 .join("");
         }
 
-        function updateNotificationCount() {
-            const unreadCount = state.announcements.filter(
-                (announcement) => announcement.readBy?.includes?.(state.user.uid) !== true
+        function resetAnnouncementForm() {
+            const form = document.getElementById("announcementForm");
+            if (!form) return;
+            form.reset();
+            document.getElementById("editingAnnouncementId").value = "";
+            document.getElementById("cancelAnnouncementEdit").hidden = true;
+            document.getElementById("saveAnnouncementButton").textContent = "Post announcement";
+        }
+
+        function fillAnnouncementForm(item) {
+            document.getElementById("editingAnnouncementId").value = item.id;
+            document.getElementById("announcementTitle").value = item.title || "";
+            document.getElementById("announcementBody").value = item.message || item.body || "";
+            document.getElementById("cancelAnnouncementEdit").hidden = false;
+            document.getElementById("saveAnnouncementButton").textContent = "Save changes";
+        }
+
+        async function saveAnnouncement(event) {
+            event.preventDefault();
+            const msg = document.getElementById("announcementMessage");
+            hideMessage(msg);
+            const title = document.getElementById("announcementTitle").value.trim();
+            const body = document.getElementById("announcementBody").value.trim();
+            if (title.length < 2 || body.length < 2) {
+                showMessage(msg, "Enter a title and message.", "error");
+                return;
+            }
+            const editingId = document.getElementById("editingAnnouncementId").value;
+            const btn = document.getElementById("saveAnnouncementButton");
+            btn.disabled = true;
+            const data = {
+                title,
+                message: body,
+                body,
+                audience: "tenants",
+                audienceType: "tenants",
+                status: "published",
+                caretakerId: state.user.uid,
+                createdBy: state.user.uid,
+                createdByName:
+                    state.profile?.fullName ||
+                    state.user.displayName ||
+                    state.user.email,
+                updatedAt: serverTimestamp()
+            };
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, "announcements", editingId), data);
+                    showMessage(msg, "Announcement updated.", "success");
+                } else {
+                    data.createdAt = serverTimestamp();
+                    data.readBy = [];
+                    await addDoc(collection(db, "announcements"), data);
+                    showMessage(msg, "Announcement posted to your tenants.", "success");
+                }
+                resetAnnouncementForm();
+                await loadCaretakerData();
+            } catch (error) {
+                console.error(error);
+                showMessage(msg, "Could not save announcement. Please try again.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = document.getElementById("editingAnnouncementId").value
+                    ? "Save changes"
+                    : "Post announcement";
+            }
+        }
+
+        async function deleteAnnouncement(id) {
+            if (!id || !confirm("Delete this announcement?")) return;
+            try {
+                await deleteDoc(doc(db, "announcements", id));
+                showToast("Announcement deleted.");
+                await loadCaretakerData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete announcement.", true);
+            }
+        }
+
+        function () {
+            const unreadCount = state.inquiries.filter(
+                (inquiry) => (inquiry.status || "new") === "new"
             ).length;
 
             document.getElementById("notificationCount").textContent =
@@ -3886,6 +4089,109 @@
             });
         }
 
+
+        let draftRooms = [];
+
+        function nextRoomLabel() {
+            const n = draftRooms.length + 1;
+            return `P1-${n}`;
+        }
+
+        function renderRoomsList() {
+            const list = document.getElementById("roomsList");
+            if (!list) return;
+            if (!draftRooms.length) {
+                list.innerHTML = `<p class="form-help">No rooms yet. Click “Add room” for P1-1, P1-2, …</p>`;
+                return;
+            }
+            list.innerHTML = draftRooms
+                .map(
+                    (room, index) => `
+                    <div class="room-item" data-room-index="${index}">
+                        <div class="room-item-top">
+                            <strong>${escapeHtml(room.label || `Room ${index + 1}`)}</strong>
+                            <button class="small-button archive" type="button" data-remove-room="${index}">Remove</button>
+                        </div>
+                        <div class="room-item-grid">
+                            <div class="form-group">
+                                <label>Room code / name</label>
+                                <input class="form-input room-label" data-field="label" data-index="${index}" type="text" value="${escapeHtml(room.label || "")}" placeholder="P1-1">
+                            </div>
+                            <div class="form-group">
+                                <label>Room type</label>
+                                <input class="form-input" data-field="roomType" data-index="${index}" type="text" value="${escapeHtml(room.roomType || "")}" placeholder="Single bed (student room)">
+                            </div>
+                            <div class="form-group">
+                                <label>Occupancy</label>
+                                <input class="form-input" data-field="occupancy" data-index="${index}" type="text" value="${escapeHtml(room.occupancy || "")}" placeholder="1 person per room">
+                            </div>
+                            <div class="form-group">
+                                <label>Availability</label>
+                                <select class="form-select" data-field="available" data-index="${index}">
+                                    <option value="true" ${room.available !== false ? "selected" : ""}>Available</option>
+                                    <option value="false" ${room.available === false ? "selected" : ""}>Occupied</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width" style="grid-column:1/-1">
+                                <label>Room photos (optional — uses house photos if empty)</label>
+                                <input class="form-input" data-field="imageUrlsText" data-index="${index}" type="text" value="${escapeHtml(Array.isArray(room.imageUrls) ? room.imageUrls.join(", ") : "")}" placeholder="Paste image URLs separated by commas, or leave blank">
+                            </div>
+                        </div>
+                    </div>
+                `
+                )
+                .join("");
+        }
+
+        function syncDraftRoomsFromDom() {
+            document.querySelectorAll("#roomsList [data-field]").forEach((el) => {
+                const index = Number(el.dataset.index);
+                const field = el.dataset.field;
+                if (!draftRooms[index]) return;
+                if (field === "available") {
+                    draftRooms[index].available = el.value === "true";
+                } else if (field === "imageUrlsText") {
+                    const urls = el.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean);
+                    draftRooms[index].imageUrls = urls;
+                } else {
+                    draftRooms[index][field] = el.value.trim();
+                }
+            });
+        }
+
+        function addDraftRoom() {
+            syncDraftRoomsFromDom();
+            const defaultOcc =
+                document.getElementById("peoplePerRoom")?.value.trim() ||
+                "1 person per room";
+            draftRooms.push({
+                label: nextRoomLabel(),
+                roomType: "Single bed (student room)",
+                occupancy: defaultOcc,
+                available: true,
+                imageUrls: []
+            });
+            renderRoomsList();
+        }
+
+        function getRoomsForSave() {
+            syncDraftRoomsFromDom();
+            return draftRooms
+                .map((room, index) => ({
+                    id: room.id || room.label || `P1-${index + 1}`,
+                    label: room.label || `P1-${index + 1}`,
+                    roomType: room.roomType || "",
+                    occupancy: room.occupancy || "",
+                    available: room.available !== false,
+                    imageUrls: Array.isArray(room.imageUrls) ? room.imageUrls.filter(Boolean) : []
+                }))
+                .filter((room) => room.label);
+        }
+
+
         function getPropertyFormData(status) {
             const title = document
                 .getElementById("propertyTitle")
@@ -3901,11 +4207,6 @@
             const location = state.locations.find(
                 (item) => item.id === locationId
             );
-
-            const totalUnitsEl = document.getElementById("totalUnits");
-            const availableUnitsEl = document.getElementById("availableUnits");
-            const totalUnits = totalUnitsEl ? Number(totalUnitsEl.value || 0) : 0;
-            const availableUnits = availableUnitsEl ? Number(availableUnitsEl.value || 0) : 0;
 
             const facilityAmenities = Array.from(
                 document.querySelectorAll('input[name="amenity"]:checked')
@@ -3978,15 +4279,15 @@
                     propertyType === "student"
                         ? document.getElementById("peoplePerRoom").value.trim()
                         : null,
+                rooms:
+                    propertyType === "student" ? getRoomsForSave() : [],
                 totalRooms: null,
                 availableRooms:
                     propertyType === "student"
                         ? Number(document.getElementById("spacesAvailable").value || 0)
                         : null,
-                totalUnits:
-                    propertyType === "apartment" ? totalUnits : null,
-                availableUnits:
-                    propertyType === "apartment" ? availableUnits : null,
+                totalUnits: null,
+                availableUnits: null,
                 amenities,
                 securityType: securityType || null,
                 electricitySources,
@@ -4053,6 +4354,9 @@
             document.getElementById("propertyForm").reset();
             document.getElementById("editingPropertyId").value = "";
             document.getElementById("imagePreviewGrid").innerHTML = "";
+            state.editingImageUrls = [];
+            draftRooms = [];
+            renderRoomsList();
             document.getElementById("editBanner").classList.remove("show");
             document.getElementById("cancelEditButton").hidden = true;
             document.getElementById("submitPropertyButton").textContent =
@@ -4073,8 +4377,20 @@
             document.getElementById("spacesAvailable").value =
                 property.spacesAvailable ?? property.availableRooms ?? "";
             document.getElementById("peoplePerRoom").value = property.peoplePerRoom || "";
-            document.getElementById("roomOrUnitType").value = property.unitType || "";
-document.getElementById("propertyDescription").value = property.description || "";
+            draftRooms = Array.isArray(property.rooms)
+                ? property.rooms.map((r) => ({
+                    id: r.id || r.label || "",
+                    label: r.label || r.id || "",
+                    roomType: r.roomType || "",
+                    occupancy: r.occupancy || property.peoplePerRoom || "",
+                    available: r.available !== false,
+                    imageUrls: Array.isArray(r.imageUrls) ? r.imageUrls.slice() : []
+                }))
+                : [];
+            renderRoomsList();
+            const unitTypeEl = document.getElementById("roomOrUnitType");
+            if (unitTypeEl) unitTypeEl.value = property.unitType || "";
+            document.getElementById("propertyDescription").value = property.description || "";
             document.getElementById("propertyRules").value = property.rules || "";
             document.getElementById("securityType").value = property.securityType || "";
 
@@ -4092,9 +4408,39 @@ document.getElementById("propertyDescription").value = property.description || "
             document.getElementById("cancelEditButton").hidden = false;
             document.getElementById("submitPropertyButton").textContent =
                 "Save changes";
-            document.getElementById("imagePreviewGrid").innerHTML = `
-                <p class="form-help">
-                    Existing photos stay unless you choose new images below.
+            const existingUrls = Array.isArray(property.imageUrls) && property.imageUrls.length
+                ? property.imageUrls.slice()
+                : property.imageUrl
+                    ? [property.imageUrl]
+                    : [];
+            state.editingImageUrls = existingUrls;
+            renderEditingImagePreviews();
+        }
+
+        function renderEditingImagePreviews() {
+            const grid = document.getElementById("imagePreviewGrid");
+            if (!grid) return;
+            const urls = state.editingImageUrls || [];
+            if (!urls.length) {
+                grid.innerHTML = `
+                    <p class="form-help">No photos yet. Choose images below to add some.</p>
+                `;
+                return;
+            }
+            grid.innerHTML = urls
+                .map(
+                    (url, index) => `
+                    <div class="image-preview" data-existing-index="${index}">
+                        <img src="${escapeHtml(url)}" alt="Property photo ${index + 1}">
+                        <button type="button" class="small-button archive" data-remove-existing="${index}" style="position:absolute;top:4px;right:4px;min-height:24px;padding:0 6px;font-size:0.65rem;">
+                            Remove
+                        </button>
+                    </div>
+                `
+                )
+                .join("") + `
+                <p class="form-help" style="grid-column:1/-1">
+                    Remove wrong photos above, or add new ones below. Remaining photos are kept when you save.
                 </p>
             `;
         }
@@ -4136,20 +4482,24 @@ document.getElementById("propertyDescription").value = property.description || "
 
                 if (files.length > 0) {
                     const uploadedImages = await uploadSelectedImages();
-                    data.imageUrl = uploadedImages[0]?.secureUrl || null;
-                    data.imageUrls = uploadedImages.map((image) => image.secureUrl);
+                    const newUrls = uploadedImages.map((image) => image.secureUrl);
+                    const kept = Array.isArray(state.editingImageUrls)
+                        ? state.editingImageUrls.slice()
+                        : [];
+                    data.imageUrls = [...kept, ...newUrls];
+                    data.imageUrl = data.imageUrls[0] || null;
                     data.cloudinaryPublicIds = uploadedImages.map(
                         (image) => image.publicId
                     );
+                } else if (editingId) {
+                    // Keep or update remaining existing photos after removals
+                    if (Array.isArray(state.editingImageUrls)) {
+                        data.imageUrls = state.editingImageUrls.slice();
+                        data.imageUrl = data.imageUrls[0] || null;
+                    }
                 }
 
                 if (editingId) {
-                    if (!files.length) {
-                        // keep existing images — do not overwrite with null
-                        delete data.imageUrl;
-                        delete data.imageUrls;
-                        delete data.cloudinaryPublicIds;
-                    }
                     await updateDoc(doc(db, "properties", editingId), data);
                     showMessage(
                         propertyMessage,
@@ -4381,8 +4731,7 @@ document.getElementById("propertyDescription").value = property.description || "
             const select = document.getElementById("tenantPropertyId");
             if (!select) return;
             const current = select.value;
-            select.innerHTML =
-                `<option value="">Select property</option>` +
+            select.innerHTML = `<option value="">Select property</option>` +
                 state.properties
                     .map(
                         (p) =>
@@ -4396,31 +4745,19 @@ document.getElementById("propertyDescription").value = property.description || "
             const body = document.getElementById("tenantsTableBody");
             if (!body) return;
 
-            const typeFilter =
-                document.getElementById("tenantTypeFilter")?.value || "all";
-            const statusFilter =
-                document.getElementById("tenantStatusFilter")?.value || "all";
-
-            let list = state.tenants.slice();
-            if (typeFilter !== "all") {
-                list = list.filter((t) => (t.tenancyType || "") === typeFilter);
-            }
-            if (statusFilter !== "all") {
-                list = list.filter((t) => (t.status || "active") === statusFilter);
-            }
-
-            if (!list.length) {
+            if (!state.tenants.length) {
                 body.innerHTML = `
                     <tr>
-                        <td colspan="9" class="empty-state">
-                            No tenants match this filter. Add one above.
+                        <td colspan="8" class="empty-state">
+                            No tenants recorded yet. Add one above or from an inquiry.
                         </td>
                     </tr>
                 `;
                 return;
             }
 
-            body.innerHTML = list
+            body.innerHTML = state.tenants
+                .slice()
                 .sort(
                     (a, b) =>
                         getTimestampValue(b.updatedAt || b.createdAt) -
@@ -4439,13 +4776,6 @@ document.getElementById("propertyDescription").value = property.description || "
                             : status === "notice"
                                 ? "badge-amber"
                                 : "badge-grey";
-                    const tenancy = tenant.tenancyType || "—";
-                    const tenancyBadge =
-                        tenancy === "permanent"
-                            ? "badge-blue"
-                            : tenancy === "transit"
-                                ? "badge-amber"
-                                : "badge-grey";
 
                     return `
                         <tr>
@@ -4453,7 +4783,6 @@ document.getElementById("propertyDescription").value = property.description || "
                                 <strong>${escapeHtml(tenant.fullName || "Tenant")}</strong>
                                 <div class="form-help">${escapeHtml(tenant.phone || "")}</div>
                             </td>
-                            <td><span class="badge ${tenancyBadge}">${escapeHtml(tenancy)}</span></td>
                             <td>${escapeHtml(tenant.roomName || "—")}</td>
                             <td>${escapeHtml(property?.title || tenant.propertyName || "—")}</td>
                             <td>${escapeHtml(tenant.dueDate || "—")}</td>
@@ -4475,10 +4804,8 @@ document.getElementById("propertyDescription").value = property.description || "
             if (!form) return;
             form.reset();
             document.getElementById("editingTenantId").value = "";
-            const cancel = document.getElementById("cancelTenantEdit");
-            if (cancel) cancel.hidden = true;
-            const btn = document.getElementById("saveTenantButton");
-            if (btn) btn.textContent = "Save tenant";
+            document.getElementById("cancelTenantEdit").hidden = true;
+            document.getElementById("saveTenantButton").textContent = "Save tenant";
         }
 
         function fillTenantForm(tenant) {
@@ -4486,10 +4813,7 @@ document.getElementById("propertyDescription").value = property.description || "
             document.getElementById("tenantFullName").value = tenant.fullName || "";
             document.getElementById("tenantPhone").value = tenant.phone || "";
             document.getElementById("tenantEmail").value = tenant.email || "";
-            document.getElementById("tenantTenancyType").value =
-                tenant.tenancyType || "";
-            document.getElementById("tenantPropertyId").value =
-                tenant.propertyId || "";
+            document.getElementById("tenantPropertyId").value = tenant.propertyId || "";
             document.getElementById("tenantRoomName").value = tenant.roomName || "";
             document.getElementById("tenantMonthlyRent").value =
                 Number.isFinite(Number(tenant.monthlyRent)) ? tenant.monthlyRent : "";
@@ -4504,20 +4828,29 @@ document.getElementById("propertyDescription").value = property.description || "
             document.getElementById("saveTenantButton").textContent = "Save changes";
         }
 
+        function fillTenantFromInquiry(inquiry) {
+            resetTenantForm();
+            document.getElementById("tenantFullName").value =
+                inquiry.tenantName || inquiry.userName || inquiry.guestName || "";
+            document.getElementById("tenantPhone").value =
+                inquiry.tenantPhone || inquiry.phone || inquiry.guestPhone || "";
+            document.getElementById("tenantEmail").value =
+                inquiry.tenantEmail || inquiry.email || inquiry.guestEmail || "";
+            if (inquiry.propertyId) {
+                document.getElementById("tenantPropertyId").value = inquiry.propertyId;
+            }
+            openSection("tenants");
+            showToast("Review tenant details and save.");
+        }
+
         async function saveTenant(event) {
             event.preventDefault();
             const msg = document.getElementById("tenantMessage");
-            if (typeof hideMessage === "function") hideMessage(msg);
+            hideMessage(msg);
 
             const fullName = document.getElementById("tenantFullName").value.trim();
-            const tenancyType = document.getElementById("tenantTenancyType").value;
-
             if (fullName.length < 2) {
                 showMessage(msg, "Enter the tenant full name.", "error");
-                return;
-            }
-            if (!["permanent", "transit"].includes(tenancyType)) {
-                showMessage(msg, "Select permanent or transit renting.", "error");
                 return;
             }
 
@@ -4528,7 +4861,6 @@ document.getElementById("propertyDescription").value = property.description || "
                 fullName,
                 phone: document.getElementById("tenantPhone").value.trim(),
                 email: document.getElementById("tenantEmail").value.trim(),
-                tenancyType,
                 propertyId: propertyId || null,
                 propertyName: property?.title || null,
                 roomName: document.getElementById("tenantRoomName").value.trim(),
@@ -4550,17 +4882,36 @@ document.getElementById("propertyDescription").value = property.description || "
             try {
                 if (editingId) {
                     await updateDoc(doc(db, "tenants", editingId), data);
+                    const idx = state.tenants.findIndex((t) => t.id === editingId);
+                    if (idx >= 0) {
+                        state.tenants[idx] = { ...state.tenants[idx], ...data, id: editingId };
+                    }
                     showMessage(msg, "Tenant updated.", "success");
                 } else {
                     data.createdAt = serverTimestamp();
-                    await addDoc(collection(db, "tenants"), data);
+                    const ref = await addDoc(collection(db, "tenants"), data);
+                    state.tenants.unshift({
+                        id: ref.id,
+                        ...data,
+                        createdAt: new Date()
+                    });
                     showMessage(msg, "Tenant saved.", "success");
                 }
                 resetTenantForm();
-                await loadCaretakerData();
+                renderTenants();
+                try {
+                    await loadCaretakerData();
+                } catch (reloadError) {
+                    console.warn(reloadError);
+                    renderTenants();
+                }
             } catch (error) {
                 console.error("Tenant save error:", error);
-                showMessage(msg, "Could not save tenant. Please try again.", "error");
+                showMessage(
+                    msg,
+                    "Could not save tenant. Please try again.",
+                    "error"
+                );
             } finally {
                 btn.disabled = false;
                 btn.textContent = document.getElementById("editingTenantId").value
@@ -4570,7 +4921,8 @@ document.getElementById("propertyDescription").value = property.description || "
         }
 
         async function deleteTenant(tenantId) {
-            if (!tenantId || !confirm("Remove this tenant record?")) return;
+            if (!tenantId) return;
+            if (!confirm("Remove this tenant record?")) return;
             try {
                 await deleteDoc(doc(db, "tenants", tenantId));
                 showToast("Tenant removed.");
@@ -4622,6 +4974,12 @@ document.getElementById("propertyDescription").value = property.description || "
             }
             if (sectionName === "tenants") {
                 populateTenantPropertyOptions();
+            }
+            if (sectionName === "announcements") {
+                markAnnouncementsRead();
+            }
+            if (sectionName === "inquiries") {
+                document.getElementById("notificationCount").textContent = "0";
             }
 
             sidebar.classList.remove("open");
@@ -4904,6 +5262,34 @@ document.getElementById("propertyDescription").value = property.description || "
             .addEventListener("change", previewSelectedImages);
 
         document
+            .getElementById("imagePreviewGrid")
+            ?.addEventListener("click", (event) => {
+                const btn = event.target.closest("[data-remove-existing]");
+                if (!btn) return;
+                const index = Number(btn.dataset.removeExisting);
+                if (!Number.isFinite(index)) return;
+                state.editingImageUrls = (state.editingImageUrls || []).filter(
+                    (_, i) => i !== index
+                );
+                renderEditingImagePreviews();
+            });
+
+        
+        document.getElementById("addRoomButton")?.addEventListener("click", addDraftRoom);
+        document.getElementById("roomsList")?.addEventListener("click", (event) => {
+            const btn = event.target.closest("[data-remove-room]");
+            if (!btn) return;
+            syncDraftRoomsFromDom();
+            const index = Number(btn.dataset.removeRoom);
+            draftRooms.splice(index, 1);
+            renderRoomsList();
+        });
+        document.getElementById("roomsList")?.addEventListener("change", syncDraftRoomsFromDom);
+        document.getElementById("roomsList")?.addEventListener("input", (event) => {
+            if (event.target.matches("[data-field]")) syncDraftRoomsFromDom();
+        });
+
+        document
             .getElementById("propertyType")
             .addEventListener("change", syncPropertyTypeFields);
 
@@ -4973,8 +5359,18 @@ document.getElementById("propertyDescription").value = property.description || "
                     return;
                 }
 
-                if (action === "archive") {
-                    await updatePropertyStatus(propertyId, "archived");
+                if (action === "delete") {
+                    if (!confirm("Delete this listing permanently? It will disappear from the whole website.")) {
+                        return;
+                    }
+                    try {
+                        await deleteDoc(doc(db, "properties", propertyId));
+                        showToast("Listing deleted.");
+                        await loadCaretakerData();
+                    } catch (error) {
+                        console.error(error);
+                        showToast("Could not delete listing. Please try again.", true);
+                    }
                 }
             });
 
@@ -4986,6 +5382,14 @@ document.getElementById("propertyDescription").value = property.description || "
                 );
 
                 if (!button) {
+                    return;
+                }
+
+                if (button.dataset.inquiryAction === "add-tenant") {
+                    const inquiry = state.inquiries.find(
+                        (item) => item.id === button.dataset.id
+                    );
+                    if (inquiry) fillTenantFromInquiry(inquiry);
                     return;
                 }
 
@@ -5009,7 +5413,7 @@ document.getElementById("propertyDescription").value = property.description || "
         document
             .getElementById("notificationButton")
             .addEventListener("click", () => {
-                openSection("announcements");
+                openSection("inquiries");
             });
 
         mobileMenuButton.addEventListener("click", () => {
@@ -5048,8 +5452,31 @@ document.getElementById("propertyDescription").value = property.description || "
                 }
             });
         }
-        document.getElementById("tenantTypeFilter")?.addEventListener("change", renderTenants);
-        document.getElementById("tenantStatusFilter")?.addEventListener("change", renderTenants);
+
+        
+        async function markAnnouncementsRead() {
+            // Manager viewing own posts — clear local badge
+            const countEl = document.getElementById("notificationCount");
+            if (countEl) countEl.textContent = "0";
+        }
+
+        document.getElementById("announcementForm")?.addEventListener("submit", saveAnnouncement);
+        document.getElementById("cancelAnnouncementEdit")?.addEventListener("click", () => {
+            resetAnnouncementForm();
+            showToast("Announcement edit cancelled.");
+        });
+        document.getElementById("announcementsList")?.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-announcement-action]");
+            if (!btn) return;
+            const item = state.announcements.find((a) => a.id === btn.dataset.id);
+            if (btn.dataset.announcementAction === "edit" && item) {
+                fillAnnouncementForm(item);
+                openSection("announcements");
+            }
+            if (btn.dataset.announcementAction === "delete") {
+                await deleteAnnouncement(btn.dataset.id);
+            }
+        });
 
         document
             .getElementById("logoutButton")

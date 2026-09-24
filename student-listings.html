@@ -727,7 +727,7 @@
     <header class="site-header">
         <div class="container header-content">
             <a class="brand" href="index.html" aria-label="Masitech Solutions home">
-                <img src="logo.jpg" alt="Masitech Solutions logo">
+                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
                 <span>Masitech Solutions</span>
             </a>
 
@@ -1073,21 +1073,93 @@
         const propertyModal = {
             el: document.getElementById("propertyModal"),
             property: null,
+            rooms: [],
+            roomIndex: 0,
             images: [],
             index: 0
         };
+
+        function getPropertyRooms(property) {
+            if (Array.isArray(property.rooms) && property.rooms.length) {
+                return property.rooms.map((room, index) => ({
+                    id: room.id || room.label || `P1-${index + 1}`,
+                    label: room.label || room.id || `P1-${index + 1}`,
+                    roomType: room.roomType || property.roomType || "Student room",
+                    occupancy:
+                        room.occupancy ||
+                        (property.peoplePerRoom
+                            ? `${property.peoplePerRoom} person per room`
+                            : "On inquiry"),
+                    available: room.available !== false,
+                    address: room.address || property.address || "",
+                    locationLabel: getLocationLabel(property),
+                    houseType: property.houseType || "Boarding house",
+                    category: property.category || property.condition || "",
+                    imageUrls:
+                        Array.isArray(room.imageUrls) && room.imageUrls.length
+                            ? room.imageUrls
+                            : getPropertyImages(property)
+                }));
+            }
+            // Fallback: whole listing as one room
+            return [
+                {
+                    id: "P1-1",
+                    label: "P1-1",
+                    roomType:
+                        property.roomType ||
+                        property.spaceLabel ||
+                        "Student room",
+                    occupancy: property.peoplePerRoom
+                        ? `${property.peoplePerRoom} person per room`
+                        : "On inquiry",
+                    available: true,
+                    address: property.address || "",
+                    locationLabel: getLocationLabel(property),
+                    houseType: property.houseType || "Boarding house",
+                    category: property.category || property.condition || "",
+                    imageUrls: getPropertyImages(property)
+                }
+            ];
+        }
 
         function openPropertyModal(property) {
             if (!property) return;
 
             propertyModal.property = property;
-            propertyModal.images = getPropertyImages(property);
+            propertyModal.rooms = getPropertyRooms(property);
+            propertyModal.roomIndex = 0;
+            propertyModal.images = propertyModal.rooms[0].imageUrls;
             propertyModal.index = 0;
 
+            renderRoomModal();
+            propertyModal.el.classList.add("open");
+            propertyModal.el.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function renderRoomModal() {
+            const property = propertyModal.property;
+            const rooms = propertyModal.rooms || [];
+            const room = rooms[propertyModal.roomIndex] || rooms[0];
+            if (!property || !room) return;
+
+            propertyModal.images = room.imageUrls?.length
+                ? room.imageUrls
+                : getPropertyImages(property);
+            if (propertyModal.index >= propertyModal.images.length) {
+                propertyModal.index = 0;
+            }
+
+            const roomLabel = room.label || "Room";
+            const total = rooms.length;
+
             document.getElementById("modalPropertyTitle").textContent =
-                property.title || "Student boarding house";
+                `${roomLabel}${total > 1 ? ` (Room ${propertyModal.roomIndex + 1} of ${total})` : ""}`;
             document.getElementById("modalPropertyLocation").textContent =
-                getLocationLabel(property);
+                property.title
+                    ? `${property.title} · ${room.locationLabel || getLocationLabel(property)}`
+                    : room.locationLabel || getLocationLabel(property);
 
             document.getElementById("modalPrice").textContent =
                 property.priceLabel ||
@@ -1098,11 +1170,9 @@
             const meta = document.getElementById("modalMeta");
             meta.innerHTML = "";
             [
-                getAvailabilityLabel(property),
-                property.peoplePerRoom
-                    ? `${property.peoplePerRoom} people/room`
-                    : null,
-                property.condition ? String(property.condition) : null
+                room.available !== false ? "Available" : "Occupied",
+                room.roomType,
+                room.occupancy
             ]
                 .filter(Boolean)
                 .forEach((label) => {
@@ -1120,22 +1190,68 @@
 
             const details = document.getElementById("modalDetails");
             details.innerHTML = `
-                <div><span>Rating</span><span>★ ${Number(property.rating || 0).toFixed(1)} (${property.reviewCount || 0})</span></div>
-                <div><span>Address</span><span>${escapeHtml(property.address || "On inquiry")}</span></div>
+                <div><span>Address</span><span>${escapeHtml(room.address || property.address || "On inquiry")}</span></div>
+                <div><span>Location</span><span>${escapeHtml(room.locationLabel || getLocationLabel(property))}</span></div>
+                <div><span>Availability</span><span>${room.available !== false ? "Available" : "Occupied"}</span></div>
+                <div><span>Room type</span><span>${escapeHtml(room.roomType || "—")}</span></div>
+                <div><span>Occupancy</span><span>${escapeHtml(room.occupancy || "—")}</span></div>
+                <div><span>House type</span><span>${escapeHtml(room.houseType || "Boarding house")}</span></div>
+                ${room.category ? `<div><span>Category</span><span>${escapeHtml(room.category)}</span></div>` : ""}
             `;
 
-            if (Array.isArray(property.amenities) && property.amenities.length) {
-                details.innerHTML += `<div><span>Amenities</span><span>${escapeHtml(property.amenities.join(", "))}</span></div>`;
+            // Room switcher under gallery when multiple rooms
+            let switcher = document.getElementById("roomSwitcher");
+            if (!switcher) {
+                const galleryPane = propertyModal.el.querySelector(".gallery-pane") ||
+                    document.getElementById("galleryThumbs")?.parentElement;
+                if (galleryPane) {
+                    switcher = document.createElement("div");
+                    switcher.id = "roomSwitcher";
+                    switcher.style.cssText =
+                        "display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center;";
+                    galleryPane.appendChild(switcher);
+                }
             }
-            if (property.rules) {
-                details.innerHTML += `<div><span>Rules</span><span>${escapeHtml(property.rules)}</span></div>`;
+            if (switcher) {
+                if (rooms.length > 1) {
+                    switcher.innerHTML = rooms
+                        .map(
+                            (r, i) => `
+                            <button type="button" data-room-index="${i}"
+                                style="min-height:30px;padding:0 10px;border-radius:6px;border:1px solid ${
+                                    i === propertyModal.roomIndex ? "transparent" : "#d1d5db"
+                                };background:${
+                                    i === propertyModal.roomIndex ? "#2563eb" : "#fff"
+                                };color:${
+                                    i === propertyModal.roomIndex ? "#fff" : "#374151"
+                                };font-size:0.75rem;font-weight:700;cursor:pointer;">
+                                ${escapeHtml(r.label)}
+                            </button>
+                        `
+                        )
+                        .join("");
+                } else {
+                    switcher.innerHTML = "";
+                }
+            }
+
+            const bookBtn = document.getElementById("modalBookButton");
+            if (bookBtn) {
+                bookBtn.textContent = `${roomLabel} · Book / Contact`;
             }
 
             renderGallery();
-            propertyModal.el.classList.add("open");
-            propertyModal.el.setAttribute("aria-hidden", "false");
-            document.body.style.overflow = "hidden";
         }
+
+        function shiftRoom(delta) {
+            const rooms = propertyModal.rooms || [];
+            if (rooms.length <= 1) return;
+            propertyModal.roomIndex =
+                (propertyModal.roomIndex + delta + rooms.length) % rooms.length;
+            propertyModal.index = 0;
+            renderRoomModal();
+        }
+
 
         function closePropertyModal() {
             propertyModal.el.classList.remove("open");
@@ -1172,7 +1288,19 @@
 
         function shiftGallery(delta) {
             const total = propertyModal.images.length;
-            if (total <= 1) return;
+            if (total <= 1) {
+                // No extra photos — move between rooms instead
+                if ((propertyModal.rooms || []).length > 1) shiftRoom(delta);
+                return;
+            }
+            const next = propertyModal.index + delta;
+            if (next < 0 || next >= total) {
+                // Move to next/prev room when past photo ends
+                if ((propertyModal.rooms || []).length > 1) {
+                    shiftRoom(delta > 0 ? 1 : -1);
+                    return;
+                }
+            }
             propertyModal.index = (propertyModal.index + delta + total) % total;
             renderGallery();
         }
@@ -1267,8 +1395,8 @@
                                 <div class="rating">${getRating(property)}</div>
                             </div>
                             <div class="card-actions">
-                                <button class="book-button" type="button" data-book-property="${propertyId}">
-                                    Book
+                                <button class="view-button" type="button" data-open-property="${propertyId}">
+                                    Check the room →
                                 </button>
                             </div>
                         </div>
@@ -1492,6 +1620,22 @@
             if (!thumb) return;
             propertyModal.index = Number(thumb.dataset.index);
             renderGallery();
+        });
+
+        document.getElementById("propertyModal").addEventListener("click", (event) => {
+            const roomBtn = event.target.closest("[data-room-index]");
+            if (roomBtn && roomBtn.dataset.roomIndex !== undefined) {
+                propertyModal.roomIndex = Number(roomBtn.dataset.roomIndex);
+                propertyModal.index = 0;
+                renderRoomModal();
+            }
+        });
+
+        // Swipe rooms with keyboard when modal open
+        document.addEventListener("keydown", (event) => {
+            if (!propertyModal.el.classList.contains("open")) return;
+            if (event.key === "PageDown") shiftRoom(1);
+            if (event.key === "PageUp") shiftRoom(-1);
         });
         document.getElementById("modalBookButton").addEventListener("click", () => {
             if (propertyModal.property) {

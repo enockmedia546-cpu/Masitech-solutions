@@ -86,6 +86,66 @@
             gap: 22px;
         }
 
+        
+        .header-content {
+            min-height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .brand img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+        .brand-name { font-size: 1rem; font-weight: 700; }
+        .brand-sub { font-size: 0.72rem; font-weight: 600; color: var(--medium-grey); }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+        .main-nav a {
+            color: var(--charcoal);
+            font-size: 0.86rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .main-nav a:hover,
+        .main-nav a.active { color: var(--teal); }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .menu-button { display: none !important; }
+
         .brand {
             display: flex;
             align-items: center;
@@ -456,33 +516,9 @@
         }
 
         @media (max-width: 950px) {
-            .main-nav {
-                position: absolute;
-                top: 76px;
-                right: 20px;
-                left: 20px;
-                display: none;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                padding: 12px;
-                background: var(--white);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                box-shadow: var(--shadow);
-            }
-
-            .main-nav.open {
-                display: flex;
-            }
-
-            .main-nav a {
-                padding: 10px;
-            }
-
-            .menu-button {
-                display: block;
-            }
+            .main-nav a { font-size: 0.8rem; }
+            .header-actions .button { min-height: 36px; padding: 0 10px; font-size: 0.78rem; }
+            .menu-button { display: none !important; }
 
             .contact-grid {
                 grid-template-columns: 1fr;
@@ -522,47 +558,23 @@
 <body>
     <header class="site-header">
         <div class="container header-content">
-            <a
-                class="brand"
-                href="index.html"
-                aria-label="Masitech Solutions home"
-            >
-                <img
-                    src="logo.jpg"
-                    alt="Masitech Solutions logo"
-                >
-
-                <span>Masitech Solutions</span>
+            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
+                <img src="logo.jpg" alt="Masitech Solutions logo">
+                <span class="brand-text">
+                    <span class="brand-name">Masitech</span>
+                    <span class="brand-sub">Solutions</span>
+                </span>
             </a>
-
-            <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-                <a href="index.html">Home</a>
-                <a href="student-listings.html">Students</a>
-                <a href="apartment-listings.html">Apartments</a>
-                <a href="about.html">About Us</a>
-                <a href="faqs.html">FAQs</a>
-                <a class="active" href="contact.html">Contact</a>
-            </nav>
-
-            <div class="header-actions">
-                <a class="button button-outline" href="login.html">
-                    Log in
-                </a>
-
-                <a class="button button-primary" href="signup.html">
-                    Sign up
-                </a>
-
-                <button
-                    class="menu-button"
-                    id="menuButton"
-                    type="button"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false"
-                    aria-controls="mainNav"
-                >
-                    ☰
-                </button>
+            <div class="header-right">
+                <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html" class="active">Contact</a>
+                    <a href="login.html">Sign In</a>
+                </nav>
+                <div class="header-actions">
+                    <a class="button button-primary" href="signup.html">Create Account</a>
+                </div>
             </div>
         </div>
     </header>
@@ -770,8 +782,8 @@
                                             Account support
                                         </option>
 
-                                        <option value="caretaker-support">
-                                            Caretaker support
+                                        <option value="property manager-support">
+                                            Property manager support
                                         </option>
 
                                         <option value="general-question">
@@ -792,21 +804,15 @@
                                         id="location"
                                         name="location"
                                     >
-                                        <option value="">
-                                            Select a location
-                                        </option>
-
-                                        <option value="campus-a">
-                                            Campus Location A
-                                        </option>
-
-                                        <option value="campus-b">
-                                            Campus Location B
-                                        </option>
-
-                                        <option value="campus-c">
-                                            Campus Location C
-                                        </option>
+                                        <option value="">Select a location</option>
+                                        <option value="cbu">CBU</option>
+                                        <option value="unilus">UNILUS</option>
+                                        <option value="mukuba">Mukuba University</option>
+                                        <option value="mulungushi">Mulungushi University</option>
+                                        <option value="lusaka">Lusaka</option>
+                                        <option value="kitwe">Kitwe</option>
+                                        <option value="solwezi">Solwezi</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
 
@@ -954,7 +960,7 @@
         document.getElementById("currentYear").textContent =
             new Date().getFullYear();
 
-        menuButton.addEventListener("click", () => {
+        menuButton?.addEventListener("click", () => {
             const isOpen = mainNav.classList.toggle("open");
             menuButton.setAttribute("aria-expanded", String(isOpen));
             menuButton.setAttribute(

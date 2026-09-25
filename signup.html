@@ -98,6 +98,7 @@
             gap: 7px;
         }
         .form-group.full-width { grid-column: span 2; }
+        .form-group[hidden] { display: none !important; }
         .form-group label {
             color: var(--charcoal);
             font-size: 0.9rem;
@@ -551,47 +552,42 @@
         const guardianNameInput = document.getElementById("guardianName");
         const guardianPhoneInput = document.getElementById("guardianPhone");
 
+        function setGroupVisible(el, visible) {
+            if (!el) return;
+            el.hidden = !visible;
+            if (visible) el.removeAttribute("hidden");
+            else el.setAttribute("hidden", "");
+        }
+
         function fillLocations(type) {
             locationSelect.innerHTML = "";
-            if (!type) {
-                locationSelect.disabled = true;
-                locationSelect.innerHTML = `<option value="">Select account type first</option>`;
-                if (tenancyTypeGroup) {
-                    tenancyTypeGroup.hidden = true;
-                    tenancyTypeSelect.value = "";
-                    tenancyTypeSelect.required = false;
-                }
-                if (guardianNameGroup) {
-                    guardianNameGroup.hidden = true;
-                    guardianPhoneGroup.hidden = true;
-                    guardianNameInput.value = "";
-                    guardianPhoneInput.value = "";
-                    guardianNameInput.required = false;
-                    guardianPhoneInput.required = false;
-                }
-                return;
-            }
 
             const isTenant = type === "tenant";
             const isStudent = type === "student";
 
-            // Tenancy type: Other resident only (never students)
-            if (tenancyTypeGroup) {
-                tenancyTypeGroup.hidden = !isTenant;
+            // Tenancy type ONLY for Other resident — never for students, never before choice
+            setGroupVisible(tenancyTypeGroup, isTenant);
+            if (tenancyTypeSelect) {
                 tenancyTypeSelect.required = isTenant;
                 if (!isTenant) tenancyTypeSelect.value = "";
             }
 
-            // Guardian details: students only
-            if (guardianNameGroup) {
-                guardianNameGroup.hidden = !isStudent;
-                guardianPhoneGroup.hidden = !isStudent;
+            // Guardian details ONLY for Student — never for other resident, never before choice
+            setGroupVisible(guardianNameGroup, isStudent);
+            setGroupVisible(guardianPhoneGroup, isStudent);
+            if (guardianNameInput) {
                 guardianNameInput.required = isStudent;
+                if (!isStudent) guardianNameInput.value = "";
+            }
+            if (guardianPhoneInput) {
                 guardianPhoneInput.required = isStudent;
-                if (!isStudent) {
-                    guardianNameInput.value = "";
-                    guardianPhoneInput.value = "";
-                }
+                if (!isStudent) guardianPhoneInput.value = "";
+            }
+
+            if (!type) {
+                locationSelect.disabled = true;
+                locationSelect.innerHTML = `<option value="">Select account type first</option>`;
+                return;
             }
 
             const list = isStudent ? STUDENT_LOCATIONS : TENANT_LOCATIONS;
@@ -651,6 +647,9 @@
             const digits = String(rawPhone || "").replace(/\D/g, "");
             return `${countryCode}${digits}`;
         }
+
+        // Start with optional fields hidden until user picks Student or Other resident
+        fillLocations(accountType.value || "");
 
         accountType.addEventListener("change", () => fillLocations(accountType.value));
         passwordInput.addEventListener("input", () => {

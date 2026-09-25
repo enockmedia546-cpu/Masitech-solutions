@@ -897,6 +897,65 @@
             display: none !important;
         }
 
+
+        .manage-popup-overlay {
+            position: fixed; inset: 0; z-index: 4500; display: none; place-items: center;
+            padding: 20px; background: rgba(15, 23, 42, 0.5);
+        }
+        .manage-popup-overlay.open { display: grid; }
+        .manage-popup-card {
+            width: min(340px, 100%); padding: 20px 18px 16px; background: var(--white);
+            border-radius: 14px; box-shadow: 0 16px 48px rgba(15, 23, 42, 0.28);
+        }
+        .manage-popup-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+        .manage-popup-sub { margin: 0 0 16px; color: var(--medium-grey); font-size: 0.82rem; }
+        .manage-popup-actions { display: grid; gap: 8px; }
+        .manage-popup-actions .button { width: 100%; min-height: 44px; justify-content: center; }
+        .manage-popup-cancel { margin-top: 4px; color: var(--charcoal); background: var(--light-grey); border: 1px solid var(--border); }
+        .manage-menu { display: none !important; }
+        .settings-view-mode .form-input,
+        .settings-view-mode .form-select,
+        .settings-view-mode .form-textarea {
+            pointer-events: none;
+            background: #f9fafb;
+            color: var(--charcoal);
+        }
+        .settings-view-mode .form-actions { display: none !important; }
+        a.sidebar-user {
+            text-decoration: none;
+            color: inherit;
+            border-radius: 10px;
+            padding: 4px;
+        }
+        a.sidebar-user:hover { background: rgba(255,255,255,0.06); }
+
+        .manage-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .manage-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 4px);
+            z-index: 40;
+            min-width: 140px;
+            padding: 6px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .manage-wrap.open .manage-menu {
+            display: grid;
+            gap: 4px;
+        }
+        .manage-menu .small-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+
         .month-group {
             margin-bottom: 12px;
             background: var(--white);
@@ -1174,25 +1233,24 @@
 
                 <p class="nav-section-title">Account</p>
 
-                <button
+                <a
                     class="nav-item"
-                    data-section="profile"
-                    type="button"
+                    href="profile.html"
+                    style="text-decoration:none"
                 >
                     <span class="nav-icon">♙</span>
                     <span>My profile</span>
-                </button>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="sidebar-user">
+                <a class="sidebar-user" href="profile.html" id="sidebarProfileLink" title="Open my profile">
                     <div class="avatar" id="sidebarAvatar">A</div>
-
                     <div class="sidebar-user-text">
                         <strong id="sidebarName">Administrator</strong>
                         <small id="sidebarRole">Loading roles...</small>
                     </div>
-                </div>
+                </a>
 
                 <button class="logout-button" id="logoutButton" type="button">
                     Log out
@@ -1874,9 +1932,6 @@
                         </div>
                     </section>
 
-                    <section
-                        class="dashboard-section"
-                        
                     <section class="dashboard-section" id="section-contact-messages">
                         <div class="section-heading">
                             <div>
@@ -1909,8 +1964,7 @@
                         </div>
                     </section>
 
-                        id="section-pages"
-                    >
+                    <section class="dashboard-section" id="section-pages">
                         <div class="section-heading">
                             <div>
                                 <h2>Website pages</h2>
@@ -2452,7 +2506,8 @@
                         </div>
 
                         <div class="panel" id="platformReviewsPanel" data-permission="content.manage">
-                            <div class="table-wrapper">
+                            <div class="panel-body" id="platformReviewsByMonth"></div>
+                            <div class="table-wrapper" style="display:none">
                                 <table>
                                     <thead>
                                         <tr>
@@ -3064,28 +3119,20 @@
                         </div>
 
                         <div class="panel">
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Actor</th>
-                                            <th>Action</th>
-                                            <th>Target</th>
-                                            <th>Location</th>
-                                            <th>Details</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="auditTableBody">
-                                        <tr>
-                                            <td colspan="6" class="empty-state">
-                                                Loading audit logs...
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div id="auditBulkBar" class="toolbar" style="display:none;margin:0 0 12px">
+                                <div class="toolbar-left">
+                                    <label class="checkbox-label"><input type="checkbox" id="auditSelectAll"> Select all visible</label>
+                                    <span id="auditSelectedCount" class="form-help">0 selected</span>
+                                </div>
+                                <div class="toolbar-right">
+                                    <button class="button button-danger" type="button" id="bulkDeleteAuditButton">Delete selected</button>
+                                </div>
                             </div>
+                            <div class="panel-body" id="auditLogsByMonth">
+                                <div class="empty-state">Loading audit logs...</div>
+                            </div>
+                            <!-- legacy table kept hidden for compatibility -->
+                            <tbody id="auditTableBody" class="hidden"></tbody>
                         </div>
                     </section>
 
@@ -3132,12 +3179,16 @@
                             <div>
                                 <h2>System settings</h2>
                                 <p>
-                                    Control platform-wide settings.
+                                    Platform information. Click Edit only when you need to change something.
                                 </p>
+                            </div>
+                            <div class="section-actions">
+                                <button class="button button-primary" type="button" id="editSettingsButton">Edit</button>
+                                <button class="button button-outline hidden" type="button" id="cancelSettingsEditButton">Cancel edit</button>
                             </div>
                         </div>
 
-                        <div class="form-panel">
+                        <div class="form-panel settings-view-mode" id="settingsPanel">
                             <div
                                 class="message"
                                 id="settingsMessage"
@@ -3247,6 +3298,13 @@
         </div>
     </div>
 
+    <div class="manage-popup-overlay" id="managePopup" aria-hidden="true">
+        <div class="manage-popup-card" role="dialog" aria-modal="true">
+            <h3 id="managePopupTitle">Manage</h3>
+            <p class="manage-popup-sub" id="managePopupSub">Choose an action</p>
+            <div class="manage-popup-actions" id="managePopupActions"></div>
+        </div>
+    </div>
     <div class="toast" id="toast" role="status"></div>
 
     <script type="module">
@@ -3639,8 +3697,44 @@
         }
 
 
+
+        let managePopupContext = null;
+        function closeManagePopup() {
+            const overlay = document.getElementById("managePopup");
+            if (!overlay) return;
+            overlay.classList.remove("open");
+            overlay.setAttribute("aria-hidden", "true");
+            const actions = document.getElementById("managePopupActions");
+            if (actions) actions.innerHTML = "";
+            managePopupContext = null;
+        }
+        function openManagePopup({ title, subtitle, options, onPick }) {
+            const overlay = document.getElementById("managePopup");
+            if (!overlay) return;
+            document.getElementById("managePopupTitle").textContent = title || "Manage";
+            document.getElementById("managePopupSub").textContent = subtitle || "Choose an action";
+            const actions = document.getElementById("managePopupActions");
+            actions.innerHTML =
+                (options || []).map((opt) => {
+                    let cls = "button button-outline";
+                    if (opt.kind === "edit" || opt.kind === "primary") cls = "button button-primary";
+                    else if (opt.kind === "delete") cls = "button button-danger";
+                    return `<button type="button" class="${cls}" data-manage-pick="${opt.action}">${escapeHtml(opt.label)}</button>`;
+                }).join("") +
+                `<button type="button" class="button manage-popup-cancel" data-manage-pick="__cancel">Cancel</button>`;
+            managePopupContext = { onPick };
+            overlay.classList.add("open");
+            overlay.setAttribute("aria-hidden", "false");
+        }
+
         function isSuperAdmin() {
-            return (state.roles || []).includes("super-admin");
+            const roles = (state.roles || []).map((r) => String(r).toLowerCase());
+            return (
+                roles.includes("super-admin") ||
+                roles.includes("superadmin") ||
+                roles.includes("super_admin") ||
+                (state.permissions || []).includes("*")
+            );
         }
 
         function getMonthKey(timestamp) {
@@ -3917,6 +4011,7 @@
             renderRoleUserOptions();
             renderRoleLocationCheckboxes();
             renderAuditLogs();
+            if (typeof updateAuditSelectionUI === "function") updateAuditSelectionUI();
             updateNotificationCount();
         }
 
@@ -4185,25 +4280,30 @@
 
                                 <td>
                                     <div class="table-actions">
-                                        <button class="small-button edit" data-user-action="edit" data-id="${user.id}" type="button">Edit</button>
-                                        <button class="small-button edit" data-user-action="edit-roles" data-id="${user.id}" type="button">Roles</button>
-                                        <button
-                                            class="small-button ${
-                                                status === "suspended"
-                                                    ? "approve"
-                                                    : "reject"
-                                            }"
-                                            data-user-action="toggle-status"
-                                            data-id="${user.id}"
-                                            type="button"
-                                        >
-                                            ${
-                                                status === "suspended"
-                                                    ? "Activate"
-                                                    : "Suspend"
-                                            }
-                                        </button>
-                                        <button class="small-button reject" data-user-action="delete" data-id="${user.id}" type="button">Delete</button>
+                                        <div class="manage-wrap">
+                                            <button class="small-button edit" type="button" data-user-action="manage" data-id="${user.id}">Manage ▾</button>
+                                            <div class="manage-menu">
+                                                <button class="small-button edit" data-user-action="edit" data-id="${user.id}" type="button">Edit</button>
+                                                <button class="small-button edit" data-user-action="edit-roles" data-id="${user.id}" type="button">Roles</button>
+                                                <button
+                                                    class="small-button ${
+                                                        status === "suspended"
+                                                            ? "approve"
+                                                            : "reject"
+                                                    }"
+                                                    data-user-action="toggle-status"
+                                                    data-id="${user.id}"
+                                                    type="button"
+                                                >
+                                                    ${
+                                                        status === "suspended"
+                                                            ? "Activate"
+                                                            : "Suspend"
+                                                    }
+                                                </button>
+                                                <button class="small-button reject" data-user-action="delete" data-id="${user.id}" type="button">Delete</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -4819,7 +4919,7 @@
                                                     ? `<button class="small-button approve" type="button" data-platform-review-action="approve" data-id="${review.id}">Approve</button>`
                                                     : `<span class="badge badge-green">On landing</span>`
                                             }
-                                            <button class="small-button reject" type="button" data-platform-review-action="delete" data-id="${review.id}">Delete</button>
+                                            ${isSuperAdmin() ? `<button class="small-button reject" type="button" data-platform-review-action="delete" data-id="${review.id}">Delete</button>` : ""}
                                         </div>
                                     </td>
                                 </tr>
@@ -4913,8 +5013,7 @@
                         <td style="max-width:220px">${escapeHtml((msg.message || "").slice(0, 120))}${(msg.message || "").length > 120 ? "…" : ""}</td>
                         <td><span class="badge ${badge}">${escapeHtml(status)}</span></td>
                         <td class="table-actions">
-                            <button class="small-button view" type="button" data-contact-action="read" data-id="${msg.id}">Mark read</button>
-                            <button class="small-button approve" type="button" data-contact-action="resolve" data-id="${msg.id}">Resolve</button>
+                            <button class="small-button edit" type="button" data-contact-action="manage" data-id="${msg.id}">Manage ▾</button>
                         </td>
                     </tr>
                 `;
@@ -4981,8 +5080,7 @@
                             <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
                                 <h3 style="margin:0">${escapeHtml(announcement.title || "Untitled announcement")}</h3>
                                 <div class="table-actions">
-                                    <button class="small-button edit" type="button" data-announcement-action="edit" data-id="${announcement.id}">Edit</button>
-                                    <button class="small-button reject" type="button" data-announcement-action="delete" data-id="${announcement.id}">Delete</button>
+                                    <button class="small-button edit" type="button" data-announcement-action="manage" data-id="${announcement.id}">Manage ▾</button>
                                 </div>
                             </div>
                             <p>${escapeHtml(announcement.message || announcement.body || "")}</p>
@@ -6107,7 +6205,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             const searchTerm =
                 document.getElementById("auditSearch")?.value?.trim().toLowerCase() || "";
 
-            const logs = state.auditLogs.filter((log) => {
+            const logs = (state.auditLogs || []).filter((log) => {
                 const searchableText = [
                     log.actorName,
                     log.actorRole,
@@ -6122,18 +6220,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 return !searchTerm || searchableText.includes(searchTerm);
             });
 
-            const tableBody = document.getElementById("auditTableBody");
-            if (!tableBody) return;
-
-            const panelBody = tableBody.closest(".panel-body") || tableBody.parentElement;
-            let container = document.getElementById("auditLogsByMonth");
-            if (!container && panelBody) {
-                container = document.createElement("div");
-                container.id = "auditLogsByMonth";
-                const wrapper = tableBody.closest(".table-wrapper");
-                if (wrapper) wrapper.style.display = "none";
-                panelBody.appendChild(container);
-            }
+            const container = document.getElementById("auditLogsByMonth");
             if (!container) return;
 
             if (logs.length === 0) {
@@ -6143,7 +6230,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
 
             const groups = groupByMonth(logs);
             const currentMonth = getMonthKey(Date.now());
-            const canDelete = isSuperAdmin();
+            const canDelete = typeof isSuperAdmin === "function" && isSuperAdmin();
 
             container.innerHTML = groups
                 .map(([month, items], index) => {
@@ -6157,11 +6244,12 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                                 <td>${escapeHtml(log.actorName || "—")}</td>
                                 <td>${escapeHtml(log.action || "—")}</td>
                                 <td>${escapeHtml(log.targetName || "—")}</td>
+                                <td>${escapeHtml(log.locationId || "—")}</td>
                                 <td>${escapeHtml(log.details || "—")}</td>
                                 <td>
                                     ${
                                         canDelete
-                                            ? `<button class="small-button reject" type="button" data-audit-action="delete" data-id="${log.id}">Delete</button>`
+                                            ? `<label class="checkbox-label" style="display:inline-flex;margin-right:8px"><input type="checkbox" class="audit-select" data-audit-id="${log.id}"></label><button class="small-button reject" type="button" data-audit-action="delete" data-id="${log.id}">Delete</button>`
                                             : "—"
                                     }
                                 </td>
@@ -6181,6 +6269,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                                                 <th>Actor</th>
                                                 <th>Action</th>
                                                 <th>Target</th>
+                                                <th>Location</th>
                                                 <th>Details</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -6193,6 +6282,41 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     `;
                 })
                 .join("");
+        }
+
+
+        function updateAuditSelectionUI() {
+            const bar = document.getElementById("auditBulkBar");
+            if (!bar) return;
+            bar.style.display = isSuperAdmin() ? "flex" : "none";
+            const selected = document.querySelectorAll(".audit-select:checked").length;
+            const countEl = document.getElementById("auditSelectedCount");
+            if (countEl) countEl.textContent = selected + " selected";
+        }
+
+        async function bulkDeleteAuditLogs() {
+            if (!isSuperAdmin()) {
+                showToast("Only super admins can delete audit logs.", true);
+                return;
+            }
+            const ids = [...document.querySelectorAll(".audit-select:checked")]
+                .map((el) => el.dataset.auditId)
+                .filter(Boolean);
+            if (!ids.length) {
+                showToast("Select at least one log first.", true);
+                return;
+            }
+            if (!confirm("Delete " + ids.length + " audit log(s)? This cannot be undone.")) return;
+            try {
+                for (const id of ids) {
+                    await deleteDoc(doc(db, "auditLogs", id));
+                }
+                showToast("Deleted " + ids.length + " log(s).");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete some logs.", true);
+            }
         }
 
         async function deleteAuditLog(id) {
@@ -7484,6 +7608,31 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     const userId =
                         button.dataset.id;
 
+                    if (button.dataset.userAction === "manage") {
+                        const user = (state.users || []).find((u) => u.id === userId);
+                        const status = String(user?.accountStatus || "active").toLowerCase();
+                        const isSuspended = status === "suspended" || status === "disabled";
+                        openManagePopup({
+                            title: user?.fullName || user?.email || "User",
+                            subtitle: "Choose an action for this user",
+                            options: [
+                                { label: "Edit details", action: "edit", kind: "edit" },
+                                { label: "Roles & permissions", action: "edit-roles", kind: "view" },
+                                { label: isSuspended ? "Activate account" : "Suspend account", action: "toggle-status", kind: "view" },
+                                { label: "Delete user", action: "delete", kind: "delete" }
+                            ],
+                            onPick: async (pick) => {
+                                if (pick === "edit") openUserEdit(userId);
+                                if (pick === "edit-roles") {
+                                    openSection("roles");
+                                    setSelectedRoleUser(userId);
+                                }
+                                if (pick === "toggle-status") await toggleUserStatus(userId);
+                                if (pick === "delete") await deleteUser(userId);
+                            }
+                        });
+                        return;
+                    }
                     if (button.dataset.userAction === "toggle-status") {
                         toggleUserStatus(userId);
                     }
@@ -7499,6 +7648,12 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     }
                 }
             );
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".manage-wrap")) {
+                document.querySelectorAll(".manage-wrap.open").forEach((el) => el.classList.remove("open"));
+            }
+        });
 
         document.getElementById("userEditForm")?.addEventListener("submit", saveUserEdit);
         document.getElementById("cancelUserEdit")?.addEventListener("click", () => {
@@ -7668,6 +7823,36 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             );
 
         document
+            .getElementById("platformReviewsByMonth")
+            ?.addEventListener("click", async (event) => {
+                const button = event.target.closest("[data-platform-review-action]");
+                if (!button) return;
+                const reviewId = button.dataset.id;
+                const action = button.dataset.platformReviewAction;
+                if (action === "approve") {
+                    await updatePlatformReview(reviewId, {
+                        status: "approved",
+                        showOnLanding: true
+                    });
+                } else if (action === "delete") {
+                    if (!isSuperAdmin()) {
+                        showToast("Only super admins can delete reviews.", true);
+                        return;
+                    }
+                    if (!confirm("Delete this review permanently?")) return;
+                    try {
+                        await deleteDoc(doc(db, "platformReviews", reviewId));
+                        await writeAuditLog("Platform review deleted", { id: reviewId, name: "Review" });
+                        showToast("Review deleted.");
+                        await loadAdminData();
+                    } catch (error) {
+                        console.error(error);
+                        showToast("Could not delete review.", true);
+                    }
+                }
+            });
+
+        document
             .getElementById("platformReviewsTableBody")
             ?.addEventListener("click", async (event) => {
                 const button = event.target.closest("[data-platform-review-action]");
@@ -7682,6 +7867,10 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         showOnLanding: true
                     });
                 } else if (action === "delete") {
+                    if (!isSuperAdmin()) {
+                        showToast("Only super admins can delete reviews.", true);
+                        return;
+                    }
                     if (!confirm("Delete this review permanently?")) return;
                     try {
                         await deleteDoc(doc(db, "platformReviews", reviewId));
@@ -7755,15 +7944,54 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
         });
 
         
+        async function deleteContactMessage(id) {
+            if (!id || !confirm("Delete this contact message permanently?")) return;
+            try {
+                await deleteDoc(doc(db, "contactMessages", id));
+                await writeAuditLog("Contact message deleted", { id, name: "Contact message" });
+                showToast("Message deleted.");
+                await loadAdminData();
+            } catch (error) {
+                console.error(error);
+                try {
+                    await deleteDoc(doc(db, "contacts", id));
+                    showToast("Message deleted.");
+                    await loadAdminData();
+                } catch (e2) {
+                    showToast("Could not delete message.", true);
+                }
+            }
+        }
+
         document.getElementById("contactMessagesTableBody")?.addEventListener("click", async (event) => {
             const btn = event.target.closest("[data-contact-action]");
             if (!btn) return;
             const id = btn.dataset.id;
+            if (btn.dataset.contactAction === "manage") {
+                openManagePopup({
+                    title: "Contact message",
+                    subtitle: "Choose an action",
+                    options: [
+                        { label: "Mark as read", action: "read", kind: "view" },
+                        { label: "Mark resolved", action: "resolve", kind: "edit" },
+                        { label: "Delete message", action: "delete", kind: "delete" }
+                    ],
+                    onPick: async (pick) => {
+                        if (pick === "read") await updateContactMessageStatus(id, "read");
+                        if (pick === "resolve") await updateContactMessageStatus(id, "resolved");
+                        if (pick === "delete") await deleteContactMessage(id);
+                    }
+                });
+                return;
+            }
             if (btn.dataset.contactAction === "read") {
                 await updateContactMessageStatus(id, "read");
             }
             if (btn.dataset.contactAction === "resolve") {
                 await updateContactMessageStatus(id, "resolved");
+            }
+            if (btn.dataset.contactAction === "delete") {
+                await deleteContactMessage(id);
             }
         });
         document.getElementById("refreshContactMessagesButton")?.addEventListener("click", async () => {
@@ -7808,6 +8036,76 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             );
 
         // No "checking access" flash — redirect immediately if not an admin
+        
+        document.getElementById("bulkDeleteAuditButton")?.addEventListener("click", bulkDeleteAuditLogs);
+        document.getElementById("auditSelectAll")?.addEventListener("change", (event) => {
+            document.querySelectorAll(".audit-select").forEach((el) => {
+                el.checked = event.target.checked;
+            });
+            updateAuditSelectionUI();
+        });
+        document.getElementById("auditLogsByMonth")?.addEventListener("change", (event) => {
+            if (event.target.classList?.contains("audit-select")) updateAuditSelectionUI();
+        });
+
+
+        document.getElementById("announcementsList")?.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-announcement-action]");
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (btn.dataset.announcementAction === "manage") {
+                const item = (state.announcements || []).find((a) => a.id === id);
+                openManagePopup({
+                    title: item?.title || "Announcement",
+                    subtitle: "Choose an action",
+                    options: [
+                        { label: "Edit announcement", action: "edit", kind: "edit" },
+                        { label: "Delete announcement", action: "delete", kind: "delete" }
+                    ],
+                    onPick: async (pick) => {
+                        if (pick === "edit") fillAnnouncementEdit(id);
+                        if (pick === "delete") await deleteAnnouncement(id);
+                    }
+                });
+                return;
+            }
+            if (btn.dataset.announcementAction === "edit") fillAnnouncementEdit(id);
+            if (btn.dataset.announcementAction === "delete") await deleteAnnouncement(id);
+        });
+
+document.getElementById("managePopup")?.addEventListener("click", async (event) => {
+            if (event.target.id === "managePopup") { closeManagePopup(); return; }
+            const pickBtn = event.target.closest("[data-manage-pick]");
+            if (!pickBtn) return;
+            const pick = pickBtn.dataset.managePick;
+            const ctx = managePopupContext;
+            closeManagePopup();
+            if (pick === "__cancel" || !ctx?.onPick) return;
+            await ctx.onPick(pick);
+        });
+
+        function setSettingsEditing(enabled) {
+            const panel = document.getElementById("settingsPanel");
+            const editBtn = document.getElementById("editSettingsButton");
+            const cancelBtn = document.getElementById("cancelSettingsEditButton");
+            if (!panel) return;
+            if (enabled) {
+                panel.classList.remove("settings-view-mode");
+                editBtn?.classList.add("hidden");
+                cancelBtn?.classList.remove("hidden");
+            } else {
+                panel.classList.add("settings-view-mode");
+                editBtn?.classList.remove("hidden");
+                cancelBtn?.classList.add("hidden");
+            }
+        }
+        document.getElementById("editSettingsButton")?.addEventListener("click", () => setSettingsEditing(true));
+        document.getElementById("cancelSettingsEditButton")?.addEventListener("click", async () => {
+            setSettingsEditing(false);
+            try { await loadAdminData(); } catch (_) {}
+            showToast("Edit cancelled.");
+        });
+
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 redirectToLogin();

@@ -390,7 +390,7 @@
                 <button
                     class="submit-button"
                     id="loginButton"
-                    type=""
+                    type="submit"
                 >
                     Log in
                 </button>
@@ -648,68 +648,11 @@
         }
 
         /*
-         * Do NOT auto-redirect when the page loads.
+         * Do NOT auto-redirect on page load.
          * A previous browser session must not skip the login form
          * or send someone to the wrong dashboard.
-         * User must enter credentials (or use Google) each time they
-         * intentionally open this page — unless they choose "Continue".
+         * User must re-enter credentials (or use Google) to continue.
          */
-        async function showExistingSessionBanner() {
-            try {
-                await auth.authStateReady();
-                const user = auth.currentUser;
-                if (!user) return;
-
-                const email = user.email || "your account";
-                const banner = document.createElement("div");
-                banner.className = "message success";
-                banner.style.display = "block";
-                banner.id = "sessionBanner";
-                banner.innerHTML = `
-                    You are already signed in as <strong>${email}</strong>.
-                    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
-                        <button type="button" id="continueSessionBtn" class="submit-button" style="width:auto;min-height:38px;padding:0 14px;font-size:0.85rem;">
-                            Continue to my dashboard
-                        </button>
-                        <button type="button" id="signOutSessionBtn" class="google-button" style="width:auto;min-height:38px;padding:0 14px;font-size:0.85rem;">
-                            Sign out and use another account
-                        </button>
-                    </div>
-                `;
-                message.parentNode.insertBefore(banner, message);
-
-                document
-                    .getElementById("continueSessionBtn")
-                    .addEventListener("click", async () => {
-                        showMessage("Opening your dashboard...", "success");
-                        await redirectAfterLogin(user);
-                    });
-
-                document
-                    .getElementById("signOutSessionBtn")
-                    .addEventListener("click", async () => {
-                        try {
-                            await signOut(auth);
-                            banner.remove();
-                            hideMessage();
-                            showMessage(
-                                "Signed out. Enter your credentials to continue.",
-                                "success"
-                            );
-                        } catch (error) {
-                            showMessage(
-                                "Could not sign out. Please try again.",
-                                "error"
-                            );
-                        }
-                    });
-            } catch (error) {
-                console.warn("Session check failed:", error);
-            }
-        }
-
-        showExistingSessionBanner();
-
         loginForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             hideMessage();
@@ -782,4 +725,3 @@
     </script>
 </body>
 </html>
-

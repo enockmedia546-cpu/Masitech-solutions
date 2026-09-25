@@ -175,24 +175,44 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .student-identity {
+.student-identity {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 13px;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 10px;
+            padding: 6px 4px;
+            transition: background 0.15s ease;
         }
-
+        a.student-identity:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
         .avatar {
             display: grid;
             width: 36px;
             height: 36px;
             place-items: center;
+            overflow: hidden;
             color: var(--white);
             background: var(--teal);
             border-radius: 50%;
             font-size: 0.8rem;
             font-weight: 700;
+            flex-shrink: 0;
         }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .notification-count:empty,
+        .notification-count[data-count="0"] {
+            display: none;
+        }
+
 
         .identity-text {
             min-width: 0;
@@ -1056,6 +1076,149 @@
             }
         }
 
+
+        .love-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.55);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+            color: #ffffff;
+            cursor: pointer;
+            padding: 0;
+            backdrop-filter: blur(4px);
+        }
+        .love-button svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .love-button.saved {
+            background: rgba(220, 38, 38, 0.95);
+            color: #ffffff;
+        }
+        .love-button.saved svg {
+            fill: #ffffff;
+            stroke: #ffffff;
+        }
+        .love-button:hover {
+            transform: scale(1.08);
+            background: rgba(15, 23, 42, 0.75);
+        }
+        .love-button.saved:hover {
+            background: #b91c1c;
+        }
+
+        .icon-action {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #eff6ff;
+            color: var(--teal);
+            cursor: pointer;
+        }
+        .icon-action svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        #modalSaveButton svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        #modalSaveButton.saved {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #fff;
+        }
+        #modalSaveButton.saved svg {
+            fill: currentColor;
+            stroke: currentColor;
+        }
+
+        .icon-action:hover {
+            border-color: var(--teal);
+            background: #dbeafe;
+        }
+
+        .property-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .property-modal {
+            display: flex;
+            flex-direction: column;
+            max-height: min(92vh, 900px);
+        }
+        .property-modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: var(--white);
+            flex-shrink: 0;
+        }
+        .property-modal-body {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-top: 14px;
+        }
+        .modal-actions .icon-action {
+            width: 42px;
+            height: 42px;
+        }
+        .modal-actions .icon-action.saved {
+            background: #dc2626;
+            color: #fff;
+            border-color: #dc2626;
+        }
+
+        #modalReviewComment {
+            width: 100%;
+            min-height: 80px;
+            margin-top: 8px;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            resize: vertical;
+            font: inherit;
+            font-size: 0.82rem;
+        }
+        #modalReviewComment:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
         /* Property detail modal + photo gallery */
         .property-image-wrapper {
             cursor: pointer;
@@ -1281,6 +1444,56 @@
             }
         }
 
+
+        .manage-popup-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 4500;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .manage-popup-overlay.open { display: grid; }
+        .manage-popup-card {
+            width: min(340px, 100%);
+            padding: 20px 18px 16px;
+            background: var(--white);
+            border-radius: 14px;
+            box-shadow: 0 16px 48px rgba(15, 23, 42, 0.28);
+        }
+        .manage-popup-card h3 {
+            margin: 0 0 6px;
+            font-size: 1.05rem;
+            color: var(--dark-charcoal);
+        }
+        .manage-popup-card .manage-popup-sub {
+            margin: 0 0 16px;
+            color: var(--medium-grey);
+            font-size: 0.82rem;
+        }
+        .manage-popup-actions {
+            display: grid;
+            gap: 8px;
+        }
+        .manage-popup-actions .button {
+            width: 100%;
+            min-height: 44px;
+            justify-content: center;
+            font-size: 0.88rem;
+        }
+        .manage-popup-cancel {
+            margin-top: 4px;
+            color: var(--charcoal);
+            background: var(--light-grey);
+            border: 1px solid var(--border);
+        }
+        .button-danger {
+            color: #fff;
+            background: var(--red);
+            border-color: var(--red);
+        }
+
         .book-modal-overlay {
             position: fixed; inset: 0; z-index: 4100; display: none;
             align-items: center; justify-content: center; padding: 20px;
@@ -1391,36 +1604,26 @@
                     <span>Announcements</span>
                 </button>
 
-                <button
-                    class="nav-item"
-                    data-section="profile"
-                    type="button"
-                >
-                    <span class="nav-icon">♙</span>
-                    <span>Quick profile</span>
-                </button>
-
                 <a
                     class="nav-item"
                     href="profile.html"
                     style="text-decoration:none"
                 >
-                    <span class="nav-icon">↗</span>
-                    <span>Full profile</span>
+                    <span class="nav-icon">♙</span>
+                    <span>My profile</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="student-identity">
+                <a class="student-identity" href="profile.html" id="sidebarProfileLink" title="Open my profile">
                     <div class="avatar" id="sidebarAvatar">S</div>
-
                     <div class="identity-text">
                         <strong id="sidebarName">Student</strong>
                         <small id="sidebarLocation">
                             Loading location...
                         </small>
                     </div>
-                </div>
+                </a>
 
                 <button class="logout-button" id="logoutButton" type="button">
                     Log out
@@ -1987,8 +2190,8 @@
                     <div class="meta-row" id="modalMeta"></div>
                     <p class="description" id="modalDescription"></p>
                     <div class="detail-list" id="modalDetails"></div>
-                    <div class="rating-row" id="modalRatingRow">
-                        <span style="font-size:0.78rem;font-weight:700;color:var(--charcoal)">Rate this place</span>
+                    <div class="rating-row" id="modalRatingRow" style="flex-wrap:wrap">
+                        <span style="font-size:0.78rem;font-weight:700;color:var(--charcoal)">Rate & review</span>
                         <div id="modalRateStars" aria-label="Star rating">
                             <button class="star-btn" type="button" data-star="1">★</button>
                             <button class="star-btn" type="button" data-star="2">★</button>
@@ -1996,12 +2199,16 @@
                             <button class="star-btn" type="button" data-star="4">★</button>
                             <button class="star-btn" type="button" data-star="5">★</button>
                         </div>
-                        <button class="rating-submit" id="modalSubmitRating" type="button">Submit rating</button>
                     </div>
+                    <textarea id="modalReviewComment" placeholder="Write your review (optional but helpful)..." maxlength="800"></textarea>
+                    <button class="rating-submit" id="modalSubmitRating" type="button" style="margin-top:8px">Submit review</button>
                     <div class="modal-actions">
-                        <button class="button button-primary" id="modalBookButton" type="button">Book / Contact</button>
-                        <button class="button button-outline" id="modalSaveButton" type="button">Save</button>
-                        <a class="button button-outline" id="modalFullLink" href="student-listings.html">See all listings</a>
+                        <button class="icon-action" id="modalBookButton" type="button" title="Message property manager" aria-label="Message property manager">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/></svg>
+                        </button>
+                        <button class="icon-action" id="modalSaveButton" type="button" title="Save / love" aria-label="Save listing">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2009,6 +2216,14 @@
     </div>
 
     
+    <div class="manage-popup-overlay" id="managePopup" aria-hidden="true">
+        <div class="manage-popup-card" role="dialog" aria-modal="true" aria-labelledby="managePopupTitle">
+            <h3 id="managePopupTitle">Manage</h3>
+            <p class="manage-popup-sub" id="managePopupSub">Choose an action</p>
+            <div class="manage-popup-actions" id="managePopupActions"></div>
+        </div>
+    </div>
+
     <div class="book-modal-overlay" id="bookModal" aria-hidden="true">
         <div class="book-modal" role="dialog" aria-modal="true" aria-labelledby="bookModalTitle">
             <div class="book-modal-header">
@@ -2087,6 +2302,7 @@
             where,
             updateDoc,
             setDoc,
+            deleteDoc,
             addDoc,
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -2372,21 +2588,29 @@
             );
 
             const saveButton = document.getElementById("modalSaveButton");
-            saveButton.textContent = savedProperty ? "Saved" : "Save";
-            saveButton.dataset.id = property.id;
-            saveButton.dataset.saveAction = savedProperty ? "remove" : "save";
+            if (saveButton) {
+                saveButton.dataset.id = property.id;
+                saveButton.dataset.saveAction = savedProperty ? "remove" : "save";
+                saveButton.classList.toggle("saved", Boolean(savedProperty));
+                saveButton.title = savedProperty ? "Remove from saved" : "Save listing";
+            }
 
-            document.getElementById("modalFullLink").href =
-                "student-listings.html";
+            const bookBtn = document.getElementById("modalBookButton");
+            if (bookBtn) {
+                bookBtn.dataset.bookProperty = property.id;
+            }
 
             selectedRating = 0;
             paintStars(document.getElementById("modalRateStars"), 0);
+            const commentEl = document.getElementById("modalReviewComment");
+            if (commentEl) commentEl.value = "";
             const mine = state.reviews.find(
-                (r) => r.propertyId === property.id
-            );
+                (r) => r.propertyId === property.id && r.userId === state.user?.uid
+            ) || state.reviews.find((r) => r.propertyId === property.id);
             if (mine) {
                 selectedRating = Number(mine.rating || 0);
                 paintStars(document.getElementById("modalRateStars"), selectedRating);
+                if (commentEl) commentEl.value = mine.comment || "";
             }
 
             renderGallery();
@@ -2497,6 +2721,44 @@
             ];
         }
 
+
+        let managePopupContext = null;
+
+        function closeManagePopup() {
+            const overlay = document.getElementById("managePopup");
+            if (!overlay) return;
+            overlay.classList.remove("open");
+            overlay.setAttribute("aria-hidden", "true");
+            const actions = document.getElementById("managePopupActions");
+            if (actions) actions.innerHTML = "";
+            managePopupContext = null;
+        }
+
+        function openManagePopup({ title, subtitle, options, onPick }) {
+            const overlay = document.getElementById("managePopup");
+            if (!overlay) return;
+            document.getElementById("managePopupTitle").textContent = title || "Manage";
+            document.getElementById("managePopupSub").textContent =
+                subtitle || "Choose an action";
+            const actions = document.getElementById("managePopupActions");
+            actions.innerHTML =
+                (options || [])
+                    .map((opt) => {
+                        let cls = "button button-outline";
+                        if (opt.kind === "edit" || opt.kind === "primary") {
+                            cls = "button button-primary";
+                        } else if (opt.kind === "delete") {
+                            cls = "button button-danger";
+                        }
+                        return `<button type="button" class="${cls}" data-manage-pick="${opt.action}">${escapeHtml(opt.label)}</button>`;
+                    })
+                    .join("") +
+                `<button type="button" class="button manage-popup-cancel" data-manage-pick="__cancel">Cancel</button>`;
+            managePopupContext = { onPick };
+            overlay.classList.add("open");
+            overlay.setAttribute("aria-hidden", "false");
+        }
+
         function showStudentApp() {
             document.body.classList.remove("auth-pending");
             document.body.classList.add("auth-ready");
@@ -2513,13 +2775,23 @@
             document.body.classList.remove("auth-pending");
             document.body.classList.add("auth-ready");
 
-            state.properties = [];
-            state.savedProperties = [];
-            state.inquiries = [];
-            state.reviews = [];
-            state.announcements = [];
+            if (!state.profile) {
+                state.profile = {
+                    fullName: state.user?.displayName || "Student",
+                    locationId: ""
+                };
+            }
+            state.properties = state.properties || [];
+            state.savedProperties = state.savedProperties || [];
+            state.inquiries = state.inquiries || [];
+            state.reviews = state.reviews || [];
+            state.announcements = state.announcements || [];
 
-            renderAll();
+            try {
+                renderAll();
+            } catch (renderError) {
+                console.error("Render after data error:", renderError);
+            }
 
             const dataMessage =
                 document.getElementById("dataMessage");
@@ -2554,8 +2826,20 @@
                     )
                     : collectionReference;
 
-            const snapshot =
-                await getDocs(dataQuery);
+            const snapshot = await Promise.race([
+                getDocs(dataQuery),
+                new Promise((_, reject) =>
+                    setTimeout(
+                        () =>
+                            reject(
+                                new Error(
+                                    `Timeout loading ${collectionName}`
+                                )
+                            ),
+                        15000
+                    )
+                )
+            ]);
 
             return snapshot.docs.map((document) => ({
                 id: document.id,
@@ -2670,6 +2954,11 @@
             state.roles =
                 effectiveRoles;
 
+            // Unlock UI as soon as student role is confirmed
+            setIdentity();
+            showStudentApp();
+
+
             const locationId =
                 state.profile.locationId ||
                 "";
@@ -2752,17 +3041,25 @@
             }
 
             try {
-                state.reviews =
-                    await loadCollection(
-                        "reviews",
-                        [
-                            where(
-                                "reviewerId",
-                                "==",
-                                user.uid
-                            )
-                        ]
-                    );
+                // Reviews are stored with userId (and sometimes reviewerId)
+                let reviews = [];
+                try {
+                    reviews = await loadCollection("reviews", [
+                        where("userId", "==", user.uid)
+                    ]);
+                } catch (userIdErr) {
+                    console.warn("reviews by userId failed:", userIdErr);
+                }
+                if (!reviews.length) {
+                    try {
+                        reviews = await loadCollection("reviews", [
+                            where("reviewerId", "==", user.uid)
+                        ]);
+                    } catch (reviewerErr) {
+                        console.warn("reviews by reviewerId failed:", reviewerErr);
+                    }
+                }
+                state.reviews = reviews;
             } catch (error) {
                 console.warn(
                     "Could not load reviews:",
@@ -2823,65 +3120,61 @@
         }
 
         function setIdentity() {
+            const profile = state.profile || {};
+            const user = state.user || {};
             const name =
-                state.profile.fullName ||
-                state.user.displayName ||
+                profile.fullName ||
+                user.displayName ||
+                user.email ||
                 "Student";
 
             const locationName =
-                state.profile.locationName ||
-                state.profile.locationId ||
+                profile.locationName ||
+                profile.locationId ||
                 "No location selected";
 
-            document.getElementById(
-                "sidebarName"
-            ).textContent = name;
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
+            const setVal = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.value = value;
+            };
 
-            document.getElementById(
-                "sidebarLocation"
-            ).textContent = locationName;
+            setText("sidebarName", name);
+            setText("sidebarLocation", locationName);
 
-            document.getElementById(
-                "sidebarAvatar"
-            ).textContent = getInitials(name);
+            const avatar = document.getElementById("sidebarAvatar");
+            if (avatar) {
+                const photo =
+                    profile.photoURL ||
+                    profile.profilePhoto ||
+                    user.photoURL ||
+                    "";
+                if (photo) {
+                    avatar.innerHTML = `<img src="${escapeHtml(photo)}" alt="">`;
+                } else {
+                    avatar.textContent = getInitials(name);
+                }
+            }
 
-            document.getElementById(
-                "welcomeName"
-            ).textContent = name.split(" ")[0];
-
-            document.getElementById(
-                "welcomeLocation"
-            ).textContent = state.profile.locationId
-                ? `Browse student accommodation in ${locationName}.`
-                : "Select a preferred location to see nearby student accommodation.";
-
-            document.getElementById(
-                "profileName"
-            ).value = name;
-
-            document.getElementById(
-                "profilePhone"
-            ).value = state.profile.phone || "";
-
-            document.getElementById(
-                "profileEmail"
-            ).value =
-                state.user.email ||
-                state.profile.email ||
-                "";
-
-            document.getElementById(
-                "profileRole"
-            ).value = capitalize(
-                state.profile.role ||
-                state.roles[0] ||
-                "student"
+            setText("welcomeName", String(name).split(" ")[0]);
+            setText(
+                "welcomeLocation",
+                profile.locationId
+                    ? `Browse student accommodation in ${locationName}.`
+                    : "Select a preferred location to see nearby student accommodation."
             );
 
-            document.getElementById(
-                "profileLocation"
-            ).value =
-                state.profile.locationId || "";
+            setVal("profileName", name);
+            setVal("profilePhone", profile.phone || "");
+            setVal("profileEmail", user.email || profile.email || "");
+            setVal(
+                "profileRole",
+                capitalize(profile.role || (state.roles && state.roles[0]) || "student")
+            );
+            setVal("profileLocation", profile.locationId || "");
         }
 
         function renderAll() {
@@ -3077,6 +3370,18 @@
                                     <span class="property-status">
                                         Available
                                     </span>
+
+                                    <button
+                                        class="love-button ${isSaved ? "saved" : ""}"
+                                        type="button"
+                                        data-save-action="${isSaved ? "remove" : "save"}"
+                                        data-id="${property.id}"
+                                        title="${isSaved ? "Remove from saved" : "Save listing"}"
+                                        aria-label="${isSaved ? "Unsave" : "Save"}"
+                                        onclick="event.stopPropagation()"
+                                    >
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                                    </button>
                                 </div>
 
                                 <div class="property-content">
@@ -3149,32 +3454,13 @@
                                             </button>
 
                                             <button
-                                                class="small-button book"
+                                                class="icon-action"
                                                 data-book-property="${property.id}"
                                                 type="button"
+                                                title="Message property manager"
+                                                aria-label="Message property manager"
                                             >
-                                                Book
-                                            </button>
-
-                                            <button
-                                                class="small-button ${
-                                                    isSaved
-                                                        ? "remove"
-                                                        : "save"
-                                                }"
-                                                data-save-action="${
-                                                    isSaved
-                                                        ? "remove"
-                                                        : "save"
-                                                }"
-                                                data-id="${property.id}"
-                                                type="button"
-                                            >
-                                                ${
-                                                    isSaved
-                                                        ? "Saved"
-                                                        : "Save"
-                                                }
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/></svg>
                                             </button>
                                         </div>
                                     </div>
@@ -3401,11 +3687,10 @@
                                         <button
                                             class="small-button view"
                                             type="button"
-                                            data-open-property="${escapeHtml(
-                                                inquiry.propertyId || ""
-                                            )}"
+                                            data-inquiry-action="manage"
+                                            data-id="${inquiry.id}"
                                         >
-                                            View property
+                                            Manage ▾
                                         </button>
                                     </td>
                                 </tr>
@@ -3445,14 +3730,16 @@
                     .map(
                         (review) => `
                             <article class="announcement-card">
-                                <h3>
-                                    ${escapeHtml(
-                                        review.targetName ||
-                                        review.propertyName ||
-                                        "Accommodation review"
-                                    )}
-                                </h3>
-
+                                <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+                                    <h3 style="margin:0">
+                                        ${escapeHtml(
+                                            review.targetName ||
+                                            review.propertyName ||
+                                            "Accommodation review"
+                                        )}
+                                    </h3>
+                                    <button class="small-button view" type="button" data-review-action="manage" data-id="${review.id}">Manage ▾</button>
+                                </div>
                                 <p>
                                     ★ ${Number(
                                         review.rating || 0
@@ -3462,7 +3749,6 @@
                                         "No comment"
                                     )}
                                 </p>
-
                                 <small>
                                     ${capitalize(
                                         review.reviewType ||
@@ -3534,16 +3820,133 @@
                     .join("");
         }
 
-        function updateNotificationCount() {
-            const unreadCount =
-                state.announcements.length;
 
-            document.getElementById(
-                "notificationCount"
-            ).textContent = unreadCount;
+        const ANNOUNCEMENTS_READ_KEY = "masitech_student_announcements_read_at";
+
+        function getAnnouncementsReadAt() {
+            try {
+                const raw = localStorage.getItem(ANNOUNCEMENTS_READ_KEY);
+                const n = Number(raw);
+                return Number.isFinite(n) ? n : 0;
+            } catch (_) {
+                return 0;
+            }
+        }
+
+        function markAnnouncementsRead() {
+            try {
+                localStorage.setItem(
+                    ANNOUNCEMENTS_READ_KEY,
+                    String(Date.now())
+                );
+            } catch (_) {}
+            updateNotificationCount();
+        }
+
+
+        async function deleteReview(reviewId) {
+            if (!reviewId || !confirm("Delete this review?")) return;
+            try {
+                await deleteDoc(doc(db, "reviews", reviewId));
+                state.reviews = state.reviews.filter((r) => r.id !== reviewId);
+                showToast("Review deleted.");
+                renderReviews();
+                renderAll();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete review.", true);
+            }
+        }
+
+        async function editReview(reviewId) {
+            const review = state.reviews.find((r) => r.id === reviewId);
+            if (!review) return;
+            const propertyId = review.propertyId;
+            if (propertyId && state.properties.some((p) => p.id === propertyId)) {
+                openPropertyModal(propertyId);
+                showToast("Update your stars and review text, then submit.");
+            } else {
+                const rating = Number(
+                    prompt("Rating (1-5)", String(review.rating || 5))
+                );
+                if (!rating || rating < 1 || rating > 5) return;
+                const comment = prompt("Review text", review.comment || "") ?? review.comment;
+                try {
+                    await updateDoc(doc(db, "reviews", reviewId), {
+                        rating,
+                        comment: String(comment || "").trim().slice(0, 800),
+                        updatedAt: serverTimestamp()
+                    });
+                    review.rating = rating;
+                    review.comment = String(comment || "").trim();
+                    showToast("Review updated.");
+                    renderReviews();
+                } catch (error) {
+                    console.error(error);
+                    showToast("Could not update review.", true);
+                }
+            }
+        }
+
+        async function deleteInquiry(inquiryId) {
+            if (!inquiryId || !confirm("Delete this inquiry?")) return;
+            try {
+                await deleteDoc(doc(db, "inquiries", inquiryId));
+                state.inquiries = state.inquiries.filter((i) => i.id !== inquiryId);
+                showToast("Inquiry deleted.");
+                renderInquiries();
+                renderDashboard();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not delete inquiry.", true);
+            }
+        }
+
+        async function editInquiry(inquiryId) {
+            const inquiry = state.inquiries.find((i) => i.id === inquiryId);
+            if (!inquiry) return;
+            const message = prompt("Edit your inquiry message", inquiry.message || "");
+            if (message === null) return;
+            const trimmed = message.trim();
+            if (trimmed.length < 5) {
+                showToast("Message is too short.", true);
+                return;
+            }
+            try {
+                await updateDoc(doc(db, "inquiries", inquiryId), {
+                    message: trimmed,
+                    updatedAt: serverTimestamp()
+                });
+                inquiry.message = trimmed;
+                showToast("Inquiry updated.");
+                renderInquiries();
+            } catch (error) {
+                console.error(error);
+                showToast("Could not update inquiry.", true);
+            }
+        }
+
+
+        function updateNotificationCount() {
+            const readAt = getAnnouncementsReadAt();
+            const unreadCount = state.announcements.filter((a) => {
+                const created = getTimestampValue(a.createdAt);
+                return created > readAt;
+            }).length;
+
+            const el = document.getElementById("notificationCount");
+            if (!el) return;
+            el.dataset.count = String(unreadCount);
+            el.textContent = unreadCount > 0 ? String(unreadCount) : "";
         }
 
         async function saveProperty(propertyId) {
+            if (!state.user) {
+                window.location.href = "login.html";
+                return;
+            }
+            if (!propertyId) return;
+
             const property =
                 state.properties.find(
                     (item) =>
@@ -3551,6 +3954,7 @@
                 );
 
             if (!property) {
+                showToast("Property not found.", true);
                 return;
             }
 
@@ -3800,6 +4204,10 @@
                 "pageSubtitle"
             ).textContent = subtitle;
 
+            if (sectionName === "announcements") {
+                markAnnouncementsRead();
+            }
+
             sidebar.classList.remove("open");
 
             mobileMenuButton.setAttribute(
@@ -3907,12 +4315,14 @@
             status.className = "message";
             status.textContent = "";
 
+            if (!bookModal.el) return;
             bookModal.el.classList.add("open");
             bookModal.el.setAttribute("aria-hidden", "false");
             document.body.style.overflow = "hidden";
         }
 
         function closeBookModal() {
+            if (!bookModal.el) return;
             bookModal.el.classList.remove("open");
             bookModal.el.setAttribute("aria-hidden", "true");
             document.body.style.overflow = "";
@@ -3997,7 +4407,7 @@
             });
         }
 
-        async function submitPropertyRating(propertyId, rating) {
+        async function submitPropertyRating(propertyId, rating, comment = "") {
             if (!state.user) {
                 window.location.href = "login.html";
                 return;
@@ -4009,6 +4419,8 @@
 
             const property = state.properties.find((p) => p.id === propertyId);
             if (!property) return;
+
+            const reviewText = String(comment || "").trim().slice(0, 800);
 
             try {
                 const reviewId = `${state.user.uid}_${propertyId}`;
@@ -4027,7 +4439,7 @@
                         locationId: property.locationId || "",
                         caretakerId: property.caretakerId || property.createdBy || null,
                         rating,
-                        comment: "",
+                        comment: reviewText,
                         reviewType: "property",
                         status: "published",
                         createdAt: serverTimestamp(),
@@ -4042,11 +4454,14 @@
                 );
                 if (existing) {
                     existing.rating = rating;
+                    existing.comment = reviewText;
                 } else {
                     state.reviews.push({
                         id: reviewId,
+                        userId: state.user.uid,
                         propertyId,
                         rating,
+                        comment: reviewText,
                         targetName: property.title || "",
                         createdAt: new Date()
                     });
@@ -4072,8 +4487,15 @@
                     /* optional aggregate write may be restricted by rules */
                 }
 
-                showToast(`Thanks! You rated this ${rating} star${rating > 1 ? "s" : ""}.`);
+                showToast(
+                    reviewText
+                        ? "Thanks! Your rating and review were saved."
+                        : `Thanks! You rated this ${rating} star${rating > 1 ? "s" : ""}.`
+                );
                 renderAll();
+                if (propertyModal.property?.id === propertyId) {
+                    openPropertyModal(propertyId);
+                }
             } catch (error) {
                 console.error("Rating error:", error);
                 showToast(
@@ -4086,33 +4508,24 @@
         }
 
         async function handlePropertyGridClick(event) {
-            const openTarget = event.target.closest(
-                "[data-open-property]"
-            );
-
-            if (openTarget) {
-                openPropertyModal(openTarget.dataset.openProperty);
+            const saveBtn = event.target.closest("[data-save-action]");
+            if (saveBtn) {
+                event.preventDefault();
+                event.stopPropagation();
+                await saveProperty(saveBtn.dataset.id);
                 return;
             }
 
-            const bookTarget = event.target.closest(
-                "[data-book-property]"
-            );
-
+            const bookTarget = event.target.closest("[data-book-property]");
             if (bookTarget) {
                 openBookModal(bookTarget.dataset.bookProperty);
                 return;
             }
 
-            const button = event.target.closest(
-                "[data-save-action]"
-            );
-
-            if (!button) {
-                return;
+            const openTarget = event.target.closest("[data-open-property]");
+            if (openTarget) {
+                openPropertyModal(openTarget.dataset.openProperty);
             }
-
-            await saveProperty(button.dataset.id);
         }
 
         document
@@ -4129,21 +4542,89 @@
 
         document
             .getElementById("inquiriesTableBody")
-            .addEventListener("click", (event) => {
-                const openTarget = event.target.closest(
-                    "[data-open-property]"
-                );
-                if (!openTarget) return;
-
-                const propertyId = openTarget.dataset.openProperty;
-                if (!propertyId) return;
-
-                if (state.properties.some((p) => p.id === propertyId)) {
-                    openPropertyModal(propertyId);
-                } else {
-                    window.location.href = "student-listings.html";
+            .addEventListener("click", async (event) => {
+                const actionBtn = event.target.closest("[data-inquiry-action]");
+                if (actionBtn) {
+                    const inquiry = state.inquiries.find(
+                        (i) => i.id === actionBtn.dataset.id
+                    );
+                    if (actionBtn.dataset.inquiryAction === "manage") {
+                        openManagePopup({
+                            title: inquiry?.propertyName || "Inquiry",
+                            subtitle: "Choose an action for this inquiry",
+                            options: [
+                                { label: "View property", action: "view", kind: "view" },
+                                { label: "Edit message", action: "edit", kind: "edit" },
+                                { label: "Delete inquiry", action: "delete", kind: "delete" }
+                            ],
+                            onPick: async (pick) => {
+                                if (pick === "view") {
+                                    const propertyId = inquiry?.propertyId || "";
+                                    if (
+                                        propertyId &&
+                                        state.properties.some((p) => p.id === propertyId)
+                                    ) {
+                                        openPropertyModal(propertyId);
+                                    } else if (propertyId) {
+                                        window.location.href = "student-listings.html";
+                                    } else {
+                                        showToast("Property not available.", true);
+                                    }
+                                } else if (pick === "edit") {
+                                    await editInquiry(actionBtn.dataset.id);
+                                } else if (pick === "delete") {
+                                    await deleteInquiry(actionBtn.dataset.id);
+                                }
+                            }
+                        });
+                        return;
+                    }
+                    if (actionBtn.dataset.inquiryAction === "edit") {
+                        await editInquiry(actionBtn.dataset.id);
+                    }
+                    if (actionBtn.dataset.inquiryAction === "delete") {
+                        await deleteInquiry(actionBtn.dataset.id);
+                    }
+                    return;
                 }
             });
+        document.getElementById("reviewsList")?.addEventListener("click", async (event) => {
+            const btn = event.target.closest("[data-review-action]");
+            if (!btn) return;
+            const review = state.reviews.find((r) => r.id === btn.dataset.id);
+            if (btn.dataset.reviewAction === "manage") {
+                openManagePopup({
+                    title: review?.targetName || review?.propertyName || "Review",
+                    subtitle: "Choose an action for this review",
+                    options: [
+                        { label: "Edit review", action: "edit", kind: "edit" },
+                        { label: "Delete review", action: "delete", kind: "delete" }
+                    ],
+                    onPick: async (pick) => {
+                        if (pick === "edit") await editReview(btn.dataset.id);
+                        if (pick === "delete") await deleteReview(btn.dataset.id);
+                    }
+                });
+                return;
+            }
+            if (btn.dataset.reviewAction === "edit") await editReview(btn.dataset.id);
+            if (btn.dataset.reviewAction === "delete") await deleteReview(btn.dataset.id);
+        });
+
+        document.getElementById("managePopup")?.addEventListener("click", async (event) => {
+            if (event.target.id === "managePopup") {
+                closeManagePopup();
+                return;
+            }
+            const pickBtn = event.target.closest("[data-manage-pick]");
+            if (!pickBtn) return;
+            const pick = pickBtn.dataset.managePick;
+            const ctx = managePopupContext;
+            closeManagePopup();
+            if (pick === "__cancel" || !ctx?.onPick) return;
+            await ctx.onPick(pick);
+        });
+
 
         document
             .getElementById("modalCloseButton")
@@ -4176,6 +4657,23 @@
                 }
             });
 
+        document.getElementById("bookModalClose")?.addEventListener("click", closeBookModal);
+        document.getElementById("bookModalCancel")?.addEventListener("click", closeBookModal);
+        document.getElementById("bookSendInquiry")?.addEventListener("click", () => {
+            sendBookingInquiry();
+        });
+        document.getElementById("bookModal")?.addEventListener("click", (event) => {
+            if (event.target.id === "bookModal") closeBookModal();
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape") return;
+            if (document.getElementById("bookModal")?.classList.contains("open")) {
+                closeBookModal();
+            }
+        });
+
+
+
         propertyModal.el.addEventListener("click", (event) => {
             if (event.target === propertyModal.el) {
                 closePropertyModal();
@@ -4196,7 +4694,8 @@
         if (submitRatingBtn) {
             submitRatingBtn.addEventListener("click", async () => {
                 if (!propertyModal.property) return;
-                await submitPropertyRating(propertyModal.property.id, selectedRating);
+                const comment = document.getElementById("modalReviewComment")?.value || "";
+                await submitPropertyRating(propertyModal.property.id, selectedRating, comment);
             });
         }
 

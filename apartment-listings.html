@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -695,13 +694,18 @@
         .amenity-chip {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
+            gap: 5px;
+            padding: 5px 9px;
             background: #eff6ff;
             color: #1d4ed8;
             border-radius: 999px;
             font-size: 0.72rem;
             font-weight: 600;
+        }
+
+        .amenity-chip svg {
+            flex-shrink: 0;
+            display: block;
         }
 
         @media (max-width: 780px) {
@@ -910,7 +914,9 @@
             onSnapshot,
             getDocs,
             addDoc,
-            serverTimestamp
+            serverTimestamp,
+            doc,
+            getDoc
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1044,17 +1050,31 @@
             return urls;
         }
 
+        function amenitySvg(name) {
+            const icons = {
+                wifi: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/></svg>',
+                water: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7c.3 0 7 7.1 7 11.3a7 7 0 1 1-14 0C5 9.8 11.7 2.7 12 2.7z"/></svg>',
+                power: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7z"/></svg>',
+                security: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+                parking: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>',
+                kitchen: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h3v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V3z"/><path d="M5 12v9"/><path d="M14 3v9a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V3"/><path d="M17 15v6"/></svg>',
+                laundry: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M7 7h.01M11 7h.01"/></svg>',
+                study: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+            };
+            return icons[name] || "";
+        }
+
         function getAmenityIcons(property) {
             const amenities = Array.isArray(property.amenities) ? property.amenities : [];
             const map = [
-                { keys: ["wifi", "wi-fi", "internet"], label: "Wi‑Fi", icon: "📶" },
-                { keys: ["water"], label: "Water", icon: "💧" },
-                { keys: ["zesco", "solar", "electricity", "power", "24/7"], label: "Power", icon: "⚡" },
-                { keys: ["security", "guard", "cctv"], label: "Security", icon: "🛡" },
-                { keys: ["parking"], label: "Parking", icon: "🚗" },
-                { keys: ["kitchen"], label: "Kitchen", icon: "🍳" },
-                { keys: ["laundry"], label: "Laundry", icon: "🧺" },
-                { keys: ["study"], label: "Study", icon: "📚" }
+                { keys: ["wifi", "wi-fi", "internet"], label: "Wi‑Fi", icon: "wifi" },
+                { keys: ["water"], label: "Water", icon: "water" },
+                { keys: ["zesco", "solar", "electricity", "power", "24/7"], label: "Power", icon: "power" },
+                { keys: ["security", "guard", "cctv"], label: "Security", icon: "security" },
+                { keys: ["parking"], label: "Parking", icon: "parking" },
+                { keys: ["kitchen"], label: "Kitchen", icon: "kitchen" },
+                { keys: ["laundry"], label: "Laundry", icon: "laundry" },
+                { keys: ["study"], label: "Study", icon: "study" }
             ];
 
             const chips = [];
@@ -1063,7 +1083,7 @@
             map.forEach((item) => {
                 if (lower.some((a) => item.keys.some((k) => a.includes(k)))) {
                     chips.push(
-                        `<span class="amenity-chip">${item.icon} ${item.label}</span>`
+                        `<span class="amenity-chip">${amenitySvg(item.icon)} ${item.label}</span>`
                     );
                 }
             });
@@ -1390,6 +1410,67 @@
 
 
         const bookModal = { el: document.getElementById("bookModal"), property: null };
+
+        async function resolveManagerContact(property) {
+            // Prefer contact stored on the listing (works for public visitors)
+            const result = {
+                name:
+                    property?.contactName ||
+                    property?.createdByName ||
+                    property?.caretakerName ||
+                    property?.ownerName ||
+                    property?.managerName ||
+                    "Property manager",
+                phone:
+                    property?.contactPhone ||
+                    property?.contactWhatsApp ||
+                    property?.caretakerPhone ||
+                    property?.ownerPhone ||
+                    property?.managerPhone ||
+                    property?.whatsapp ||
+                    property?.phone ||
+                    ""
+            };
+
+            const managerId =
+                property?.caretakerId ||
+                property?.createdBy ||
+                property?.ownerId ||
+                property?.managerId ||
+                null;
+
+            // Fallback: try users collection (may fail if not logged in / rules block it)
+            if ((!result.phone || result.name === "Property manager") && managerId) {
+                try {
+                    const snap = await getDoc(doc(db, "users", managerId));
+                    if (snap.exists()) {
+                        const data = snap.data() || {};
+                        if (!result.phone) {
+                            result.phone =
+                                data.phone ||
+                                data.whatsapp ||
+                                data.contactPhone ||
+                                data.mobile ||
+                                data.contactWhatsApp ||
+                                "";
+                        }
+                        if (result.name === "Property manager") {
+                            result.name =
+                                data.fullName ||
+                                data.displayName ||
+                                data.name ||
+                                result.name;
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Could not load manager contact from users:", error);
+                }
+            }
+
+            return result;
+        }
+
+
         function normalizePhone(phone) { return String(phone || "").replace(/[^0-9+]/g, ""); }
         function whatsappLink(phone) {
             let digits = normalizePhone(phone).replace(/^\+/, "");
@@ -1397,33 +1478,52 @@
             if (digits.startsWith("0")) digits = "260" + digits.slice(1);
             return `https://wa.me/${digits}`;
         }
-        function openBookModal(property) {
+        async function openBookModal(property) {
             if (!property) return;
             bookModal.property = property;
-            document.getElementById("bookModalTitle").textContent = "Book / Contact property manager";
-            document.getElementById("bookModalProperty").textContent = property.title || "Apartment";
-            const name = property.contactName || property.createdByName || "Property manager / Landlord";
-            const phone = property.contactPhone || property.contactWhatsApp || property.caretakerPhone || "";
+            const titleEl = document.getElementById("bookModalTitle");
+            const propEl = document.getElementById("bookModalProperty");
+            if (titleEl) titleEl.textContent = "Book / Contact property manager";
+            if (propEl) propEl.textContent = property.title || "Property";
+
+            document.getElementById("bookContactName").textContent = "Loading contact...";
+            document.getElementById("bookContactPhone").textContent = "…";
+            document.getElementById("bookCallLink").style.display = "none";
+            document.getElementById("bookWhatsAppLink").style.display = "none";
+
+            bookModal.el.classList.add("open");
+            document.body.style.overflow = "hidden";
+
+            const contact = await resolveManagerContact(property);
+            const name = contact.name || "Property manager";
+            const phone = String(contact.phone || "").trim();
+
             document.getElementById("bookContactName").textContent = name;
-            document.getElementById("bookContactPhone").textContent = phone || "Phone not provided yet";
+            document.getElementById("bookContactPhone").textContent = phone
+                ? phone
+                : "Phone not on file for this listing — send an inquiry below (login required)";
+
             const callLink = document.getElementById("bookCallLink");
             const waLink = document.getElementById("bookWhatsAppLink");
             if (phone) {
                 callLink.href = `tel:${normalizePhone(phone)}`;
                 callLink.style.display = "inline-flex";
                 const wa = whatsappLink(phone);
-                if (wa) { waLink.href = wa; waLink.style.display = "inline-flex"; }
-                else waLink.style.display = "none";
+                if (wa) {
+                    waLink.href = wa;
+                    waLink.style.display = "inline-flex";
+                } else {
+                    waLink.style.display = "none";
+                }
             } else {
                 callLink.style.display = "none";
                 waLink.style.display = "none";
             }
+
             document.getElementById("bookMessage").value =
                 `Hi, I am interested in "${property.title || "this property"}". Please share availability and viewing details.`;
             const status = document.getElementById("bookMessageStatus");
-            status.style.display = "none";
-            bookModal.el.classList.add("open");
-            document.body.style.overflow = "hidden";
+            if (status) status.style.display = "none";
         }
         function closeBookModal() {
             bookModal.el.classList.remove("open");
@@ -1494,11 +1594,14 @@
             propertyModal.index = Number(thumb.dataset.index);
             renderGallery();
         });
-        document.getElementById("modalBookButton").addEventListener("click", () => {
-            if (propertyModal.property) {
-                closePropertyModal();
-                openBookModal(propertyModal.property);
-            }
+        document.getElementById("modalBookButton").addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const property = propertyModal.property;
+            if (!property) return;
+            // Keep a reference BEFORE closing — closePropertyModal() clears propertyModal.property
+            closePropertyModal();
+            openBookModal(property);
         });
         propertyModal.el.addEventListener("click", (event) => {
             if (event.target === propertyModal.el) closePropertyModal();

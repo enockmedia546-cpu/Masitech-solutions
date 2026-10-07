@@ -3204,6 +3204,67 @@
             property: null
         };
 
+
+        async function resolveManagerContact(property) {
+            // Prefer contact stored on the listing (works even if users read is restricted)
+            const result = {
+                name:
+                    property?.contactName ||
+                    property?.createdByName ||
+                    property?.caretakerName ||
+                    property?.ownerName ||
+                    property?.managerName ||
+                    "Property manager",
+                phone:
+                    property?.contactPhone ||
+                    property?.contactWhatsApp ||
+                    property?.caretakerPhone ||
+                    property?.ownerPhone ||
+                    property?.managerPhone ||
+                    property?.whatsapp ||
+                    property?.phone ||
+                    ""
+            };
+
+            const managerId =
+                property?.caretakerId ||
+                property?.createdBy ||
+                property?.ownerId ||
+                property?.managerId ||
+                null;
+
+            // Fallback: try users collection
+            if ((!result.phone || result.name === "Property manager") && managerId) {
+                try {
+                    const snap = await getDoc(doc(db, "users", managerId));
+                    if (snap.exists()) {
+                        const data = snap.data() || {};
+                        if (!result.phone) {
+                            result.phone =
+                                data.phone ||
+                                data.whatsapp ||
+                                data.contactPhone ||
+                                data.mobile ||
+                                data.contactWhatsApp ||
+                                "";
+                        }
+                        if (result.name === "Property manager") {
+                            result.name =
+                                data.fullName ||
+                                data.displayName ||
+                                data.name ||
+                                result.name;
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Could not load manager contact from users:", error);
+                }
+            }
+
+            return result;
+        }
+
+
         function normalizePhone(phone) {
             return String(phone || "").replace(/[^0-9+]/g, "");
         }
@@ -3215,40 +3276,65 @@
             return `https://wa.me/${digits}`;
         }
 
-        function openBookModal(propertyId) {
+        async function openBookModal(propertyId) {
             const property = state.properties.find((p) => p.id === propertyId);
             if (!property) {
-                showToast("Apartment not found.", true);
+                showToast("Property not found.", true);
                 return;
             }
+
             bookModal.property = property;
             document.getElementById("bookModalTitle").textContent = "Book / Contact property manager";
             document.getElementById("bookModalProperty").textContent =
                 property.title || "Private apartment";
-            const name = property.contactName || property.createdByName || "Property manager";
-            const phone = property.contactPhone || property.contactWhatsApp || property.caretakerPhone || "";
+
+            document.getElementById("bookContactName").textContent = "Loading contact...";
+            document.getElementById("bookContactPhone").textContent = "…";
+            const callLink0 = document.getElementById("bookCallLink");
+            const waLink0 = document.getElementById("bookWhatsAppLink");
+            if (callLink0) callLink0.style.display = "none";
+            if (waLink0) waLink0.style.display = "none";
+
+            if (!bookModal.el) return;
+            bookModal.el.classList.add("open");
+            bookModal.el.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+
+            const contact = await resolveManagerContact(property);
+            const name = contact.name || "Property manager";
+            const phone = String(contact.phone || "").trim();
+
             document.getElementById("bookContactName").textContent = name;
-            document.getElementById("bookContactPhone").textContent = phone || "Phone not provided yet";
+            document.getElementById("bookContactPhone").textContent = phone
+                ? phone
+                : "Phone not on file for this listing — send an inquiry below";
+
             const callLink = document.getElementById("bookCallLink");
             const waLink = document.getElementById("bookWhatsAppLink");
+
             if (phone) {
                 callLink.href = `tel:${normalizePhone(phone)}`;
                 callLink.style.display = "inline-flex";
                 const wa = whatsappLink(phone);
-                if (wa) { waLink.href = wa; waLink.style.display = "inline-flex"; }
-                else waLink.style.display = "none";
+                if (wa) {
+                    waLink.href = wa;
+                    waLink.style.display = "inline-flex";
+                } else {
+                    waLink.style.display = "none";
+                }
             } else {
                 callLink.style.display = "none";
                 waLink.style.display = "none";
             }
+
             document.getElementById("bookMessage").value =
-                `Hi, I am interested in "${property.title || "this apartment"}". Please share availability and viewing details.`;
+                `Hi, I am interested in "${property.title || "this property"}". Please share availability and viewing details.`;
+
             const status = document.getElementById("bookMessageStatus");
-            status.className = "message";
-            status.textContent = "";
-            bookModal.el.classList.add("open");
-            bookModal.el.setAttribute("aria-hidden", "false");
-            document.body.style.overflow = "hidden";
+            if (status) {
+                status.className = "message";
+                status.textContent = "";
+            }
         }
 
         function closeBookModal() {
@@ -3356,8 +3442,11 @@
         bookModal.el.addEventListener("click", (e) => { if (e.target === bookModal.el) closeBookModal(); });
         const modalBookButton = document.getElementById("modalBookButton");
         if (modalBookButton) {
-            modalBookButton.addEventListener("click", () => {
-                if (propertyModal.property) openBookModal(propertyModal.property.id);
+            modalBookButton.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const property = propertyModal.property;
+                if (property) openBookModal(property.id);
             });
         }
 

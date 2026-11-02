@@ -251,6 +251,116 @@
             border-color: rgba(255,255,255,0.55);
         }
         .button-ghost:hover { background: rgba(255,255,255,0.12); }
+        /* Safety notice banner — below header, above hero */
+        .safety-notice {
+            display: none;
+            position: relative;
+            z-index: 900;
+            background: #fffbeb;
+            border-bottom: 1px solid #fcd34d;
+        }
+        .safety-notice.visible {
+            display: block;
+        }
+        .safety-notice-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+        }
+        .safety-icon {
+            flex-shrink: 0;
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            color: #b45309;
+            background: #fde68a;
+            border-radius: 9px;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+        .safety-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .safety-title {
+            margin-bottom: 4px;
+            color: #92400e;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .safety-text {
+            color: #78350f;
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+        .safety-text .safety-more {
+            display: none;
+        }
+        .safety-notice.expanded .safety-text .safety-more {
+            display: inline;
+        }
+        .safety-text .safety-ellipsis {
+            display: inline;
+        }
+        .safety-notice.expanded .safety-text .safety-ellipsis {
+            display: none;
+        }
+        .safety-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .safety-toggle {
+            padding: 0;
+            color: #b45309;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+        .safety-toggle:hover {
+            color: #92400e;
+        }
+        .safety-close {
+            flex-shrink: 0;
+            display: grid;
+            width: 32px;
+            height: 32px;
+            place-items: center;
+            color: #92400e;
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        .safety-close:hover {
+            background: rgba(180, 83, 9, 0.12);
+        }
+        @media (max-width: 620px) {
+            .safety-notice-inner {
+                padding: 10px 0;
+                gap: 10px;
+            }
+            .safety-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 0.95rem;
+            }
+            .safety-text {
+                font-size: 0.8rem;
+            }
+        }
+
         /* Hero with slideshow background */
         .hero {
             position: relative;
@@ -294,28 +404,31 @@
         .hero-copy {
             max-width: 580px;
         }
+        /* Hierarchy: MASITECH SOLUTIONS (largest) → tagline → paragraph (smallest) */
         .hero-label {
-            display: inline-block;
-            margin-bottom: 12px;
-            padding: 5px 10px;
-            color: #bfdbfe;
-            background: rgba(37, 99, 235, 0.28);
-            border: 1px solid rgba(147, 197, 253, 0.35);
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
         }
         .hero-copy h1 {
-            margin-bottom: 14px;
-            font-size: clamp(2.1rem, 4.2vw, 3.3rem);
-            line-height: 1.12;
-            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            color: #e2e8f0;
+            font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
         }
         .hero-copy p {
             max-width: 490px;
             margin-bottom: 24px;
-            color: #dbeafe;
-            font-size: 1.02rem;
+            color: #bfdbfe;
+            font-size: 0.92rem;
+            line-height: 1.55;
         }
         .hero-actions {
             display: flex;
@@ -967,6 +1080,25 @@
         </div>
     </header>
 
+    <!-- Safety notice: below white header, above hero -->
+    <div class="safety-notice visible" id="safetyNotice" role="region" aria-label="Safety notice">
+        <div class="container safety-notice-inner">
+            <div class="safety-icon" aria-hidden="true">!</div>
+            <div class="safety-body">
+                <div class="safety-title">Safety notice</div>
+                <p class="safety-text">
+                    <span class="safety-preview">How do I report suspicious activity? Contact the platform promptly with the listing, account, or message details.</span><span class="safety-ellipsis">…</span><span class="safety-more"> Do not send money or share sensitive information until the matter has been investigated. No one is allowed to pay money to any Agent or any payment using mobile money.</span>
+                </p>
+                <div class="safety-actions">
+                    <button type="button" class="safety-toggle" id="safetyToggle" aria-expanded="false">
+                        Show more
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="safety-close" id="safetyClose" aria-label="Dismiss safety notice">×</button>
+        </div>
+    </div>
+
     <main>
         <!-- HERO: full-bleed slideshow back1–back3.jpeg -->
         <section class="hero">
@@ -980,7 +1112,7 @@
             <div class="container hero-inner">
                 <div class="hero-copy">
                     <span class="hero-label">Masitech Solutions</span>
-                    <h1>Your Next Home Starts Here.</h1>
+                    <h1>Your next home starts here</h1>
                     <p>
                        Find comfortable, affordable accommodation with Masitech Solutions. Explore our boarding houses and apartments, discover the facilities available, and book your space directly with our team 
                     </p>
@@ -1322,6 +1454,34 @@
 
         document.getElementById("currentYear").textContent =
             new Date().getFullYear();
+
+        /* ---------- Safety notice: close + expand ---------- */
+        (function initSafetyNotice() {
+            const notice = document.getElementById("safetyNotice");
+            const closeBtn = document.getElementById("safetyClose");
+            const toggleBtn = document.getElementById("safetyToggle");
+            if (!notice) return;
+
+            const STORAGE_KEY = "masitech_safety_notice_dismissed";
+
+            try {
+                if (sessionStorage.getItem(STORAGE_KEY) === "1") {
+                    notice.classList.remove("visible");
+                    return;
+                }
+            } catch (e) { /* ignore */ }
+
+            closeBtn?.addEventListener("click", () => {
+                notice.classList.remove("visible");
+                try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch (e) { /* ignore */ }
+            });
+
+            toggleBtn?.addEventListener("click", () => {
+                const open = notice.classList.toggle("expanded");
+                toggleBtn.setAttribute("aria-expanded", String(open));
+                toggleBtn.textContent = open ? "Show less" : "Show more";
+            });
+        })();
 
         /* ---------- Hero slideshow: back1 longer, then back2/back3 ---------- */
         const slides = Array.from(document.querySelectorAll(".hero-slide"));

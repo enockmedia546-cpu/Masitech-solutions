@@ -11,8 +11,8 @@
     <link rel="canonical" href="https://masitechsolutions.com/">
 
     <!-- Icons -->
-    <link rel="icon" type="image/jpeg" href="logo.jpg">
-    <link rel="apple-touch-icon" href="logo.jpg">
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <link rel="apple-touch-icon" href="logo.jpeg">
     <meta name="theme-color" content="#2563eb">
 
     <!-- Open Graph -->
@@ -21,7 +21,7 @@
     <meta property="og:title" content="Student Boarding Houses &amp; Apartments in Zambia | Masitech Solutions">
     <meta property="og:description" content="Find student boarding houses near CBU and apartments in Kitwe, Lusaka and across Zambia. Compare prices and contact caretakers.">
     <meta property="og:url" content="https://masitechsolutions.com/">
-    <meta property="og:image" content="https://masitechsolutions.com/logo.jpg">
+    <meta property="og:image" content="https://masitechsolutions.com/logo.jpeg">
     <meta property="og:image:alt" content="Masitech Solutions">
     <meta property="og:locale" content="en_ZM">
 
@@ -29,7 +29,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Student Boarding Houses &amp; Apartments in Zambia | Masitech Solutions">
     <meta name="twitter:description" content="Find student boarding houses near CBU and apartments across Zambia with Masitech Solutions.">
-    <meta name="twitter:image" content="https://masitechsolutions.com/logo.jpg">
+    <meta name="twitter:image" content="https://masitechsolutions.com/logo.jpeg">
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -43,7 +43,7 @@
           "url": "https://masitechsolutions.com/",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://masitechsolutions.com/logo.jpg"
+            "url": "https://masitechsolutions.com/logo.jpeg"
           },
           "email": "info@masitechsolutions.com",
           "telephone": "+260970486156"
@@ -52,7 +52,7 @@
           "@type": "LocalBusiness",
           "@id": "https://masitechsolutions.com/#localbusiness",
           "name": "Masitech Solutions",
-          "image": "https://masitechsolutions.com/logo.jpg",
+          "image": "https://masitechsolutions.com/logo.jpeg",
           "url": "https://masitechsolutions.com/",
           "telephone": "+260970486156",
           "email": "info@masitechsolutions.com",
@@ -143,7 +143,7 @@
         }
         .header-content {
             position: relative;
-            min-height: 74px;
+            min-height: 92px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -159,10 +159,10 @@
             min-width: 0;
         }
         .brand img {
-            width: 46px;
-            height: 46px;
+            width: 78px;
+            height: 78px;
             object-fit: contain;
-            border-radius: 9px;
+            border-radius: 12px;
             flex-shrink: 0;
         }
         .brand-text {
@@ -1046,12 +1046,12 @@
             .form-grid .full { grid-column: auto; }
             .section-heading { flex-direction: column; align-items: flex-start; }
             .header-content {
-                min-height: 64px;
+                min-height: 72px;
                 gap: 8px;
             }
             .brand img {
-                width: 36px;
-                height: 36px;
+                width: 58px;
+                height: 58px;
             }
             .brand-text .brand-name { font-size: 0.88rem; }
             .brand-text .brand-sub { font-size: 0.65rem; }
@@ -1067,21 +1067,19 @@
 <body>
     <header class="site-header">
         <div class="container header-content">
-            <a class="brand" href="index.html" aria-label="Masitech Solutions home">
-                <img src="logo.jpg" alt="Masitech Solutions logo">
+            <a class="brand" href="index.html" aria-label="Masitech Real Estates home">
+                <img src="logo.jpg" alt="Masitech Real Estates logo">
                 <span class="brand-text">
                     <span class="brand-name">Masitech</span>
-                    <span class="brand-sub">Solutions</span>
+                    <span class="brand-sub">Real Estates</span>
                 </span>
             </a>
 
             <div class="header-right">
                 <nav class="main-nav" id="mainNav" aria-label="Main navigation">
                     <a class="active" href="index.html">Home</a>
-                    
                     <a href="about.html">About Us</a>
-                    
-                    <a href="login.html">Log in</a>
+                    <a href="contact.html">Contact</a>
                 </nav>
                 <div class="header-actions">
                     <a class="button button-outline" href="login.html">Log in</a>
@@ -1104,25 +1102,27 @@
         <!-- HERO: full-bleed slideshow back1–back3.jpeg -->
         <section class="hero">
             <div class="hero-slides" aria-hidden="true">
-                <div class="hero-slide active" style="background-image:url('top1.jpeg')"></div>
-                <div class="hero-slide" style="background-image:url('top2.jpeg')"></div>
-                <div class="hero-slide" style="background-image:url('top3.jpeg')"></div>
+                <div class="hero-slide active" id="heroSlide1" style="background-image:url('top1.jpeg')"></div>
+                <div class="hero-slide" id="heroSlide2" style="background-image:url('top2.jpeg')"></div>
+                <div class="hero-slide" id="heroSlide3" style="background-image:url('top3.jpeg')"></div>
             </div>
             <div class="hero-fade"></div>
 
             <div class="container hero-inner">
                 <div class="hero-copy">
-                    <span class="hero-label">Masitech Solutions</span>
-                    <h1>Your next home starts here</h1>
-                    <p>
-                       Find comfortable, affordable accommodation with Masitech Solutions. Explore our boarding houses and apartments, discover the facilities available, and book your space directly with our team 
+                    <span class="hero-label" id="cmsHeroLabel">Masitech Real Estates</span>
+                    <h1 id="cmsHeroTitle">Because you deserve the best!</h1>
+                    <p id="cmsHeroSubtitle">
+                        Masitech Real Estates provides students and professionals with secure, well-managed accommodations in Kitwe and Solwezi. View our student residences and available apartments then book directly with our team. No booking fees or hidden charges.
                     </p>
                     <div class="hero-actions">
-                        <a class="button button-primary" href="student-listings.html">
+                        <a class="button button-primary" href="student-listings.html" id="cmsHeroBtn1">
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
-                            Explore Our Properties
+                            <span id="cmsHeroBtn1Text">Explore Our Properties</span>
                         </a>
-                        <a class="button button-ghost" href="apartment-listings.html">Book Accommodation</a>
+                        <a class="button button-ghost" href="apartment-listings.html" id="cmsHeroBtn2">
+                            <span id="cmsHeroBtn2Text">Book Accommodation</span>
+                        </a>
                     </div>
                     <div class="hero-points">
                         <span>
@@ -1130,12 +1130,8 @@
                             Search by campus
                         </span>
                         <span>
-                            <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-                            Compare properties
-                        </span>
-                        <span>
                             <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z"/></svg>
-                            Contact caretakers
+                            Contact our team
                         </span>
                     </div>
                 </div>
@@ -1457,6 +1453,8 @@
         import {
             getFirestore,
             collection,
+            doc,
+            onSnapshot,
             query,
             where,
             limit,
@@ -1488,6 +1486,73 @@
 
         document.getElementById("currentYear").textContent =
             new Date().getFullYear();
+
+        /* ---------- CMS: landing page content from sitePages/index ---------- */
+        const DEFAULT_HERO = {
+            heroLabel: "Masitech Real Estates",
+            heroTitle: "Because you deserve the best!",
+            heroSubtitle:
+                "Masitech Real Estates provides students and professionals with secure, well-managed accommodations in Kitwe and Solwezi. View our student residences and available apartments then book directly with our team. No booking fees or hidden charges.",
+            heroBtn1: "Explore Our Properties",
+            heroBtn2: "Book Accommodation",
+            heroSlide1: "top1.jpeg",
+            heroSlide2: "top2.jpeg",
+            heroSlide3: "top3.jpeg"
+        };
+
+        function setTextContent(id, value) {
+            const el = document.getElementById(id);
+            if (!el || value == null || String(value).trim() === "") return;
+            el.textContent = String(value);
+        }
+
+        function applyHeroSlide(id, url, fallback) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const src = String(url || "").trim() || fallback;
+            // Basic safety: only allow http(s), relative paths, or common image paths
+            const lower = src.toLowerCase();
+            if (
+                lower.startsWith("javascript:") ||
+                lower.startsWith("vbscript:") ||
+                lower.startsWith("data:text")
+            ) {
+                el.style.backgroundImage = `url('${fallback}')`;
+                return;
+            }
+            const safe = src.replace(/"/g, "%22").replace(/'/g, "%27");
+            el.style.backgroundImage = `url('${safe}')`;
+        }
+
+        function applyIndexContent(data) {
+            const c = data?.contentFields || data || {};
+            setTextContent("cmsHeroLabel", c.heroLabel || DEFAULT_HERO.heroLabel);
+            setTextContent("cmsHeroTitle", c.heroTitle || DEFAULT_HERO.heroTitle);
+            setTextContent("cmsHeroSubtitle", c.heroSubtitle || DEFAULT_HERO.heroSubtitle);
+            setTextContent("cmsHeroBtn1Text", c.heroBtn1 || DEFAULT_HERO.heroBtn1);
+            setTextContent("cmsHeroBtn2Text", c.heroBtn2 || DEFAULT_HERO.heroBtn2);
+
+            applyHeroSlide("heroSlide1", c.heroSlide1, DEFAULT_HERO.heroSlide1);
+            applyHeroSlide("heroSlide2", c.heroSlide2, DEFAULT_HERO.heroSlide2);
+            applyHeroSlide("heroSlide3", c.heroSlide3, DEFAULT_HERO.heroSlide3);
+
+            if (c.metaDescription) {
+                const meta = document.querySelector('meta[name="description"]');
+                if (meta) meta.setAttribute("content", c.metaDescription);
+            }
+        }
+
+        onSnapshot(
+            doc(db, "sitePages", "index"),
+            (snap) => {
+                if (snap.exists()) {
+                    applyIndexContent(snap.data());
+                }
+            },
+            (error) => {
+                console.warn("Could not load landing page CMS content:", error);
+            }
+        );
 
         /* ---------- Safety gate before booking / explore links ---------- */
         (function initSafetyGate() {
@@ -1617,13 +1682,37 @@
                 : page;
         });
 
-        function escapeHtml(value) {
+function escapeHtml(value) {
             return String(value ?? "")
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
+
+        function safeImageUrl(value, fallback) {
+            const fallbackUrl = fallback || "property-placeholder.jpg";
+            const raw = String(value ?? "").trim();
+            if (!raw) return fallbackUrl;
+            // Block javascript:, data: text, and attribute breakouts
+            const lower = raw.toLowerCase();
+            if (
+                lower.startsWith("javascript:") ||
+                lower.startsWith("vbscript:") ||
+                lower.startsWith("data:text")
+            ) {
+                return fallbackUrl;
+            }
+            // Allow http(s), relative paths, and common CDN paths only
+            if (
+                /^(https?:\/\/|\/|[a-z0-9_./-]+\.(jpg|jpeg|png|gif|webp|avif)(\?.*)?$)/i.test(raw)
+            ) {
+                return raw.replace(/"/g, "%22").replace(/'/g, "%27").replace(/</g, "%3C").replace(/>/g, "%3E");
+            }
+            return fallbackUrl;
+        }
+
 
         function formatPrice(property) {
             if (property.priceLabel) return escapeHtml(property.priceLabel);
@@ -1634,11 +1723,11 @@
         }
 
         function getImage(property) {
-            return (
+            const candidate =
                 property.imageUrl ||
                 (Array.isArray(property.imageUrls) && property.imageUrls[0]) ||
-                "property-placeholder.jpg"
-            );
+                "";
+            return safeImageUrl(candidate, "property-placeholder.jpg");
         }
 
         function getCaretakerKey(property) {

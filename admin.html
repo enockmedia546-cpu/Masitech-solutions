@@ -2294,10 +2294,32 @@
                                         <div class="form-group full-width"><label>Hero section</label></div>
                                         <div class="form-group"><label for="indexHeroLabel">Hero label</label><input class="form-input" id="indexHeroLabel" type="text"></div>
                                         <div class="form-group"><label for="indexMetaDescription">SEO meta description</label><input class="form-input" id="indexMetaDescription" type="text"></div>
-                                        <div class="form-group full-width"><label for="indexHeroTitle">Hero title</label><input class="form-input" id="indexHeroTitle" type="text"></div>
-                                        <div class="form-group full-width"><label for="indexHeroSubtitle">Hero subtitle</label><textarea class="form-textarea" id="indexHeroSubtitle" rows="3"></textarea></div>
+                                        <div class="form-group full-width"><label for="indexHeroTitle">Hero title (slogan)</label><input class="form-input" id="indexHeroTitle" type="text"></div>
+                                        <div class="form-group full-width"><label for="indexHeroSubtitle">Hero intro paragraph</label><textarea class="form-textarea" id="indexHeroSubtitle" rows="3"></textarea></div>
                                         <div class="form-group"><label for="indexHeroBtn1">Primary button text</label><input class="form-input" id="indexHeroBtn1" type="text"></div>
                                         <div class="form-group"><label for="indexHeroBtn2">Secondary button text</label><input class="form-input" id="indexHeroBtn2" type="text"></div>
+
+                                        <div class="form-group full-width"><label>Hero background photos</label>
+                                            <p class="form-help" style="margin-top:4px">Upload new photos here (via Cloudinary, same as property images). Or paste an image URL. Leave blank to keep the current image.</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="indexHeroSlide1">Slide 1 image</label>
+                                            <input class="form-input" id="indexHeroSlide1" type="text" placeholder="URL or relative path e.g. top1.jpeg">
+                                            <input class="form-input" id="indexHeroSlide1File" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:6px">
+                                            <img id="indexHeroSlide1Preview" alt="" style="display:none;margin-top:8px;max-height:80px;border-radius:6px;border:1px solid var(--border)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="indexHeroSlide2">Slide 2 image</label>
+                                            <input class="form-input" id="indexHeroSlide2" type="text" placeholder="URL or relative path e.g. top2.jpeg">
+                                            <input class="form-input" id="indexHeroSlide2File" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:6px">
+                                            <img id="indexHeroSlide2Preview" alt="" style="display:none;margin-top:8px;max-height:80px;border-radius:6px;border:1px solid var(--border)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="indexHeroSlide3">Slide 3 image</label>
+                                            <input class="form-input" id="indexHeroSlide3" type="text" placeholder="URL or relative path e.g. top3.jpeg">
+                                            <input class="form-input" id="indexHeroSlide3File" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:6px">
+                                            <img id="indexHeroSlide3Preview" alt="" style="display:none;margin-top:8px;max-height:80px;border-radius:6px;border:1px solid var(--border)">
+                                        </div>
 
                                         <div class="form-group full-width"><label>Property types section</label></div>
                                         <div class="form-group full-width"><label for="indexTypesHeading">Section heading</label><input class="form-input" id="indexTypesHeading" type="text"></div>
@@ -2744,76 +2766,10 @@
                                             <label class="checkbox-label">
                                                 <input
                                                     type="checkbox"
-                                                    value="content-admin"
+                                                    value="admin"
                                                     data-role-input
                                                 >
-                                                Content admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="property-admin"
-                                                    data-role-input
-                                                >
-                                                Property admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="user-admin"
-                                                    data-role-input
-                                                >
-                                                User admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="analytics-admin"
-                                                    data-role-input
-                                                >
-                                                Analytics admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="location-admin"
-                                                    data-role-input
-                                                >
-                                                Location admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="sub-admin"
-                                                    data-role-input
-                                                >
-                                                Sub-admin
-                                            </label>
-
-                                            <label class="checkbox-label">
-                                                <input
-                                                    type="checkbox"
-                                                    value="main-admin"
-                                                    data-role-input
-                                                >
-                                                Main admin
-                                            </label>
-
-                                            <label
-                                                class="checkbox-label"
-                                                id="superAdminRoleOption"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    value="super-admin"
-                                                    data-role-input
-                                                >
-                                                Super admin
+                                                Admin
                                             </label>
                                         </div>
                                     </div>
@@ -3032,16 +2988,8 @@
                                                 Caretaker
                                             </option>
 
-                                            <option value="sub-admin">
-                                                Sub-admin
-                                            </option>
-
-                                            <option value="main-admin">
-                                                Main admin
-                                            </option>
-
-                                            <option value="super-admin">
-                                                Super admin
+                                            <option value="admin">
+                                                Admin
                                             </option>
                                         </select>
                                     </div>
@@ -3345,8 +3293,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const ADMIN_ROLES = [
+        // Same Cloudinary setup as the caretaker dashboard
+        const CLOUDINARY_CLOUD_NAME = "uxvihl5r";
+        const CLOUDINARY_UPLOAD_PRESET = "MASITECH";
+
+        // Single admin type. Legacy role names still recognized for existing accounts.
+        const ADMIN_ROLES = ["admin"];
+        const LEGACY_ADMIN_ROLES = [
             "super-admin",
+            "superadmin",
+            "super_admin",
             "main-admin",
             "sub-admin",
             "content-admin",
@@ -3357,76 +3313,18 @@
         ];
 
         const DEFAULT_ROLE_PERMISSIONS = {
+            admin: ["*"],
+            // Legacy aliases → full access (migrate to role "admin" when editing users)
             "super-admin": ["*"],
-
-            "main-admin": [
-                "users.view",
-                "users.edit",
-                "users.suspend",
-                "caretakers.view",
-                "caretakers.manage",
-                "properties.view",
-                "properties.edit",
-                "properties.approve",
-                "locations.view",
-                "locations.manage",
-                "reviews.view",
-                "reviews.moderate",
-                "announcements.view",
-                "announcements.manage",
-                "content.view",
-                "content.manage",
-                "analytics.view",
-                "roles.view",
-                "roles.manage",
-                "audit.view",
-                "settings.view",
-                "settings.manage"
-            ],
-
-            "sub-admin": [
-                "users.view",
-                "properties.view",
-                "reviews.view",
-                "announcements.view",
-                "analytics.view"
-            ],
-
-            "content-admin": [
-                "content.view",
-                "content.manage",
-                "announcements.view",
-                "announcements.manage"
-            ],
-
-            "property-admin": [
-                "properties.view",
-                "properties.edit",
-                "properties.approve",
-                "locations.view",
-                "reviews.view"
-            ],
-
-            "user-admin": [
-                "users.view",
-                "users.edit",
-                "users.suspend",
-                "caretakers.view",
-                "caretakers.manage"
-            ],
-
-            "analytics-admin": [
-                "analytics.view",
-                "reviews.view"
-            ],
-
-            "location-admin": [
-                "locations.view",
-                "locations.manage",
-                "properties.view",
-                "properties.approve",
-                "caretakers.view"
-            ]
+            superadmin: ["*"],
+            super_admin: ["*"],
+            "main-admin": ["*"],
+            "sub-admin": ["*"],
+            "content-admin": ["*"],
+            "property-admin": ["*"],
+            "user-admin": ["*"],
+            "analytics-admin": ["*"],
+            "location-admin": ["*"]
         };
 
         // Same location IDs as signup.html — never invent different codes
@@ -3690,6 +3588,8 @@
         }
 
         function hasPermission(permission) {
+            // One admin type: any platform admin has full access
+            if (hasAdminRole()) return true;
             return (
                 state.permissions.includes("*") ||
                 state.permissions.includes(permission)
@@ -3728,13 +3628,8 @@
         }
 
         function isSuperAdmin() {
-            const roles = (state.roles || []).map((r) => String(r).toLowerCase());
-            return (
-                roles.includes("super-admin") ||
-                roles.includes("superadmin") ||
-                roles.includes("super_admin") ||
-                (state.permissions || []).includes("*")
-            );
+            // Owner policy: only one admin type — same as hasAdminRole()
+            return hasAdminRole();
         }
 
         function getMonthKey(timestamp) {
@@ -3760,9 +3655,12 @@
         }
 
         function hasAdminRole() {
-            return state.roles.some((role) =>
-                ADMIN_ROLES.includes(role)
-            );
+            const roles = (state.roles || []).map((r) => String(r).toLowerCase());
+            if (roles.includes("admin")) return true;
+            if (roles.some((role) => LEGACY_ADMIN_ROLES.includes(role))) return true;
+            if ((state.permissions || []).includes("*")) return true;
+            const primary = String(state.profile?.role || "").toLowerCase();
+            return primary === "admin" || LEGACY_ADMIN_ROLES.includes(primary);
         }
 
         function applyPermissionVisibility() {
@@ -3872,7 +3770,7 @@
                     state.roles
                 );
 
-            // Allow any user who has an admin role (super, main, sub, content, etc.)
+            // Allow users with the single admin role (legacy admin subtypes still accepted)
             if (!hasAdminRole()) {
                 redirectToLogin();
                 return;
@@ -5143,16 +5041,19 @@
         const FIXED_PAGES = {
             index: {
                 label: "Landing page",
-                defaultTitle: "Masitech Solutions",
+                defaultTitle: "Masitech Real Estates",
                 defaults: {
-                    heroLabel: "Accommodation made simpler",
-                    heroTitle: "Find a place that feels like home.",
+                    heroLabel: "Masitech Real Estates",
+                    heroTitle: "Because you deserve the best!",
                     heroSubtitle:
-                        "Discover trusted student boarding houses and comfortable apartments in convenient locations near your campus and workplace.",
-                    heroBtn1: "Find student housing",
-                    heroBtn2: "Browse apartments",
+                        "Masitech Real Estates provides students and professionals with secure, well-managed accommodations in Kitwe and Solwezi. View our student residences and available apartments then book directly with our team. No booking fees or hidden charges.",
+                    heroBtn1: "Explore Our Properties",
+                    heroBtn2: "Book Accommodation",
+                    heroSlide1: "top1.jpeg",
+                    heroSlide2: "top2.jpeg",
+                    heroSlide3: "top3.jpeg",
                     metaDescription:
-                        "Find student boarding houses and apartments in convenient campus locations.",
+                        "Find student boarding houses and apartments in Kitwe, Solwezi and across Zambia with Masitech Real Estates.",
                     typesHeading: "Accommodation for different needs",
                     typesIntro:
                         "Whether you are a student or a working tenant, find suitable accommodation managed by local property managers.",
@@ -5584,6 +5485,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
 
                 [
                     "heroLabel", "heroTitle", "heroSubtitle", "heroBtn1", "heroBtn2",
+                    "heroSlide1", "heroSlide2", "heroSlide3",
                     "metaDescription", "typesHeading", "typesIntro", "studentTitle",
                     "studentText", "aptTitle", "aptText", "whyHeading", "whyIntro",
                     "feat1Title", "feat1Text", "feat2Title", "feat2Text", "feat3Title",
@@ -5597,6 +5499,9 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         heroSubtitle: "indexHeroSubtitle",
                         heroBtn1: "indexHeroBtn1",
                         heroBtn2: "indexHeroBtn2",
+                        heroSlide1: "indexHeroSlide1",
+                        heroSlide2: "indexHeroSlide2",
+                        heroSlide3: "indexHeroSlide3",
                         metaDescription: "indexMetaDescription",
                         typesHeading: "indexTypesHeading",
                         typesIntro: "indexTypesIntro",
@@ -5626,6 +5531,10 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                         footerDesc: "indexFooterDesc"
                     };
                     setInputValue(idMap[key], c[key] || d[key] || "");
+                });
+                // Refresh hero slide previews
+                [1, 2, 3].forEach((n) => {
+                    updateSlidePreview(`indexHeroSlide${n}`, `indexHeroSlide${n}Preview`);
                 });
 
             } else if (pageKey === "about") {
@@ -5756,6 +5665,9 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 heroSubtitle: getInputValue("indexHeroSubtitle"),
                 heroBtn1: getInputValue("indexHeroBtn1"),
                 heroBtn2: getInputValue("indexHeroBtn2"),
+                heroSlide1: getInputValue("indexHeroSlide1"),
+                heroSlide2: getInputValue("indexHeroSlide2"),
+                heroSlide3: getInputValue("indexHeroSlide3"),
                 metaDescription: getInputValue("indexMetaDescription"),
                 typesHeading: getInputValue("indexTypesHeading"),
                 typesIntro: getInputValue("indexTypesIntro"),
@@ -6663,12 +6575,20 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     ? user.permissions
                     : [];
 
-            document.getElementById(
-                "primaryRole"
-            ).value =
+            const isAdminUser =
+                roles.includes("admin") ||
+                roles.some((r) => LEGACY_ADMIN_ROLES.includes(String(r))) ||
+                LEGACY_ADMIN_ROLES.includes(String(user.role || "")) ||
+                user.role === "admin";
+
+            let primary =
                 user.role ||
                 roles[0] ||
                 "student";
+            if (isAdminUser || LEGACY_ADMIN_ROLES.includes(String(primary))) {
+                primary = "admin";
+            }
+            document.getElementById("primaryRole").value = primary;
 
             document.getElementById(
                 "accountStatus"
@@ -6689,10 +6609,11 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     "[data-role-input]"
                 )
                 .forEach((input) => {
-                    input.checked =
-                        roles.includes(
-                            input.value
-                        );
+                    if (input.value === "admin") {
+                        input.checked = isAdminUser;
+                    } else {
+                        input.checked = roles.includes(input.value);
+                    }
                 });
 
             document
@@ -6790,49 +6711,36 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                 return;
             }
 
-            if (
-                selectedRoles.includes("super-admin") &&
-                !state.roles.includes("super-admin")
-            ) {
-                showMessage(
-                    roleMessage,
-                    "Only a super administrator can assign the super-admin role.",
-                    "error"
+            // Normalize: only one admin type
+            let normalizedRoles = selectedRoles.map((r) => String(r));
+            const wantsAdmin = normalizedRoles.some((r) =>
+                r === "admin" || LEGACY_ADMIN_ROLES.includes(r)
+            );
+            if (wantsAdmin) {
+                normalizedRoles = normalizedRoles.filter(
+                    (r) => r !== "admin" && !LEGACY_ADMIN_ROLES.includes(r)
                 );
+                normalizedRoles.push("admin");
+            }
+            normalizedRoles = [...new Set(normalizedRoles)];
 
-                return;
+            let normalizedPrimary = primaryRole;
+            if (wantsAdmin || LEGACY_ADMIN_ROLES.includes(primaryRole) || primaryRole === "admin") {
+                normalizedPrimary = "admin";
             }
 
-            if (
-                (
-                    selectedRoles.includes(
-                        "main-admin"
-                    ) ||
-                    selectedRoles.includes(
-                        "super-admin"
-                    )
-                ) &&
-                !state.roles.includes(
-                    "super-admin"
-                )
-            ) {
-                showMessage(
-                    roleMessage,
-                    "Only a super administrator can assign high-level administrator roles.",
-                    "error"
-                );
-
-                return;
-            }
+            const normalizedPermissions = wantsAdmin
+                ? ["*"]
+                : selectedPermissions;
 
             try {
                 await updateDoc(
                     doc(db, "users", userId),
                     {
-                        role: primaryRole,
-                        roles: selectedRoles,
+                        role: normalizedPrimary,
+                        roles: normalizedRoles,
                         permissions:
-                            selectedPermissions,
+                            normalizedPermissions,
                         locationIds,
                         locationId: locationIds[0] || null,
                         accountStatus,
@@ -7287,6 +7195,95 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
             }
             loadSelectedPageIntoForm("");
             hideMessage(document.getElementById("pageMessage"));
+        });
+
+        /* ---------- Hero background photo uploads (Cloudinary) ---------- */
+        function updateSlidePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            if (!input || !preview) return;
+            const url = String(input.value || "").trim();
+            if (url) {
+                preview.src = url;
+                preview.style.display = "block";
+            } else {
+                preview.removeAttribute("src");
+                preview.style.display = "none";
+            }
+        }
+
+        async function uploadImageToCloudinary(file) {
+            if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+                throw new Error("Cloudinary is not configured.");
+            }
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            formData.append("folder", "masitech/hero");
+
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+                { method: "POST", body: formData }
+            );
+
+            if (!response.ok) {
+                throw new Error("Cloudinary upload failed.");
+            }
+
+            const result = await response.json();
+            return {
+                secureUrl: result.secure_url,
+                publicId: result.public_id
+            };
+        }
+
+        async function uploadHeroSlide(file, slideNumber) {
+            if (!file) return null;
+            if (!file.type.startsWith("image/")) {
+                showToast("Please choose an image file (JPEG, PNG or WebP).", true);
+                return null;
+            }
+            if (file.size > 4 * 1024 * 1024) {
+                showToast("Image is too large. Please use a file under 4 MB.", true);
+                return null;
+            }
+            try {
+                showToast(`Uploading slide ${slideNumber}...`);
+                const uploaded = await uploadImageToCloudinary(file);
+                const input = document.getElementById(`indexHeroSlide${slideNumber}`);
+                if (input) {
+                    input.value = uploaded.secureUrl;
+                    updateSlidePreview(
+                        `indexHeroSlide${slideNumber}`,
+                        `indexHeroSlide${slideNumber}Preview`
+                    );
+                }
+                showToast(`Slide ${slideNumber} uploaded. Click Save page to publish.`);
+                return uploaded.secureUrl;
+            } catch (error) {
+                console.error("Hero slide upload failed:", error);
+                showToast(
+                    "Could not upload image to Cloudinary. Check the MASITECH upload preset.",
+                    true
+                );
+                return null;
+            }
+        }
+
+        [1, 2, 3].forEach((n) => {
+            document
+                .getElementById(`indexHeroSlide${n}File`)
+                ?.addEventListener("change", async (event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+                    await uploadHeroSlide(file, n);
+                    event.target.value = "";
+                });
+            document
+                .getElementById(`indexHeroSlide${n}`)
+                ?.addEventListener("input", () => {
+                    updateSlidePreview(`indexHeroSlide${n}`, `indexHeroSlide${n}Preview`);
+                });
         });
 
         document.getElementById("pageForm")?.addEventListener("submit", async (event) => {
@@ -7836,7 +7833,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     });
                 } else if (action === "delete") {
                     if (!isSuperAdmin()) {
-                        showToast("Only super admins can delete reviews.", true);
+                        showToast("Only admins can delete reviews.", true);
                         return;
                     }
                     if (!confirm("Delete this review permanently?")) return;
@@ -7868,7 +7865,7 @@ Privacy and security | How do I report suspicious activity? | Contact the platfo
                     });
                 } else if (action === "delete") {
                     if (!isSuperAdmin()) {
-                        showToast("Only super admins can delete reviews.", true);
+                        showToast("Only admins can delete reviews.", true);
                         return;
                     }
                     if (!confirm("Delete this review permanently?")) return;

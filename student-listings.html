@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Boarding Houses | Masitech Solutions</title>
+    <title>Student Estates | Masitech Real Estates</title>
 
     <style>
         :root {
@@ -276,9 +276,11 @@
         }
 
         .property-image-wrapper {
+            display: block;
             position: relative;
             height: 205px;
             background: #d1d5db;
+            overflow: hidden;
         }
 
         .property-image {
@@ -725,6 +727,203 @@
             }
         }
 
+        /* Estate directory cards */
+        .estate-card .property-image-wrapper {
+            height: 220px;
+        }
+        .estate-card .view-button {
+            width: 100%;
+            justify-content: center;
+        }
+        .estate-card .property-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+        .estate-card .location {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .estate-stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+        }
+        .estate-stat .stat-icon {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 8px;
+        }
+        .estate-stat .stat-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+        .estate-stat .stat-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .estate-stat .stat-label {
+            font-size: 0.72rem;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .estate-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 10px 0 14px;
+        }
+        .estate-amenities .amenity-chip {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        /* Houses inside an estate */
+        .house-card {
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(31, 41, 55, 0.05);
+        }
+        .house-slideshow {
+            position: relative;
+            height: 200px;
+            background: #d1d5db;
+            cursor: pointer;
+        }
+        .house-slideshow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .house-slideshow img.active {
+            display: block;
+        }
+        .house-slideshow .slide-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.55);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+        .house-slideshow .slide-nav.prev { left: 8px; }
+        .house-slideshow .slide-nav.next { right: 8px; }
+        .house-slideshow .slide-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .house-slideshow .slide-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+        }
+        .house-slideshow .slide-dots span.active {
+            background: #fff;
+        }
+        .house-body {
+            padding: 16px;
+        }
+        .house-body h3 {
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+        .house-body .house-meta {
+            color: var(--medium-grey);
+            font-size: 0.82rem;
+            margin-bottom: 8px;
+        }
+        .house-body p {
+            color: var(--charcoal);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        /* Fullscreen photo lightbox */
+        .photo-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 6000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.88);
+            padding: 20px;
+        }
+        .photo-lightbox.open {
+            display: flex;
+        }
+        .photo-lightbox img {
+            max-width: min(960px, 100%);
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .photo-lightbox .lb-close,
+        .photo-lightbox .lb-prev,
+        .photo-lightbox .lb-next {
+            position: absolute;
+            border: 0;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+        .photo-lightbox .lb-close {
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+        }
+        .photo-lightbox .lb-prev,
+        .photo-lightbox .lb-next {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+        }
+        .photo-lightbox .lb-prev { left: 16px; }
+        .photo-lightbox .lb-next { right: 16px; }
+        .photo-lightbox .lb-counter {
+            position: absolute;
+            bottom: 18px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
     </style>
 </head>
 
@@ -732,7 +931,7 @@
     <header class="site-header">
         <div class="container header-content">
             <a class="brand" href="index.html" aria-label="Masitech Solutions home">
-                <img src="logo.jpg" alt="Masitech Solutions logo">
+                <img src="assets/logo.jpg" alt="Masitech Solutions logo">
                 <span>Masitech Solutions</span>
             </a>
 
@@ -766,10 +965,9 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1>Boarding houses</h1>
-                <p>
-                    Browse available Boarding Houses and
-                    compare rooms, prices, conditions, and facilities.
+                <h1 id="pageMainTitle">Student Estates</h1>
+                <p id="pageMainSubtitle">
+                    Explore our student estates, available facilities, and campus locations.
                 </p>
             </div>
         </section>
@@ -808,21 +1006,24 @@
                     </button>
                 </form>
 
-                <div class="listing-summary">
+                <div class="listing-summary" id="listingSummary">
                     <div>
-                        <h2>Available Boarding Houses</h2>
-                        <p id="resultCount">Loading listings...</p>
+                        <p id="estateBackLink" hidden style="margin-bottom:10px">
+                            <a href="student-listings.html" style="color:var(--blue);font-weight:700;font-size:0.9rem">← Back to all estates</a>
+                        </p>
+                        <h2 id="listingHeading">Student estates</h2>
+                        <p id="resultCount">Loading estates...</p>
                     </div>
                 </div>
 
                 <div class="loading" id="loadingState">
-                    Loading student boarding houses...
+                    Loading student estates...
                 </div>
 
                 <div class="property-grid" id="propertyGrid"></div>
 
                 <div class="empty-state" id="emptyState" hidden>
-                    No student boarding houses match your search.
+                    No student estates match your search.
                 </div>
 
                 <div class="error-state" id="errorState" hidden>
@@ -866,6 +1067,15 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- House photo lightbox (popup gallery) -->
+    <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+        <button type="button" class="lb-close" id="lbClose" aria-label="Close">×</button>
+        <button type="button" class="lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+        <img id="lbImage" src="" alt="House photo">
+        <button type="button" class="lb-next" id="lbNext" aria-label="Next">›</button>
+        <div class="lb-counter" id="lbCounter"></div>
     </div>
 
     <div class="book-modal-overlay" id="bookModal">
@@ -981,11 +1191,35 @@
             }
         });
 
-        function escapeHtml(value) {
-            const div = document.createElement("div");
-            div.textContent = value ?? "";
-            return div.innerHTML;
+function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
+
+        function safeImageUrl(value, fallback) {
+            const fallbackUrl = fallback || "https://via.placeholder.com/800x500?text=Property";
+            const raw = String(value ?? "").trim();
+            if (!raw) return fallbackUrl;
+            const lower = raw.toLowerCase();
+            if (
+                lower.startsWith("javascript:") ||
+                lower.startsWith("vbscript:") ||
+                lower.startsWith("data:text")
+            ) {
+                return fallbackUrl;
+            }
+            if (
+                /^(https?:\/\/|\/|[a-z0-9_./-]+\.(jpg|jpeg|png|gif|webp|avif)(\?.*)?$)/i.test(raw)
+            ) {
+                return raw.replace(/"/g, "%22").replace(/'/g, "%27").replace(/</g, "%3C").replace(/>/g, "%3E");
+            }
+            return fallbackUrl;
+        }
+
 
         function formatPrice(property) {
             if (property.priceLabel) {
@@ -1000,12 +1234,14 @@
         }
 
         function getImageUrl(property) {
-            if (property.imageUrl) return property.imageUrl;
-            if (Array.isArray(property.imageUrls) && property.imageUrls[0]) {
-                return property.imageUrls[0];
-            }
-
-            return "https://via.placeholder.com/800x500?text=Student+Accommodation";
+            const candidate =
+                property.imageUrl ||
+                (Array.isArray(property.imageUrls) && property.imageUrls[0]) ||
+                "";
+            return safeImageUrl(
+                candidate,
+                "https://via.placeholder.com/800x500?text=Student+Accommodation"
+            );
         }
 
         function getRating(property) {
@@ -1035,18 +1271,19 @@
         }
 
         function getPropertyImages(property) {
+            const fallback = "https://via.placeholder.com/800x500?text=Student+Accommodation";
             const urls = [];
             if (Array.isArray(property.imageUrls)) {
                 property.imageUrls.forEach((url) => {
-                    if (url && !urls.includes(url)) urls.push(url);
+                    const safe = safeImageUrl(url, "");
+                    if (safe && !urls.includes(safe)) urls.push(safe);
                 });
             }
-            if (property.imageUrl && !urls.includes(property.imageUrl)) {
-                urls.unshift(property.imageUrl);
+            if (property.imageUrl) {
+                const safe = safeImageUrl(property.imageUrl, "");
+                if (safe && !urls.includes(safe)) urls.unshift(safe);
             }
-            if (urls.length === 0) {
-                urls.push("https://via.placeholder.com/800x500?text=Student+Accommodation");
-            }
+            if (urls.length === 0) urls.push(fallback);
             return urls;
         }
 
@@ -1103,19 +1340,24 @@
         function getPropertyRooms(property) {
             if (Array.isArray(property.rooms) && property.rooms.length) {
                 return property.rooms.map((room, index) => ({
-                    id: room.id || room.label || `room-${index + 1}`,
-                    label: room.label || room.id || `Room ${index + 1}`,
-                    roomType: room.roomType || property.roomType || "Student room",
+                    id: room.id || room.label || `house-${index + 1}`,
+                    label: room.label || room.name || room.id || `House ${index + 1}`,
+                    roomType: room.roomType || property.roomType || "Student house",
                     occupancy:
                         room.occupancy ||
                         (property.peoplePerRoom
                             ? `${property.peoplePerRoom} person per room`
                             : "On inquiry"),
+                    status:
+                        room.status ||
+                        (room.available === false ? "occupied" : "available"),
                     available: room.available !== false,
                     address: room.address || property.address || "",
                     locationLabel: getLocationLabel(property),
                     houseType: property.houseType || "Boarding house",
                     category: property.category || property.condition || "",
+                    description: room.description || room.notes || "",
+                    amenities: Array.isArray(room.amenities) ? room.amenities.slice() : [],
                     imageUrls:
                         Array.isArray(room.imageUrls) && room.imageUrls.length
                             ? room.imageUrls
@@ -1126,12 +1368,12 @@
             const title = property.title || "Boarding house";
             return [
                 {
-                    id: property.id || "room-1",
+                    id: property.id || "house-1",
                     label: title,
                     roomType:
                         property.roomType ||
                         property.spaceLabel ||
-                        "Student room",
+                        "Student house",
                     occupancy: property.peoplePerRoom
                         ? `${property.peoplePerRoom} person per room`
                         : "On inquiry",
@@ -1140,18 +1382,23 @@
                     locationLabel: getLocationLabel(property),
                     houseType: property.houseType || "Boarding house",
                     category: property.category || property.condition || "",
+                    amenities: Array.isArray(property.amenities) ? property.amenities.slice() : [],
                     imageUrls: getPropertyImages(property)
                 }
             ];
         }
 
-        function openPropertyModal(property) {
+        function openPropertyModal(property, roomIndex) {
             if (!property) return;
 
             propertyModal.property = property;
             propertyModal.rooms = getPropertyRooms(property);
-            propertyModal.roomIndex = 0;
-            propertyModal.images = propertyModal.rooms[0].imageUrls;
+            const idx = Number(roomIndex);
+            propertyModal.roomIndex =
+                Number.isFinite(idx) && idx >= 0 && idx < propertyModal.rooms.length
+                    ? idx
+                    : 0;
+            propertyModal.images = propertyModal.rooms[propertyModal.roomIndex].imageUrls;
             propertyModal.index = 0;
 
             renderRoomModal();
@@ -1180,7 +1427,7 @@
             // Show property title (and room number only when multiple real rooms exist)
             document.getElementById("modalPropertyTitle").textContent =
                 total > 1
-                    ? `${propertyTitle} · Room ${propertyModal.roomIndex + 1} of ${total}`
+                    ? `${propertyTitle} · House ${propertyModal.roomIndex + 1} of ${total}`
                     : propertyTitle;
             document.getElementById("modalPropertyLocation").textContent =
                 locationLabel;
@@ -1206,8 +1453,11 @@
                     meta.appendChild(span);
                 });
 
+            const houseAmenityIcons = Array.isArray(room.amenities) && room.amenities.length
+                ? getAmenityIcons({ amenities: room.amenities })
+                : getAmenityIcons(property);
             document.getElementById("modalAmenities").innerHTML =
-                getAmenityIcons(property).join("") || "";
+                houseAmenityIcons.join("") || "";
 
             document.getElementById("modalDescription").textContent =
                 property.description || "Property details will be provided soon.";
@@ -1217,9 +1467,8 @@
                 <div><span>Address</span><span>${escapeHtml(room.address || property.address || "On inquiry")}</span></div>
                 <div><span>Location</span><span>${escapeHtml(room.locationLabel || getLocationLabel(property))}</span></div>
                 <div><span>Availability</span><span>${room.available !== false ? "Available" : "Occupied"}</span></div>
-                <div><span>Room type</span><span>${escapeHtml(room.roomType || "—")}</span></div>
-                <div><span>Occupancy</span><span>${escapeHtml(room.occupancy || "—")}</span></div>
-                <div><span>House type</span><span>${escapeHtml(room.houseType || "Boarding house")}</span></div>
+                <div><span>House type</span><span>${escapeHtml(room.roomType || "—")}</span></div>
+                <div><span>People per room</span><span>${escapeHtml(room.occupancy || "—")}</span></div>
                 ${room.category ? `<div><span>Category</span><span>${escapeHtml(room.category)}</span></div>` : ""}
             `;
 
@@ -1303,7 +1552,7 @@
                 .map(
                     (url, i) => `
                         <button class="gallery-thumb ${i === index ? "active" : ""}" type="button" data-index="${i}" aria-label="Photo ${i + 1}">
-                            <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy">
+                            <img src="${safeImageUrl(url)}" alt="Thumbnail ${i + 1}" loading="lazy">
                         </button>
                     `
                 )
@@ -1338,90 +1587,93 @@
             );
         }
 
+        function getEstateIdFromUrl() {
+            try {
+                return new URLSearchParams(window.location.search).get("estate") || "";
+            } catch (_) {
+                return "";
+            }
+        }
+
         function displayProperties(properties) {
+            // Estate directory view (one card per property / estate)
             propertyGrid.innerHTML = "";
+            document.getElementById("estateBackLink")?.setAttribute("hidden", "");
+            const heading = document.getElementById("listingHeading");
+            if (heading) heading.textContent = "Student estates";
+            const mainTitle = document.getElementById("pageMainTitle");
+            const mainSub = document.getElementById("pageMainSubtitle");
+            if (mainTitle) mainTitle.textContent = "Student Estates";
+            if (mainSub) {
+                mainSub.textContent =
+                    "Explore our student estates, available facilities, and campus locations.";
+            }
 
             if (properties.length === 0) {
                 emptyState.hidden = false;
-                resultCount.textContent = "0 listings found";
+                resultCount.textContent = "0 estates found";
                 return;
             }
 
             emptyState.hidden = true;
             resultCount.textContent =
-                `${properties.length} listing${properties.length === 1 ? "" : "s"} found`;
+                `${properties.length} estate${properties.length === 1 ? "" : "s"} found`;
 
             properties.forEach((property) => {
                 const propertyId = property.id;
                 const title = escapeHtml(
-                    property.title || "Student boarding house"
+                    property.title || "Student estate"
                 );
                 const location = escapeHtml(getLocationLabel(property));
                 const description = escapeHtml(
-                    property.description || "Property details will be provided soon."
+                    property.description ||
+                        "Secure, well-managed student accommodation with shared facilities."
                 );
-                const roomType = escapeHtml(
-                    property.roomType ||
-                    property.spaceLabel ||
-                    "Room details unavailable"
-                );
-                const condition = escapeHtml(
-                    property.condition || "Condition not provided"
-                );
-                const availableRooms = escapeHtml(
-                    getAvailabilityLabel(property)
-                );
+                const rooms = Array.isArray(property.rooms) ? property.rooms : [];
+                const houseCountValue =
+                    rooms.length > 0
+                        ? `${rooms.length} house${rooms.length === 1 ? "" : "s"}`
+                        : "Inquire within";
+                const houseCountLabel =
+                    rooms.length > 0 ? "Houses available" : "Houses on inquiry";
+                const amenityPreview = getAmenityIcons(property).slice(0, 6).join("");
+                const estateUrl = `student-listings.html?estate=${encodeURIComponent(propertyId)}`;
 
                 const card = document.createElement("article");
-                card.className = "property-card";
-
-                const people = escapeHtml(
-                    property.peoplePerRoom
-                        ? `${property.peoplePerRoom}/room`
-                        : roomType
-                );
-                const spaces = escapeHtml(getAvailabilityLabel(property));
-                const amenityPreview = getAmenityIcons(property).slice(0, 5).join("");
+                card.className = "property-card estate-card";
 
                 card.innerHTML = `
-                    <div
-                        class="property-image-wrapper"
-                        data-open-property="${propertyId}"
-                        role="button"
-                        tabindex="0"
-                        aria-label="View ${title}"
-                    >
+                    <a class="property-image-wrapper" href="${estateUrl}" aria-label="View accommodation at ${title}">
                         <img
                             class="property-image"
                             src="${getImageUrl(property)}"
                             alt="${title}"
                             loading="lazy"
-                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Accommodation'"
+                            onerror="this.src='https://via.placeholder.com/800x500?text=Student+Estate'"
                         >
                         <span class="status-badge">Available</span>
-                    </div>
+                    </a>
 
                     <div class="property-content">
                         <h3>${title}</h3>
                         <p class="location">${location}</p>
-                        <p class="property-description">${description}</p>
 
-                        <div class="property-meta">
-                            <span class="meta-item">${spaces}</span>
-                            <span class="meta-item">${people}</span>
-                            <span class="meta-item">${condition}</span>
+                        <div class="estate-stat">
+                            <span class="stat-icon" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/><path d="M10 11h4"/></svg>
+                            </span>
+                            <span class="stat-text">
+                                <span class="stat-value">${escapeHtml(houseCountValue)}</span>
+                                <span class="stat-label">${escapeHtml(houseCountLabel)}</span>
+                            </span>
                         </div>
-                        ${amenityPreview ? `<div class="amenity-icons">${amenityPreview}</div>` : ""}
+                        ${amenityPreview ? `<div class="estate-amenities amenity-icons">${amenityPreview}</div>` : ""}
 
                         <div class="property-bottom">
-                            <div>
-                                <div class="price">${formatPrice(property)}</div>
-                                <div class="rating">${getRating(property)}</div>
-                            </div>
                             <div class="card-actions">
-                                <button class="view-button" type="button" data-open-property="${propertyId}">
-                                    Check the room →
-                                </button>
+                                <a class="view-button" href="${estateUrl}" style="display:block;text-align:center;font-weight:700;letter-spacing:0.04em;">
+                                    VIEW HOUSES →
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1429,6 +1681,166 @@
 
                 propertyGrid.appendChild(card);
             });
+        }
+
+        /* ---------- Houses inside a selected estate ---------- */
+        const houseLightbox = {
+            images: [],
+            index: 0
+        };
+
+        function openHouseLightbox(images, startIndex) {
+            const lb = document.getElementById("photoLightbox");
+            if (!lb || !images.length) return;
+            houseLightbox.images = images;
+            houseLightbox.index = startIndex || 0;
+            renderHouseLightbox();
+            lb.classList.add("open");
+            lb.setAttribute("aria-hidden", "false");
+        }
+
+        function closeHouseLightbox() {
+            const lb = document.getElementById("photoLightbox");
+            if (!lb) return;
+            lb.classList.remove("open");
+            lb.setAttribute("aria-hidden", "true");
+        }
+
+        function renderHouseLightbox() {
+            const img = document.getElementById("lbImage");
+            const counter = document.getElementById("lbCounter");
+            const list = houseLightbox.images;
+            if (!img || !list.length) return;
+            const i = ((houseLightbox.index % list.length) + list.length) % list.length;
+            houseLightbox.index = i;
+            img.src = list[i];
+            if (counter) counter.textContent = `${i + 1} / ${list.length}`;
+        }
+
+        function displayEstateHouses(property) {
+            propertyGrid.innerHTML = "";
+            emptyState.hidden = true;
+
+            const title = property.title || "Student estate";
+            const location = getLocationLabel(property);
+            const houses = getPropertyRooms(property);
+
+            const back = document.getElementById("estateBackLink");
+            if (back) back.hidden = false;
+            const heading = document.getElementById("listingHeading");
+            if (heading) heading.textContent = title;
+            const mainTitle = document.getElementById("pageMainTitle");
+            const mainSub = document.getElementById("pageMainSubtitle");
+            if (mainTitle) mainTitle.textContent = title;
+            if (mainSub) {
+                mainSub.textContent = `${location} · View available houses and facilities at this estate.`;
+            }
+
+            resultCount.textContent =
+                `${houses.length} house${houses.length === 1 ? "" : "s"} at this estate`;
+
+            if (houses.length === 0) {
+                emptyState.hidden = false;
+                emptyState.textContent = "No houses have been published for this estate yet.";
+                return;
+            }
+
+            houses.forEach((house, houseIndex) => {
+                const images = (house.imageUrls && house.imageUrls.length)
+                    ? house.imageUrls
+                    : getPropertyImages(property);
+                const name = escapeHtml(house.label || `House ${houseIndex + 1}`);
+                const roomType = escapeHtml(house.roomType || "Student house");
+                const occupancy = escapeHtml(house.occupancy || "");
+                const statusKey = house.status || (house.available === false ? "occupied" : "available");
+                const statusLabels = {
+                    available: { text: "Available", color: "var(--green)" },
+                    "not-available": { text: "Not available", color: "var(--amber)" },
+                    occupied: { text: "Occupied", color: "var(--amber)" },
+                    "under-construction": { text: "Under construction", color: "#b45309" },
+                    "coming-soon": { text: "Coming soon", color: "var(--blue)" }
+                };
+                const statusInfo = statusLabels[statusKey] || statusLabels.available;
+                const desc = escapeHtml(
+                    house.description ||
+                    property.description ||
+                    "Well-managed student housing with shared facilities. Contact our team for availability and viewing."
+                );
+                const houseAmenities = Array.isArray(house.amenities) && house.amenities.length
+                    ? getAmenityIcons({ amenities: house.amenities })
+                    : [];
+
+                const slides = images
+                    .map(
+                        (src, i) =>
+                            `<img src="${src}" alt="${name} photo ${i + 1}" class="${i === 0 ? "active" : ""}" loading="lazy" data-slide-index="${i}" onerror="this.src='https://via.placeholder.com/800x500?text=House'">`
+                    )
+                    .join("");
+                const dots =
+                    images.length > 1
+                        ? `<div class="slide-dots">${images
+                              .map(
+                                  (_, i) =>
+                                      `<span class="${i === 0 ? "active" : ""}" data-dot="${i}"></span>`
+                              )
+                              .join("")}</div>`
+                        : "";
+                const nav =
+                    images.length > 1
+                        ? `<button type="button" class="slide-nav prev" data-dir="-1" aria-label="Previous">‹</button>
+                           <button type="button" class="slide-nav next" data-dir="1" aria-label="Next">›</button>`
+                        : "";
+
+                const card = document.createElement("article");
+                card.className = "house-card";
+                card.innerHTML = `
+                    <div class="house-slideshow" data-house-index="${houseIndex}" role="button" tabindex="0" aria-label="View photos of ${name}">
+                        ${slides}
+                        ${nav}
+                        ${dots}
+                    </div>
+                    <div class="house-body">
+                        <h3>${name}</h3>
+                        <p class="house-meta">
+                            ${roomType}${occupancy ? ` · ${occupancy}` : ""}
+                            · <strong style="color:${statusInfo.color}">${statusInfo.text}</strong>
+                        </p>
+                        ${houseAmenities.length ? `<div class="estate-amenities amenity-icons" style="margin-top:10px">${houseAmenities.join("")}</div>` : ""}
+                        <p>${desc}</p>
+                        <div style="margin-top:12px">
+                            <button type="button" class="view-button" data-open-property="${escapeHtml(property.id)}" data-room-index="${houseIndex}">
+                                View details / Book →
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Slideshow state on the element
+                card.querySelector(".house-slideshow")._slideIndex = 0;
+                card.querySelector(".house-slideshow")._images = images;
+
+                propertyGrid.appendChild(card);
+            });
+        }
+
+        function showEstateOrDirectory() {
+            const estateId = getEstateIdFromUrl();
+            const filterCard = document.getElementById("filterForm");
+            if (!estateId) {
+                if (filterCard) filterCard.style.display = "";
+                filterAndDisplayProperties();
+                return;
+            }
+            const property = allProperties.find((p) => p.id === estateId);
+            if (!property) {
+                if (filterCard) filterCard.style.display = "";
+                filterAndDisplayProperties();
+                resultCount.textContent = "Estate not found. Showing all estates.";
+                return;
+            }
+            // Hide filters when viewing a single estate's houses
+            if (filterCard) filterCard.style.display = "none";
+            displayEstateHouses(property);
         }
 
         function filterAndDisplayProperties() {
@@ -1711,7 +2123,7 @@
                 const property = allProperties.find(
                     (item) => item.id === openTarget.dataset.openProperty
                 );
-                openPropertyModal(property);
+                openPropertyModal(property, openTarget.dataset.roomIndex);
             }
         });
 
@@ -1782,16 +2194,72 @@
 
                 loadingState.style.display = "none";
                 errorState.hidden = true;
-                filterAndDisplayProperties();
+                showEstateOrDirectory();
             },
             (error) => {
                 console.error("Could not load properties:", error);
 
                 loadingState.style.display = "none";
                 errorState.hidden = false;
-                resultCount.textContent = "Listings unavailable";
+                resultCount.textContent = "Estates unavailable";
             }
         );
+
+        /* House slideshow + lightbox interactions */
+        propertyGrid.addEventListener("click", (event) => {
+            const navBtn = event.target.closest(".slide-nav");
+            if (navBtn) {
+                event.preventDefault();
+                event.stopPropagation();
+                const slideshow = navBtn.closest(".house-slideshow");
+                if (!slideshow) return;
+                const images = slideshow._images || [];
+                if (images.length < 2) return;
+                const dir = Number(navBtn.dataset.dir) || 1;
+                slideshow._slideIndex =
+                    ((slideshow._slideIndex || 0) + dir + images.length) % images.length;
+                slideshow.querySelectorAll("img").forEach((img, i) => {
+                    img.classList.toggle("active", i === slideshow._slideIndex);
+                });
+                slideshow.querySelectorAll(".slide-dots span").forEach((dot, i) => {
+                    dot.classList.toggle("active", i === slideshow._slideIndex);
+                });
+                return;
+            }
+
+            const slideshow = event.target.closest(".house-slideshow");
+            if (slideshow) {
+                const images = slideshow._images || [];
+                openHouseLightbox(images, slideshow._slideIndex || 0);
+                return;
+            }
+        });
+
+        document.getElementById("lbClose")?.addEventListener("click", closeHouseLightbox);
+        document.getElementById("lbPrev")?.addEventListener("click", () => {
+            houseLightbox.index -= 1;
+            renderHouseLightbox();
+        });
+        document.getElementById("lbNext")?.addEventListener("click", () => {
+            houseLightbox.index += 1;
+            renderHouseLightbox();
+        });
+        document.getElementById("photoLightbox")?.addEventListener("click", (event) => {
+            if (event.target.id === "photoLightbox") closeHouseLightbox();
+        });
+        document.addEventListener("keydown", (event) => {
+            const lb = document.getElementById("photoLightbox");
+            if (!lb?.classList.contains("open")) return;
+            if (event.key === "Escape") closeHouseLightbox();
+            if (event.key === "ArrowLeft") {
+                houseLightbox.index -= 1;
+                renderHouseLightbox();
+            }
+            if (event.key === "ArrowRight") {
+                houseLightbox.index += 1;
+                renderHouseLightbox();
+            }
+        });
     </script>
 </body>
 </html>

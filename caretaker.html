@@ -1481,6 +1481,67 @@
             }
         }
 
+        .room-photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .room-photo-grid:empty {
+            display: none;
+        }
+
+        .room-photo-preview {
+            position: relative;
+            height: 90px;
+            overflow: hidden;
+            background: var(--light-grey);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .room-photo-preview.pending {
+            border-style: dashed;
+            border-color: #93c5fd;
+        }
+
+        .room-photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .room-photo-remove {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            min-height: 22px !important;
+            padding: 0 6px !important;
+            font-size: 0.8rem !important;
+            line-height: 1;
+        }
+
+        .room-photo-tag {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            padding: 2px 5px;
+            background: rgba(37, 99, 235, 0.88);
+            color: #fff;
+            border-radius: 3px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 620px) {
+            .room-photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
 
         @media (max-width: 480px) {
             .checkbox-grid {
@@ -1892,10 +1953,13 @@
                     >
                         <div class="section-heading">
                             <div>
-                                <h2>Add a property</h2>
+                                <h2>Add an estate</h2>
                                 <p>
-                                    Create a boarding house or apartment in an assigned
-                                    location.
+                                    Create an estate with its name, location, number of
+                                    houses and special services. Then click VIEW
+                                    ACCOMMODATION below to add the individual houses,
+                                    each with its own photos, amenities, description and
+                                    people per room.
                                 </p>
                             </div>
                         </div>
@@ -1913,38 +1977,34 @@
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label for="propertyTitle">
-                                            Property name or room name
+                                            Estate name
                                         </label>
 
                                         <input
                                             class="form-input"
                                             id="propertyTitle"
                                             type="text"
-                                            placeholder="Example: Green View House / Room 3"
+                                            placeholder="Example: Green View Estate"
                                             required
                                         >
+
+                                        <span class="form-help">
+                                            One listing is one estate (one roof).
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group hidden-field">
+                                        <label for="propertyType">Property type</label>
+                                        <select class="form-select" id="propertyType" required>
+                                            <option value="student" selected>Student boarding house</option>
+                                            <option value="apartment">Apartment</option>
+                                        </select>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="propertyType">
-                                            Property type
-                                        </label>
-
-                                        <select
-                                            class="form-select"
-                                            id="propertyType"
-                                            required
-                                        >
-                                            <option value="">
-                                                Select property type
-                                            </option>
-                                            <option value="student">
-                                                Student boarding house
-                                            </option>
-                                            <option value="apartment">
-                                                Apartment
-                                            </option>
-                                        </select>
+                                        <label for="numberOfHouses">Number of houses available</label>
+                                        <input class="form-input" id="numberOfHouses" type="number" min="0" step="1" placeholder="e.g. 6">
+                                        <span class="form-help">How many houses are available in this estate.</span>
                                     </div>
 
                                     <div class="form-group">
@@ -1969,112 +2029,37 @@
                                         </span>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="propertyAddress">
-                                            Address
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="propertyAddress"
-                                            type="text"
-                                            placeholder="Street or area"
-                                            required
-                                        >
+                                    <div class="form-group hidden-field">
+                                        <label for="propertyAddress">Address</label>
+                                        <input class="form-input" id="propertyAddress" type="text" placeholder="Street or area">
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="propertyPrice">
-                                            Monthly price (amount only)
-                                        </label>
-
-                                        <input
-                                            class="form-input"
-                                            id="propertyPrice"
-                                            type="number"
-                                            min="0"
-                                            step="0.01"
-                                            placeholder="e.g. 850"
-                                            required
-                                        >
-                                        <span class="form-help">
-                                            Type the figure only. Display will show “K… per month” automatically.
-                                        </span>
+                                    <div class="form-group hidden-field">
+                                        <label for="propertyPrice">Monthly price</label>
+                                        <input class="form-input" id="propertyPrice" type="number" min="0" step="0.01" placeholder="e.g. 850">
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="propertyCondition">
-                                            Condition
-                                        </label>
-
-                                        <select
-                                            class="form-select"
-                                            id="propertyCondition"
-                                            required
-                                        >
-                                            <option value="">
-                                                Select condition
-                                            </option>
+                                    <div class="form-group hidden-field">
+                                        <label for="propertyCondition">Condition</label>
+                                        <select class="form-select" id="propertyCondition">
+                                            <option value="">Select condition</option>
                                             <option value="new">New</option>
                                             <option value="excellent">Excellent</option>
                                             <option value="good">Good</option>
                                             <option value="fair">Fair</option>
-                                            <option value="needs-maintenance">
-                                                Needs maintenance
-                                            </option>
+                                            <option value="needs-maintenance">Needs maintenance</option>
                                         </select>
                                     </div>
 
-                                    <!-- Student boarding: spaces + people per room -->
-                                    <div class="form-group field-student-only">
-                                        <label for="spacesAvailable">
-                                            Spaces available
-                                        </label>
-                                        <input
-                                            class="form-input"
-                                            id="spacesAvailable"
-                                            type="number"
-                                            min="0"
-                                            step="1"
-                                            placeholder="e.g. 6"
-                                        >
-                                        <span class="form-help">
-                                            How many bed spaces are free for students
-                                        </span>
-                                    </div>
-
-                                    <div class="form-group field-student-only">
-                                        <label for="peoplePerRoom">
-                                            People per room (default)
-                                        </label>
-                                        <input
-                                            class="form-input"
-                                            id="peoplePerRoom"
-                                            type="text"
-                                            placeholder="e.g. 1 person per room"
-                                        >
-                                        <span class="form-help">
-                                            Default occupancy. You can override per room below.
-                                        </span>
-                                    </div>
-
-
-                                    <!-- Apartment: unit type + totals -->
+                                    <!-- Apartment unit type (hidden; estates only) -->
                                     <div class="form-group field-apartment-only hidden-field">
-                                        <label for="roomOrUnitType">
-                                            Unit type
-                                        </label>
-                                        <input
-                                            class="form-input"
-                                            id="roomOrUnitType"
-                                            type="text"
-                                            placeholder="e.g. 2-bedroom apartment"
-                                        >
+                                        <label for="roomOrUnitType">Unit type</label>
+                                        <input class="form-input" id="roomOrUnitType" type="text" placeholder="e.g. 2-bedroom apartment">
                                     </div>
 
 
                                     <div class="form-group full-width">
-                                        <label>Amenities</label>
+                                        <label>Special services offered</label>
                                         <div class="amenity-section">
                                             <div>
                                                 <h4>Facilities</h4>
@@ -2144,10 +2129,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group full-width">
-                                        <label for="propertyDescription">
-                                            Description
-                                        </label>
+                                    <div class="form-group full-width hidden-field">
+                                        <label for="propertyDescription">Description</label>
 
                                         <div class="template-toolbar">
                                             <button class="small-button" id="saveDescriptionTemplate" type="button">
@@ -2175,10 +2158,8 @@
                                         <div class="template-list" id="descriptionTemplates"></div>
                                     </div>
 
-                                    <div class="form-group full-width">
-                                        <label for="propertyRules">
-                                            House or property rules
-                                        </label>
+                                    <div class="form-group full-width hidden-field">
+                                        <label for="propertyRules">House or property rules</label>
 
                                         <div class="template-toolbar">
                                             <button class="small-button" id="saveRulesTemplate" type="button">
@@ -2206,9 +2187,7 @@
                                     </div>
 
                                     <div class="form-group full-width">
-                                        <label for="propertyImages">
-                                            Property images
-                                        </label>
+                                        <label for="propertyImages">Cover photo</label>
 
                                         <input
                                             class="form-input"
@@ -2219,15 +2198,54 @@
                                         >
 
                                         <span class="form-help">
-                                            Add clear photos of the exterior,
-                                            rooms, bathrooms, kitchen, and other
-                                            important areas.
+                                            Add a clear cover photo of the estate exterior.
                                         </span>
 
                                         <div
                                             class="image-preview-grid"
                                             id="imagePreviewGrid"
                                         ></div>
+                                    </div>
+
+                                    <div class="form-group full-width" style="text-align:center;">
+                                        <button
+                                            class="button button-primary"
+                                            id="viewAccommodationButton"
+                                            type="button"
+                                            style="width:100%;min-height:56px;font-size:1.05rem;font-weight:700;letter-spacing:0.06em;"
+                                        >
+                                            VIEW ACCOMMODATION
+                                        </button>
+                                        <span class="form-help">
+                                            Click to add the houses inside this estate — each house gets its own name, photos, amenities, description and people per room.
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group full-width" id="housesSection" hidden>
+                                        <label>Houses in this estate</label>
+
+                                        <div class="room-builder">
+                                            <div class="room-builder-header">
+                                                <div>
+                                                    <h4>Houses under this estate</h4>
+                                                    <span class="form-help">
+                                                        Each house keeps its own name, photos,
+                                                        amenities, description and people per room.
+                                                        Students browse: estate → house → photos.
+                                                    </span>
+                                                </div>
+
+                                                <button
+                                                    class="small-button edit"
+                                                    id="addRoomButton"
+                                                    type="button"
+                                                >
+                                                    + Add house
+                                                </button>
+                                            </div>
+
+                                            <div id="roomsList"></div>
+                                        </div>
                                     </div>
 
                                     <div class="form-actions">
@@ -2950,8 +2968,8 @@
                 "Manage properties in your assigned locations"
             ],
             "add-property": [
-                "Add a property",
-                "Create a boarding house or apartment listing"
+                "Add an estate",
+                "Create an estate, then add its houses inside it"
             ],
             inquiries: [
                 "Property inquiries",
@@ -3096,6 +3114,7 @@
             document.getElementById("propertyModalMeta").innerHTML = `
                 <span class="meta-item">${escapeHtml(capitalize(property.propertyType || "listing"))}</span>
                 <span class="meta-item">${escapeHtml(String(availability))} available</span>
+                ${Array.isArray(property.rooms) && property.rooms.length ? `<span class="meta-item">${property.rooms.length} house${property.rooms.length === 1 ? "" : "s"}</span>` : ""}
                 <span class="meta-item">${escapeHtml(property.status || "—")}</span>
             `;
             const amenities = Array.isArray(property.amenities) ? property.amenities : [];
@@ -4424,54 +4443,126 @@
 
         let draftRooms = [];
 
-        function nextRoomLabel() {
+        function nextHouseLabel() {
             const n = draftRooms.length + 1;
-            return `P1-${n}`;
+            return `House ${n}`;
         }
 
         function renderRoomsList() {
             const list = document.getElementById("roomsList");
             if (!list) return;
+
+            const facilityOptions = [
+                "Wi-Fi", "Water", "Parking", "Kitchen", "Study area", "Borehole"
+            ];
+
             if (!draftRooms.length) {
-                list.innerHTML = `<p class="form-help">No rooms yet. Click “Add room” for P1-1, P1-2, …</p>`;
+                list.innerHTML = `
+                    <p class="form-help">
+                        No houses yet. Click “+ Add house” to create House 1,
+                        House 2, … Each house can have its own photos,
+                        amenities, description and people per room.
+                    </p>
+                `;
                 return;
             }
+
             list.innerHTML = draftRooms
-                .map(
-                    (room, index) => `
-                    <div class="room-item" data-room-index="${index}">
-                        <div class="room-item-top">
-                            <strong>${escapeHtml(room.label || `Room ${index + 1}`)}</strong>
-                            <button class="small-button archive" type="button" data-remove-room="${index}">Remove</button>
+                .map((room, index) => {
+                    const existingPhotos = (room.imageUrls || [])
+                        .map(
+                            (url, photoIndex) => `
+                                <div class="room-photo-preview">
+                                    <img src="${escapeHtml(url)}" alt="${escapeHtml(room.label || "House")} photo ${photoIndex + 1}">
+                                    <button
+                                        type="button"
+                                        class="small-button archive room-photo-remove"
+                                        data-remove-room-photo="${index}:${photoIndex}"
+                                        aria-label="Remove photo"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            `
+                        )
+                        .join("");
+
+                    const pendingPhotos = (room.imageFiles || [])
+                        .map(
+                            (file, photoIndex) => `
+                                <div class="room-photo-preview pending">
+                                    <img src="${(room.imageFilePreviews || [])[photoIndex] || ""}" alt="New photo for ${escapeHtml(room.label || "house")}">
+                                    <span class="room-photo-tag">New</span>
+                                    <button
+                                        type="button"
+                                        class="small-button archive room-photo-remove"
+                                        data-remove-room-pending="${index}:${photoIndex}"
+                                        aria-label="Remove new photo"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            `
+                        )
+                        .join("");
+
+                    const roomAmenities = Array.isArray(room.amenities) ? room.amenities : [];
+                    const amenitiesCheckboxes = facilityOptions
+                        .map(
+                            (facility) => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-field="amenities" data-index="${index}" data-amenity="${escapeHtml(facility)}" value="${escapeHtml(facility)}" ${roomAmenities.includes(facility) ? "checked" : ""}>
+                                    <span class="amenity-label">${escapeHtml(facility)}</span>
+                                </label>
+                            `
+                        )
+                        .join("");
+
+                    return `
+                        <div class="room-item" data-room-index="${index}">
+                            <div class="room-item-top">
+                                <strong>${escapeHtml(room.label || `House ${index + 1}`)}</strong>
+                                <button class="small-button archive" type="button" data-remove-room="${index}">Remove</button>
+                            </div>
+                            <div class="room-item-grid">
+                                <div class="form-group">
+                                    <label>House name</label>
+                                    <input class="form-input" data-field="label" data-index="${index}" type="text" value="${escapeHtml(room.label || "")}" placeholder="House 1">
+                                </div>
+                                <div class="form-group">
+                                    <label>House type</label>
+                                    <input class="form-input" data-field="roomType" data-index="${index}" type="text" value="${escapeHtml(room.roomType || "")}" placeholder="e.g. Self-contained, Shared">
+                                </div>
+                                <div class="form-group">
+                                    <label>People per room</label>
+                                    <input class="form-input" data-field="occupancy" data-index="${index}" type="text" value="${escapeHtml(room.occupancy || "")}" placeholder="e.g. 1 person per room">
+                                </div>
+                                <div class="form-group">
+                                    <label>Availability</label>
+                                    <select class="form-select" data-field="available" data-index="${index}">
+                                        <option value="true" ${room.available !== false ? "selected" : ""}>Available</option>
+                                        <option value="false" ${room.available === false ? "selected" : ""}>Occupied</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width" style="grid-column:1/-1">
+                                    <label>House description</label>
+                                    <textarea class="form-textarea" data-field="description" data-index="${index}" placeholder="Describe this house — view, fittings, notes...">${escapeHtml(room.description || "")}</textarea>
+                                </div>
+                                <div class="form-group full-width" style="grid-column:1/-1">
+                                    <label>Amenities</label>
+                                    <div class="checkbox-grid">${amenitiesCheckboxes}</div>
+                                    <span class="form-help">Tick the facilities available inside this specific house.</span>
+                                </div>
+                                <div class="form-group full-width" style="grid-column:1/-1">
+                                    <label>House photos</label>
+                                    <input class="form-input" data-field="imageFiles" data-index="${index}" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+                                    <span class="form-help">Photos of this house. Estate cover photo above is used as a fallback when a house has none.</span>
+                                    <div class="room-photo-grid">${existingPhotos}${pendingPhotos}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="room-item-grid">
-                            <div class="form-group">
-                                <label>Room code / name</label>
-                                <input class="form-input room-label" data-field="label" data-index="${index}" type="text" value="${escapeHtml(room.label || "")}" placeholder="P1-1">
-                            </div>
-                            <div class="form-group">
-                                <label>Room type</label>
-                                <input class="form-input" data-field="roomType" data-index="${index}" type="text" value="${escapeHtml(room.roomType || "")}" placeholder="Single bed (student room)">
-                            </div>
-                            <div class="form-group">
-                                <label>Occupancy</label>
-                                <input class="form-input" data-field="occupancy" data-index="${index}" type="text" value="${escapeHtml(room.occupancy || "")}" placeholder="1 person per room">
-                            </div>
-                            <div class="form-group">
-                                <label>Availability</label>
-                                <select class="form-select" data-field="available" data-index="${index}">
-                                    <option value="true" ${room.available !== false ? "selected" : ""}>Available</option>
-                                    <option value="false" ${room.available === false ? "selected" : ""}>Occupied</option>
-                                </select>
-                            </div>
-                            <div class="form-group full-width" style="grid-column:1/-1">
-                                <label>Room photos (optional — uses house photos if empty)</label>
-                                <input class="form-input" data-field="imageUrlsText" data-index="${index}" type="text" value="${escapeHtml(Array.isArray(room.imageUrls) ? room.imageUrls.join(", ") : "")}" placeholder="Paste image URLs separated by commas, or leave blank">
-                            </div>
-                        </div>
-                    </div>
-                `
-                )
+                    `;
+                })
                 .join("");
         }
 
@@ -4480,49 +4571,95 @@
                 const index = Number(el.dataset.index);
                 const field = el.dataset.field;
                 if (!draftRooms[index]) return;
+
+                if (field === "imageFiles" || field === "amenities") {
+                    return; // handled separately
+                }
+
                 if (field === "available") {
                     draftRooms[index].available = el.value === "true";
-                } else if (field === "imageUrlsText") {
-                    const urls = el.value
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean);
-                    draftRooms[index].imageUrls = urls;
                 } else {
-                    draftRooms[index][field] = el.value.trim();
+                    draftRooms[index][field] = el.value;
                 }
+            });
+
+            // Aggregate per-house amenities checkboxes
+            draftRooms.forEach((room, index) => {
+                room.amenities = Array.from(
+                    document.querySelectorAll(
+                        `#roomsList input[data-field="amenities"][data-index="${index}"]:checked`
+                    )
+                ).map((input) => input.value);
             });
         }
 
         function addDraftRoom() {
             syncDraftRoomsFromDom();
-            const defaultOcc =
-                document.getElementById("peoplePerRoom")?.value.trim() ||
-                "1 person per room";
             draftRooms.push({
-                label: nextRoomLabel(),
-                roomType: "Single bed (student room)",
-                occupancy: defaultOcc,
+                label: nextHouseLabel(),
+                roomType: "",
+                occupancy: "",
                 available: true,
-                imageUrls: []
+                description: "",
+                amenities: [],
+                imageUrls: [],
+                imageFiles: [],
+                imageFilePreviews: []
             });
             renderRoomsList();
+        }
+
+        async function uploadRoomImages(rooms) {
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+            const results = [];
+
+            for (let index = 0; index < rooms.length; index++) {
+                const room = rooms[index];
+                const draft = draftRooms[index] || {};
+                const files = Array.isArray(draft.imageFiles) ? draft.imageFiles : [];
+                const uploadedUrls = [];
+
+                for (const file of files) {
+                    if (!allowedTypes.includes(file.type)) {
+                        throw new Error(
+                            `House "${room.label || index + 1}": only JPG, PNG, and WebP images are allowed.`
+                        );
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                        throw new Error(
+                            `House "${room.label || index + 1}": each image must be smaller than 5 MB.`
+                        );
+                    }
+
+                    const uploaded = await uploadImageToCloudinary(file);
+                    uploadedUrls.push(uploaded.secureUrl);
+                }
+
+                results.push({
+                    ...room,
+                    imageUrls: [...(room.imageUrls || []), ...uploadedUrls]
+                });
+            }
+
+            return results;
         }
 
         function getRoomsForSave() {
             syncDraftRoomsFromDom();
             return draftRooms
                 .map((room, index) => ({
-                    id: room.id || room.label || `P1-${index + 1}`,
-                    label: room.label || `P1-${index + 1}`,
+                    id: room.id || room.label || `house-${index + 1}`,
+                    label: room.label || `House ${index + 1}`,
                     roomType: room.roomType || "",
                     occupancy: room.occupancy || "",
                     available: room.available !== false,
+                    description: room.description || "",
+                    amenities: Array.isArray(room.amenities) ? room.amenities.slice() : [],
                     imageUrls: Array.isArray(room.imageUrls) ? room.imageUrls.filter(Boolean) : []
                 }))
                 .filter((room) => room.label);
         }
-
 
         function getPropertyFormData(status) {
             const title = document
@@ -4590,10 +4727,13 @@
                     [location?.street, location?.area, location?.address]
                         .filter(Boolean)
                         .join(", "),
-                price: Number(document.getElementById("propertyPrice").value || 0),
+                price: (() => {
+                    const n = Number(document.getElementById("propertyPrice")?.value || 0);
+                    return Number.isFinite(n) && n > 0 ? n : null;
+                })(),
                 priceLabel: (() => {
-                    const n = Number(document.getElementById("propertyPrice").value || 0);
-                    if (!Number.isFinite(n) || n < 0) return "Price on inquiry";
+                    const n = Number(document.getElementById("propertyPrice")?.value || 0);
+                    if (!Number.isFinite(n) || n <= 0) return "Price on inquiry";
                     return `K${n.toLocaleString()} per month`;
                 })(),
                 roomType: null,
@@ -4605,18 +4745,14 @@
                     document.getElementById("propertyCondition").value,
                 spacesAvailable:
                     propertyType === "student"
-                        ? Number(document.getElementById("spacesAvailable").value || 0)
+                        ? Number(document.getElementById("numberOfHouses")?.value || 0)
                         : null,
-                peoplePerRoom:
-                    propertyType === "student"
-                        ? document.getElementById("peoplePerRoom").value.trim()
-                        : null,
-                rooms:
-                    propertyType === "student" ? getRoomsForSave() : [],
+                peoplePerRoom: null,
+                rooms: getRoomsForSave(),
                 totalRooms: null,
                 availableRooms:
                     propertyType === "student"
-                        ? Number(document.getElementById("spacesAvailable").value || 0)
+                        ? Number(document.getElementById("numberOfHouses")?.value || 0)
                         : null,
                 totalUnits: null,
                 availableUnits: null,
@@ -4661,7 +4797,7 @@
 
             if (data.propertyType === "student") {
                 if (data.spacesAvailable === null || data.spacesAvailable < 0) {
-                    return "Enter how many spaces are available.";
+                    return "Enter how many houses are available.";
                 }
             }
 
@@ -4689,6 +4825,8 @@
             state.editingImageUrls = [];
             draftRooms = [];
             renderRoomsList();
+            const housesSection = document.getElementById("housesSection");
+            if (housesSection) housesSection.hidden = true;
             document.getElementById("editBanner").classList.remove("show");
             document.getElementById("cancelEditButton").hidden = true;
             document.getElementById("submitPropertyButton").textContent =
@@ -4706,20 +4844,31 @@
             document.getElementById("propertyPrice").value =
                 Number.isFinite(Number(property.price)) ? property.price : "";
             document.getElementById("propertyCondition").value = property.condition || "";
-            document.getElementById("spacesAvailable").value =
-                property.spacesAvailable ?? property.availableRooms ?? "";
-            document.getElementById("peoplePerRoom").value = property.peoplePerRoom || "";
+            const numberOfHousesEl = document.getElementById("numberOfHouses");
+            if (numberOfHousesEl) {
+                numberOfHousesEl.value =
+                    property.spacesAvailable ??
+                    property.availableRooms ??
+                    (Array.isArray(property.rooms) ? property.rooms.length : "") ??
+                    "";
+            }
             draftRooms = Array.isArray(property.rooms)
                 ? property.rooms.map((r) => ({
                     id: r.id || r.label || "",
                     label: r.label || r.id || "",
                     roomType: r.roomType || "",
-                    occupancy: r.occupancy || property.peoplePerRoom || "",
+                    occupancy: r.occupancy || "",
                     available: r.available !== false,
-                    imageUrls: Array.isArray(r.imageUrls) ? r.imageUrls.slice() : []
+                    description: r.description || "",
+                    amenities: Array.isArray(r.amenities) ? r.amenities.slice() : [],
+                    imageUrls: Array.isArray(r.imageUrls) ? r.imageUrls.slice() : [],
+                    imageFiles: [],
+                    imageFilePreviews: []
                 }))
                 : [];
             renderRoomsList();
+            const housesSection = document.getElementById("housesSection");
+            if (housesSection) housesSection.hidden = draftRooms.length === 0;
             const unitTypeEl = document.getElementById("roomOrUnitType");
             if (unitTypeEl) unitTypeEl.value = property.unitType || "";
             document.getElementById("propertyDescription").value = property.description || "";
@@ -4790,6 +4939,39 @@
 
             if (validationError) {
                 showMessage(propertyMessage, validationError, "error");
+                return;
+            }
+
+            // Upload per-house photos (Cloudinary) before saving the listing
+            try {
+                if (data.propertyType === "student" && Array.isArray(data.rooms)) {
+                    data.rooms = await uploadRoomImages(data.rooms);
+
+                    if (data.rooms.length > 0) {
+                        const availableHouseCount = data.rooms.filter(
+                            (room) => room.available !== false
+                        ).length;
+                        data.spacesAvailable = availableHouseCount;
+                        data.availableRooms = availableHouseCount;
+                    }
+
+                    // Use the first house photo as the estate cover when no estate photo exists
+                    if (!data.imageUrl) {
+                        for (const room of data.rooms) {
+                            if (Array.isArray(room.imageUrls) && room.imageUrls.length) {
+                                data.imageUrls = room.imageUrls.slice();
+                                data.imageUrl = room.imageUrls[0];
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (roomImageError) {
+                showMessage(
+                    propertyMessage,
+                    roomImageError.message || "Room photos could not be uploaded.",
+                    "error"
+                );
                 return;
             }
 
@@ -5605,6 +5787,7 @@
         renderTemplateList("description");
         renderTemplateList("rules");
         syncPropertyTypeFields();
+        renderRoomsList();
 
         document
             .getElementById("saveDescriptionTemplate")
@@ -5685,15 +5868,97 @@
 
         
         document.getElementById("addRoomButton")?.addEventListener("click", addDraftRoom);
-        document.getElementById("roomsList")?.addEventListener("click", (event) => {
-            const btn = event.target.closest("[data-remove-room]");
-            if (!btn) return;
-            syncDraftRoomsFromDom();
-            const index = Number(btn.dataset.removeRoom);
-            draftRooms.splice(index, 1);
-            renderRoomsList();
+
+        document.getElementById("viewAccommodationButton")?.addEventListener("click", () => {
+            const housesSection = document.getElementById("housesSection");
+            if (housesSection) {
+                housesSection.hidden = false;
+                housesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            if (!draftRooms.length) {
+                addDraftRoom();
+            }
         });
-        document.getElementById("roomsList")?.addEventListener("change", syncDraftRoomsFromDom);
+
+        document.getElementById("roomsList")?.addEventListener("click", (event) => {
+            const removeRoomBtn = event.target.closest("[data-remove-room]");
+            if (removeRoomBtn) {
+                syncDraftRoomsFromDom();
+                const index = Number(removeRoomBtn.dataset.removeRoom);
+                draftRooms.splice(index, 1);
+                renderRoomsList();
+                return;
+            }
+
+            const removePhotoBtn = event.target.closest("[data-remove-room-photo]");
+            if (removePhotoBtn) {
+                syncDraftRoomsFromDom();
+                const [roomIndex, photoIndex] = removePhotoBtn.dataset.removeRoomPhoto
+                    .split(":")
+                    .map(Number);
+                if (draftRooms[roomIndex]?.imageUrls) {
+                    draftRooms[roomIndex].imageUrls.splice(photoIndex, 1);
+                }
+                renderRoomsList();
+                return;
+            }
+
+            const removePendingBtn = event.target.closest("[data-remove-room-pending]");
+            if (removePendingBtn) {
+                syncDraftRoomsFromDom();
+                const [roomIndex, photoIndex] = removePendingBtn.dataset.removeRoomPending
+                    .split(":")
+                    .map(Number);
+                if (draftRooms[roomIndex]?.imageFiles) {
+                    draftRooms[roomIndex].imageFiles.splice(photoIndex, 1);
+                    draftRooms[roomIndex].imageFilePreviews?.splice(photoIndex, 1);
+                }
+                renderRoomsList();
+            }
+        });
+
+        document.getElementById("roomsList")?.addEventListener("change", (event) => {
+            const fileInput = event.target.closest(
+                'input[type="file"][data-field="imageFiles"]'
+            );
+
+            if (!fileInput) {
+                syncDraftRoomsFromDom();
+                return;
+            }
+
+            const index = Number(fileInput.dataset.index);
+            if (!draftRooms[index]) return;
+
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+            const files = Array.from(fileInput.files || []).filter((file) => {
+                if (!allowedTypes.includes(file.type)) {
+                    showToast("Only JPG, PNG, and WebP images are allowed.", true);
+                    return false;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast("Each image must be smaller than 5 MB.", true);
+                    return false;
+                }
+                return true;
+            });
+
+            draftRooms[index].imageFiles = draftRooms[index].imageFiles || [];
+            draftRooms[index].imageFilePreviews = draftRooms[index].imageFilePreviews || [];
+
+            files.forEach((file) => {
+                draftRooms[index].imageFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = () => {
+                    draftRooms[index].imageFilePreviews.push(reader.result);
+                    renderRoomsList();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            fileInput.value = "";
+        });
+
         document.getElementById("roomsList")?.addEventListener("input", (event) => {
             if (event.target.matches("[data-field]")) syncDraftRoomsFromDom();
         });

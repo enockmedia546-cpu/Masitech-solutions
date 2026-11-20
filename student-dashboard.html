@@ -645,9 +645,11 @@
         }
 
         .property-image-wrapper {
+            display: block;
             position: relative;
             height: 170px;
             background: #d1d5db;
+            overflow: hidden;
         }
 
         .property-image {
@@ -1858,11 +1860,10 @@
                     >
                         <div class="section-heading">
                             <div>
-                                <h2>Student boarding houses</h2>
+                                <h2>Student Estates</h2>
 
                                 <p>
-                                    Browse published student accommodation for your
-                                    selected location.
+                                    Explore student estates in your area, then view houses inside each estate.
                                 </p>
                             </div>
 
@@ -1871,7 +1872,7 @@
                                     class="button button-outline"
                                     href="student-listings.html"
                                 >
-                                    View more listings
+                                    View all estates
                                 </a>
                             </div>
                         </div>
@@ -2344,8 +2345,8 @@
             ],
 
             listings: [
-                "Student boarding houses",
-                "Browse published student accommodation"
+                "Student Estates",
+                "Explore estates, then view houses inside each one"
             ],
 
             saved: [
@@ -2406,11 +2407,35 @@
             element.className = "message";
         }
 
-        function escapeHtml(value) {
-            const div = document.createElement("div");
-            div.textContent = value ?? "";
-            return div.innerHTML;
+function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
+
+        function safeImageUrl(value, fallback) {
+            const fallbackUrl = fallback || "https://via.placeholder.com/800x500?text=Property";
+            const raw = String(value ?? "").trim();
+            if (!raw) return fallbackUrl;
+            const lower = raw.toLowerCase();
+            if (
+                lower.startsWith("javascript:") ||
+                lower.startsWith("vbscript:") ||
+                lower.startsWith("data:text")
+            ) {
+                return fallbackUrl;
+            }
+            if (
+                /^(https?:\/\/|\/|[a-z0-9_./-]+\.(jpg|jpeg|png|gif|webp|avif)(\?.*)?$)/i.test(raw)
+            ) {
+                return raw.replace(/"/g, "%22").replace(/'/g, "%27").replace(/</g, "%3C").replace(/>/g, "%3E");
+            }
+            return fallbackUrl;
+        }
+
 
         function getInitials(name) {
             return String(name || "Student")
@@ -2490,24 +2515,19 @@
         }
 
         function getPropertyImages(property) {
+            const fallback = "https://via.placeholder.com/800x500?text=Student+Housing";
             const urls = [];
-
             if (Array.isArray(property.imageUrls)) {
                 property.imageUrls.forEach((url) => {
-                    if (url && !urls.includes(url)) urls.push(url);
+                    const safe = safeImageUrl(url, "");
+                    if (safe && !urls.includes(safe)) urls.push(safe);
                 });
             }
-
-            if (property.imageUrl && !urls.includes(property.imageUrl)) {
-                urls.unshift(property.imageUrl);
+            if (property.imageUrl) {
+                const safe = safeImageUrl(property.imageUrl, "");
+                if (safe && !urls.includes(safe)) urls.unshift(safe);
             }
-
-            if (urls.length === 0) {
-                urls.push(
-                    "https://via.placeholder.com/800x500?text=Student+Housing"
-                );
-            }
-
+            if (urls.length === 0) urls.push(fallback);
             return urls;
         }
 
@@ -2651,7 +2671,7 @@
                             data-index="${i}"
                             aria-label="Photo ${i + 1}"
                         >
-                            <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy">
+                            <img src="${safeImageUrl(url)}" alt="Thumbnail ${i + 1}" loading="lazy">
                         </button>
                     `
                 )
@@ -2690,11 +2710,11 @@
 
         function getProfileRoles(profile) {
             if (Array.isArray(profile.roles)) {
-                return profile.roles;
+                return profile.roles.map(String);
             }
 
             if (profile.role) {
-                return [profile.role];
+                return [String(profile.role)];
             }
 
             return [];
@@ -2702,11 +2722,11 @@
 
         function getClaimRoles(claims) {
             if (Array.isArray(claims.roles)) {
-                return claims.roles;
+                return claims.roles.map(String);
             }
 
             if (claims.role) {
-                return [claims.role];
+                return [String(claims.role)];
             }
 
             return [];
@@ -2921,12 +2941,13 @@
                 getEffectiveRoles(
                     profileData,
                     claims
-                );
+                ).map((r) => String(r).toLowerCase());
 
             const accountStatus =
                 profileData.accountStatus ||
                 "active";
 
+            // Student dashboard only — admin / caretaker use their own pages
             if (!effectiveRoles.includes("student")) {
                 showAccessDenied(
                     "This account does not have the student role. Open the dashboard assigned to your role."
@@ -3325,7 +3346,7 @@
             if (properties.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        No student boarding houses are available in your location.
+                        No student estates are available in your location.
                     </div>
                 `;
 
@@ -3349,22 +3370,20 @@
 
                         return `
                             <article class="property-card" data-property-id="${property.id}">
-                                <div
+                                <a
                                     class="property-image-wrapper"
-                                    data-open-property="${property.id}"
-                                    role="button"
-                                    tabindex="0"
-                                    aria-label="View ${escapeHtml(property.title || "property")}"
+                                    href="student-listings.html?estate=${encodeURIComponent(property.id)}"
+                                    aria-label="View accommodation at ${escapeHtml(property.title || "estate")}"
                                 >
                                     <img
                                         class="property-image"
                                         src="${getPropertyImage(property)}"
                                         alt="${escapeHtml(
                                             property.title ||
-                                            "Student housing"
+                                            "Student estate"
                                         )}"
                                         loading="lazy"
-                                        onerror="this.src='https://via.placeholder.com/800x500?text=Student+Housing'"
+                                        onerror="this.src='https://via.placeholder.com/800x500?text=Student+Estate'"
                                     >
 
                                     <span class="property-status">
@@ -3382,13 +3401,13 @@
                                     >
                                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                                     </button>
-                                </div>
+                                </a>
 
                                 <div class="property-content">
                                     <h3>
                                         ${escapeHtml(
                                             property.title ||
-                                            "Student boarding house"
+                                            "Student estate"
                                         )}
                                     </h3>
 
@@ -3445,13 +3464,13 @@
                                         </div>
 
                                         <div class="property-card-actions">
-                                            <button
+                                            <a
                                                 class="small-button view"
-                                                data-open-property="${property.id}"
-                                                type="button"
+                                                href="student-listings.html?estate=${encodeURIComponent(property.id)}"
+                                                style="font-weight:700;letter-spacing:0.04em;"
                                             >
-                                                View
-                                            </button>
+                                                VIEW ACCOMMODATION
+                                            </a>
 
                                             <button
                                                 class="icon-action"
